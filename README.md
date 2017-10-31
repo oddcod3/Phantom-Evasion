@@ -168,6 +168,9 @@ Android Smali-Droidmare module support both msfvenom payload obfuscation and inj
 
 Pytherpreter modules supports all python msfvenom payload
 
+## license
+GPLv3.0
+
 ## Donate
 
 if you want you can buy me a beer
