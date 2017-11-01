@@ -976,16 +976,15 @@ def description_printer(module_type):
 
         description = ""
         description += "  This Module decompiles with apktool\n"
-        description += "  original apk msfvenom generated, modify smali code ,and \n"
+        description += "  msfvenom apk payload, modify smali code and \n"
         description += "  rebuild and resign the new apk  \n\n"
-        description += "  [>] Memory allocation type: Dalvik VM managed\n\n"
+        description += "  [>] Support existing apk backdooring\n\n"
         description += "  [>] STATIC EVASION:\n"
         description += "  Nop injection \n"
         description += "  string & path renaming \n"
         description += "  permissions shuffler \n"
         description += "  [>] DYNAMIC EVASION:\n"
-        description += "  indirection  \n"
-        description += "  false branch & goto \n"
+        description += "  counters injection in method\n"
         description += "  [>] OUTFORMAT: Apk \n"
 
     else: 
