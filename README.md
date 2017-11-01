@@ -5,7 +5,8 @@ both compatibile with python 2.7 and 3.4 or higher( note that python 2.7 is requ
 The aim of this tool is to make antivirus evasion an easy task for pentesters 
 with the use of prewritten modules capable to 
 generate  (almost) undetectable executable even with most common 32 bit metasploit payload.
-Dynamic Evasion is the trump card of this tool while advanced encryption is not implemented (isn't necessary). 
+AV Sandbox detection is the trump card of this tool while advanced encryption is not implemented (isn't necessary). 
+
 
 MODULE TYPE:
  
@@ -169,6 +170,7 @@ Android Smali-Droidmare module support both msfvenom payload obfuscation and inj
 Pytherpreter modules supports all python msfvenom payload
 
 ## license
+
 GPLv3.0
 
 ## Donate
