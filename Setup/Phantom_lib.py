@@ -381,7 +381,7 @@ def menu_options():
 def payload_generator(msfvenom_payload,arch,host,port):
     py_version=platform.python_version()    
 
-    Randiter = str(random.randint(8,14))
+    Randiter = str(random.randint(10,15))
     platform == ""
  
 
