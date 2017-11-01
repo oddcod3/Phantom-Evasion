@@ -177,7 +177,7 @@ GPLv3.0
 
 if you want you can buy me a beer
 
-Bitcoin: 1J7UHCc5PvWEA4CgaeuLDHJgmiAWBvn8Qe
+Bitcoin: 188TzY98ZBT7RvPWo5CPLRt1tMcvfiiGiY
 
 
 
