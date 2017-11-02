@@ -7,6 +7,7 @@ with the use of prewritten modules capable to
 generate  (almost) undetectable executable even with most common 32 bit metasploit payload.
 AV Sandbox detection is the trump card of this tool while advanced encryption is not implemented (isn't necessary). 
 
+Format: exe/elf/apk/dmg
 
 MODULE TYPE:
  
