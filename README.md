@@ -91,6 +91,7 @@ requires python2.7 for Universal Modules ( excluding that it works great also wi
 ## kali linux:
 
 The best.
+Actually the only OS truly supported.
 
 Automatic setup, simply launch with:
 ```
