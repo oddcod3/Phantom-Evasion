@@ -182,6 +182,7 @@ def dependencies_checker():
         else:
             print(bcolors.OCRA + "\n[>] LINUX distro Detected!! \n" + bcolors.ENDC)
             sleep(1)
+            linux_isready()
 
     elif platform_used == "Windows":
 
