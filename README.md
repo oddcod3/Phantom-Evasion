@@ -177,7 +177,7 @@ GPLv3.0
 
 ## Donate
 
-if you want you can buy me a beer
+if you like my code you can buy me a beer
 
 Bitcoin: 188TzY98ZBT7RvPWo5CPLRt1tMcvfiiGiY
 
