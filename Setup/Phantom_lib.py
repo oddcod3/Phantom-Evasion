@@ -580,13 +580,13 @@ def shellcode_completer(module_type):
     if shell_gen_type == "1":
 
         module_launcher1(module_type)
-        print("\n[<>] File saved in prototype folder!\n")
+        print("\n[<>] File saved in Phantom-Evasion folder!\n")
         sleep(3)
 
     elif shell_gen_type == "2":
 
         module_launcher2(module_type)
-        print("\n[<>] File saved in prototype folder!\n")
+        print("\n[<>] File saved in Phantom-Evasion folder!\n")
         sleep(3)
 
 def osx_cascade_encoding():
@@ -675,6 +675,7 @@ def osx_cascade_encoding():
         round_6.wait() 
      
     sleep(2) 
+    print("\n[<>] File saved in Phantom-Evasion folder!\n")
 
 def apk_msfvenom():
     py_version=platform.python_version()
@@ -823,7 +824,7 @@ def droidmare_launcher():
         os.remove("msf_gen.apk")
         os.remove("msf_rebuild.apk")
         os.remove("resigned.apk")
-        print("\n[>] New Apk saved in phantom folder")
+        print("\n[>] New Apk saved in Phantom-Evasion folder")
         sleep(2)
 
 def description_printer(module_type):
