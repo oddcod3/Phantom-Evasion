@@ -201,7 +201,7 @@ def dependencies_checker():
 
 def advisor():
     clear()
-    print(bcolors.RED + "[DISCLAIMER]:" + bcolors.ENDC + "Phantom-Framework is intended to be used for legal security")
+    print(bcolors.RED + "[DISCLAIMER]:" + bcolors.ENDC + "Phantom-Evasion is intended to be used for legal security")
     print("purposes only any other use is not under the responsibility of the developer\n") 
     sleep(0.2)
     print(bcolors.RED + "[+] Developed by:" + bcolors.ENDC + " Diego Cornacchini  \n")
