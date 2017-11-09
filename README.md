@@ -171,6 +171,18 @@ Android Smali-Droidmare module support both msfvenom payload obfuscation and inj
 
 Pytherpreter modules supports all python msfvenom payload
 
+## next release features
+
+Vesion 0.2 will include:
+
+> Advanced encryption 
+
+> New windows and linux modules 
+
+> Better Metamorphism
+
+Stay tuned
+
 ## license
 
 GPLv3.0
