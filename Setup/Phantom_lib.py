@@ -448,11 +448,11 @@ def auto_compiler(module_type,arch,filename):
 
         elif "linux" in module_type and arch == "x86":
 
-            subprocess.call(['gcc','Source.c','-o',filename,'-m32','-no-pie'])
+            subprocess.call(['gcc','Source.c','-o',filename,'-m32','-static'])
 
         elif "linux" in module_type and arch == "x64":
 
-            subprocess.call(['gcc','Source.c','-o',filename,'-no-pie'])
+            subprocess.call(['gcc','Source.c','-o',filename,'-static'])
 
     elif Os_used == "Windows":
 
