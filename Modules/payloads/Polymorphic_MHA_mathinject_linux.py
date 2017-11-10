@@ -77,7 +77,9 @@ cc=cc.replace("]","")
 MorphEvasion1 = str(usefull.Polymorph_Multipath_Evasion(a,Filename))
 MorphEvasion2 = str(usefull.Polymorph_Multipath_Evasion(b,Filename))
 MorphEvasion3 = str(usefull.Polymorph_Multipath_Evasion(c,Filename))
- 
+MorphEvasion1 = MorphEvasion1.replace(".exe","")
+MorphEvasion2 = MorphEvasion2.replace(".exe","")
+MorphEvasion3 = MorphEvasion3.replace(".exe","")
 Junkcode1 = usefull.Junkmathinject(aa) 	        # Junkcode
 Junkcode2 = usefull.Junkmathinject(bb)		# Junkcode
 Junkcode3 = usefull.Junkmathinject(cc)		# Junkcode
