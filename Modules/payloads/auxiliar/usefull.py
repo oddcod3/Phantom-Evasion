@@ -57,13 +57,15 @@ def python_poly_multipath(number,step):
         Hollow_code += num_space + "if " + Randcpt + " == 0 :\n"
         return Hollow_code 
 
-    elif number == "3":
+    elif number == "3": # crazy pow 
 
         Randvar = varname_creator()
+        Randfloat = random.uniform(1.110,1.119)
+        Randpow = str(Randfloat**random.randint(100,300)
         Hollow_code = ""
-        Hollow_code += num_space + "from ctypes import *\n"
-        Hollow_code += num_space + Randvar + " = windll.kernel32.IsDebuggerPresent()\n"
-        Hollow_code += num_space + "if " + Randvar + " == 0 :\n"
+        Hollow_code += num_space + Randvar " = " + Randpow + "*\n"
+        Hollow_code += num_space + "while" + Randvar + " > 1:\n"
+        Hollow_code += num_space + "    " + Randvar + " = " + Randvar + "/" + str(Randfloat) + "\n"
         return Hollow_code
 
 def Junkmathinject(number):
