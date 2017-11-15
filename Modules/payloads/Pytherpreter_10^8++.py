@@ -30,7 +30,7 @@ Filename = sys.argv[2]
 
 Randflag = usefull.varname_creator()
 Randcounter = usefull.varname_creator()
-Randbig = str(random.randint(60000000,120000000)) 
+Randbig = str(random.randint(6000000,12000000)) 
 Hollow_code = ""
 Hollow_code += Randcounter + " = 0\n"
 Hollow_code += Randflag + " = 0\n"
