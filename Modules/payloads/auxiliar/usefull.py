@@ -63,7 +63,7 @@ def python_poly_multipath(number,step):
         Randfloat = random.uniform(1.110,1.119)
         Randpow = str(Randfloat**random.randint(100,300))
         Hollow_code = ""
-        Hollow_code += num_space + Randvar " = " + Randpow + "*\n"
+        Hollow_code += num_space + Randvar + " = " + Randpow + "*\n"
         Hollow_code += num_space + "while" + Randvar + " > 1:\n"
         Hollow_code += num_space + "    " + Randvar + " = " + Randvar + "/" + str(Randfloat) + "\n"
         return Hollow_code
