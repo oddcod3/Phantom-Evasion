@@ -350,7 +350,7 @@ def auto_pyinstall(filename):
             
         elif platform.system() == "Windows":
             path2pyinstaller=path_finder("pyinstaller.py")
-            subprocess.call(['py',path2pyinstaller,filename,'-F','--noupx','--hidden-import','code','--hidden-import','platform',' --hidden-import','shutil'])
+            subprocess.call(['py',path2pyinstaller,filename,'-F','--noupx','--hidden-import','code','--hidden-import','platform','--hidden-import','shutil'])
             
         sleep(1)  
         print(bcolors.GREEN + "\n[>] Executable saved in Phantom folder\n" + bcolors.ENDC)
