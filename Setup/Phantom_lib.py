@@ -346,7 +346,7 @@ def auto_pyinstall(filename):
 
     if ans == "y":
         if platform.system() == "Linux":
-            subprocess.call(['pyinstaller',filename,'-F','--noupx','--hidden-import','code','--hidden-import','platform',' --hidden-import','shutil'])
+            subprocess.call(['pyinstaller',filename,'-F','--noupx','--hidden-import','code','--hidden-import','platform','--hidden-import','shutil'])
             
         elif platform.system() == "Windows":
             path2pyinstaller=path_finder("pyinstaller.py")
