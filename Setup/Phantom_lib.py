@@ -77,7 +77,17 @@ def linux_isready():
 
 
 def kali_arch_isready():
+    sleep(0.5)
     print(bcolors.OCRA + "[>] Checking dependencies:\n" + bcolors.ENDC)
+    package = os.system("dpkg -l | grep libc6-dev-i386 >/dev/null 2>&1")
+    if package == 0:
+        print(bcolors.GREEN + "[>] Package libc6-dev-i386 [Found]\n" + bcolors.ENDC)
+    else:
+        print(bcolors.RED + "[>] Package libc6-dev-i386 [Not Found]\n" + bcolors.ENDC)
+        sleep(1)
+        print(bcolors.GREEN + "[>] Trying to autoinstall:\n" + bcolors.ENDC)
+        sleep(1)
+        subprocess.call(['apt-get','install','libc6-dev-i386','-y'])
     sleep(0.5)
     auto_setup("apktool")
     auto_setup("gcc")
@@ -130,7 +140,7 @@ def auto_setup(name):
         sleep(1)
         subprocess.call(['apt-get','install',name,'-y'])
     else:
-        print(bcolors.GREEN + "[+] " + name + "  [Found]\n" + bcolors.ENDC) 
+        print(bcolors.GREEN + "[+] " + name + "  [Found]" + bcolors.ENDC) 
         sleep(0.1)
 
 def auto_check(name):
