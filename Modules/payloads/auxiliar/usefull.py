@@ -68,6 +68,7 @@ def python_poly_multipath(number,step):
         Hollow_code += num_space + Randvar + " = " + Randpow + "\n"
         Hollow_code += num_space + "while " + Randvar + " > 1:\n"
         Hollow_code += num_space + "    " + Randvar + " = " + Randvar + "/" + str(Randfloat) + "\n"
+        Hollow_code += num_space + "if " + Randvar + " <= 1:\n" 
         return Hollow_code
 
 def Junkmathinject(number):
