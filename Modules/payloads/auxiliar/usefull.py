@@ -35,15 +35,13 @@ def python_poly_multipath(number,step):
         num_space="            "
     
     if number == "1":    #Long Counter
-        Randflag = varname_creator()
         Randcounter = varname_creator()
         Randbig = str(random.randint(6000000,12000000))  
         Hollow_code = ""
         Hollow_code += num_space + Randcounter + " = 0\n"
-        Hollow_code += num_space + Randflag + " = 0\n"
         Hollow_code += num_space + "while " + Randcounter + " < " + Randbig + ":\n"
-        Hollow_code += num_space + "    " + Randflag + " += 1\n"
-        Hollow_code += num_space + "if " + Randflag + " == " + Randbig + ":\n"
+        Hollow_code += num_space + "    " + Randcounter + " += 1\n"
+        Hollow_code += num_space + "if " + Randcounter + " == " + Randbig + ":\n"
         return Hollow_code 
 
     elif number == "2":   #BacktoZero
