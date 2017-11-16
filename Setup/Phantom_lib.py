@@ -915,7 +915,6 @@ def description_printer(module_type):
         description += "  Random millions increments \n"
         description += "  Random math subprogram if sandobox detected\n"
         description += "  [>] AUTOCOMPILE(cross platform): to ELF file \n"
-        description += "  [>] FUD: 95%"
 
     elif module_type == "Polymorphic_MHA_mathinject_linux.py":
         description = ""
@@ -958,7 +957,7 @@ def description_printer(module_type):
         description += "  [>] DYNAMIC EVASION:\n"
         description += "  Random millions increments  \n"
         description += "  Am i Zero?  \n"
-        description += "  Is debugger present?   \n"
+        description += "  crazy pow   \n"
         description += "  [>] AUTOCOMPILE: using Pyinstaller \n"
 
 
