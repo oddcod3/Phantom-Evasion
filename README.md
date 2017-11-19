@@ -117,7 +117,7 @@ You need to install dependencies manually:
 
 Install & setup gcc,cygwin,pyinstaller,apktool,openssl,metasploit
 
-remember to set Environment variable 
+remember to set Environment variables 
 
 go to phantom-evasion folder and launch:
 
@@ -160,7 +160,7 @@ Install & setup gcc,mingw-w64,pyinstaller,apktool,openssl,metasploit,zipalign
 
 Modules which targets specified platform are prefixed with Windows,Linux,Android,OSX,
 
-Universal modules create an executable type dependent on which platform is used for generation process (pyinstaller)
+Universal modules create an executable type dependent on which platform is used during generation process (pyinstaller)
 
 
 ## Modules options
