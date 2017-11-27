@@ -183,6 +183,11 @@ Vesion 0.2 will include:
 
 Stay tuned
 
+## Warning
+
+Actually there is no error checking routine on user input!!
+Be sure to input options correctly!!
+
 ## license
 
 GPLv3.0
