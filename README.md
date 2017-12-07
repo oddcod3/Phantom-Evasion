@@ -15,6 +15,20 @@ Windows,Linux,Android,Osx,Universal   (Platform-Target)
 
 Universal modules produces malware stub executable using pyinstaller for the  OS used during generation process.
 
+## New version 0.2 
+
+Vesion 0.2 will be released on 9/12/2017
+
+> Advanced encryption
+
+> Added powershell modules
+
+> New windows and linux modules 
+
+> Better Metamorphism
+
+
+
 ## NODISTRIBUTE result at the day of release:
 
 windows and linux modules use shikata_ga_nai for static analysis evasion
@@ -171,17 +185,6 @@ Android Smali-Droidmare module support both msfvenom payload obfuscation and inj
 
 Pytherpreter modules supports all python msfvenom payload
 
-## next release features
-
-Vesion 0.2 will include:
-
-> Advanced encryption 
-
-> New windows and linux modules 
-
-> Better Metamorphism
-
-Stay tuned
 
 ## Warning
 
