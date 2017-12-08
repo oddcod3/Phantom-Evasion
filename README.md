@@ -19,6 +19,8 @@ Universal modules produces malware stub executable using pyinstaller for the  OS
 
 Vesion 0.2 will be released on 9/12/2017
 
+New features:
+
 > Advanced encryption
 
 > Added powershell modules
