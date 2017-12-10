@@ -17,7 +17,7 @@ Universal modules produces malware stub executable using pyinstaller for the  OS
 
 ## New version 0.2 
 
-Vesion 0.2 will be released on 9/12/2017
+Vesion 0.2 will be released on 15/12/2017
 
 New features:
 
