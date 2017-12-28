@@ -1,11 +1,12 @@
 # PHANTOM EVASION
 
+## version 0.2 released!
+
 Phantom-Evasion is a malware stub generator tool written in python 
-both compatibile with python 2.7 and 3.4 or higher( note that python 2.7 is required for pyinstaller).
 The aim of this tool is to make antivirus evasion an easy task for pentesters 
 with the use of prewritten modules capable to 
 generate  (almost) undetectable executable even with most common 32 bit metasploit payload.
-AV Sandbox detection is the trump card of this tool while advanced encryption is not implemented (isn't necessary). 
+This tool combine AV Sandbox detection with static analysis evasion 
 
 Format: exe/elf/apk/dmg
 
@@ -15,66 +16,23 @@ Windows,Linux,Android,Osx,Universal   (Platform-Target)
 
 Universal modules produces malware stub executable using pyinstaller for the  OS used during generation process.
 
-## New version 0.2 
+## New: FUD msfvenom 64bit payload
 
-Vesion 0.2 release 25/12/2017 (due to bugfix)
-
-New features:
-
-> Advanced encryption
-
-> Added powershell modules
-
-> New windows and linux modules 
-
-> Better Metamorphism
+Now 64 bit payloads are fully supported and completely FUD
 
 
+## New: Custom Encoder
 
-## NODISTRIBUTE result at the day of release:
+New multibyte xor encoder with C decrypter stub compatible with msfvenom and custom payloads
 
-windows and linux modules use shikata_ga_nai for static analysis evasion
-sometimes some low ranked antiviruses detect shikata_ga_nai signature in that case simply rerun the module
-and verify again.
+## New: Powershell payload support
 
-payload used: 
+New powershell oneline dropper usefull to drop empire oneline payload
 
-windows/meterpreter/reverse_tcp for exe
+New powershell script dropper support msfvenom powershell payloads and custom powershell payload
 
-linux/x86/meterpreter/reverse_tcp for elf 
-
-android/meterpreter/reverse_tcp for apk
-
-osx/x64/meterpreter/reverse_tcp for dmg
-
-python/meterpreter/reverse_tcp in Universal modules
-
-
-MODULE(FORMAT)(RESULT) 
-
-windows multipath virtualalloc                  (exe)    (0/37)
-
-windows multipath heapalloc                     (exe)    (0/37)
-
-windows polymorphic multipath virtualalloc      (exe)    (0/37)
-
-windows polymorphic multipath heapalloc         (exe)    (0/37)
-
-linux multipath heapalloc                       (elf)    (0/37)
-
-linux polymorphic multipath heapalloc           (elf)    (0/37)
-
-osx cascade encoding                            (dmg)    (4/37)
-
-android smali droidmare:
-
-obfuscate apk payload                           (apk)    (1/37)
-
-obfuscate apk payload & backdoor existing apk   (apk)    (2/37)
-
-universal pytherpreter increments               (elf)    (0/37)
-
-universal pytherpreter polymorphic              (elf)    (0/37)
+Powershell script dropper can't execute 32 bit powershell payload on 64 bit target
+Be sure in that case to use 64 bit payload
 
 ## Cross platform autocompile SUPPORTED:
 
@@ -183,6 +141,10 @@ Universal modules create an executable type dependent on which platform is used 
 
 Multipath modules support both msfvenom payload or custom shellcode 
 
+Powershell oneline dropper support empire one-liner payload
+
+Powershell script dropper support msfvenom powershell payloads or custom powershell scripts
+
 Android Smali-Droidmare module support both msfvenom payload obfuscation and injection in existing apk (if apktool succeed in baksmailing the apk)
 
 Pytherpreter modules supports all python msfvenom payload
@@ -193,15 +155,21 @@ Pytherpreter modules supports all python msfvenom payload
 Actually there is no error checking routine on user input!!
 Be sure to input options correctly!!
 
+Python3 compatibility temporarily suspended 
+
+Like Jon Snow "I know nothing"
+
 ## license
 
 GPLv3.0
 
-## Donate
+## Want to Donate?
 
 if you like my code you can buy me a beer
 
-Bitcoin: 188TzY98ZBT7RvPWo5CPLRt1tMcvfiiGiY
+Bitcoin  (BTC) :   1GgvVkgagqVcmWyppG8xPCjEpfhhUgyyJQ
 
+Litecoin (LTC) :   LhUnmVNC7wcBCb1uiZ9S2AKkvTDSDHJB6H
 
+Ethereum (ETH) :   0xb025bcF5b4D7F9Fd26a2D4B1412D1c0776C7B2E9
 
