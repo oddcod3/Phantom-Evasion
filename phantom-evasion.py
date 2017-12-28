@@ -41,7 +41,7 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-
+Phantom_lib.python_banner()
 Phantom_lib.dependencies_checker()
 Phantom_lib.advisor()
 
@@ -69,17 +69,21 @@ while ans:
         sleep(0.2)
         print("\n[4] Windows Polymorphic Multipath HeapAlloc (C)")
         sleep(0.2)
-        print("\n[5] Linux Multipath HeapAlloc (C)")
+        print("\n[5] Windows Polymorphic Powershell Oneline Dropper (Powershell)")
         sleep(0.2)
-        print("\n[6] Linux Polymorphic Multipath HeapAlloc (C)")
+        print("\n[6] Windows Polymorphic Powershell Script Dropper (Powershell)")
         sleep(0.2)
-        print("\n[7] OSX 64 bit cascade encoding (Macho) ")
+        print("\n[7] Linux Multipath HeapAlloc (C)")
         sleep(0.2)
-        print("\n[8] Android Droidmare msfvenom-rebuilder (Smali)")
+        print("\n[8] Linux Polymorphic Multipath HeapAlloc (C)")
         sleep(0.2)
-        print("\n[9] Universal Pyhterpreter increments-trick (Python)")
+        print("\n[9] OSX 64 bit cascade encoding (Macho) ")
         sleep(0.2)
-        print("\n[10] Universal Polymorphic Pyhterpreter  (Python)")
+        print("\n[10] Android msfvenom smali obfuscator  (Smali)")
+        sleep(0.2)
+        print("\n[11] Universal Pyhterpreter increments-trick (Python)")
+        sleep(0.2)
+        print("\n[12] Universal Polymorphic Pyhterpreter  (Python)")
         sleep(0.2)
         print("\n[0] Back")
         sleep(0.2)
@@ -116,40 +120,54 @@ while ans:
             Phantom_lib.shellcode_completer(module_type)
 
         elif ans=="5":
+            module_type = "Polymorphic_PowershellOnelineDropper_windows.py"
+            Phantom_lib.clear()
+            Phantom_lib.description_printer(module_type)        
+            print("\n\n")
+            Phantom_lib.powershell_completer(module_type)
+
+        elif ans=="6":
+            module_type = "Polymorphic_PowershellScriptDropper_windows.py"
+            Phantom_lib.clear()
+            Phantom_lib.description_printer(module_type)        
+            print("\n\n")
+            Phantom_lib.powershell_completer(module_type)
+
+        elif ans=="7":
             module_type = "MHA_mathinject_linux.py"
             Phantom_lib.clear()
             Phantom_lib.description_printer(module_type)        
             print("\n\n")
             Phantom_lib.shellcode_completer(module_type)
 
-        elif ans=="6":
+        elif ans=="8":
             module_type = "Polymorphic_MHA_mathinject_linux.py"
             Phantom_lib.clear()
             Phantom_lib.description_printer(module_type)        
             print("\n\n")
             Phantom_lib.shellcode_completer(module_type)
 
-        elif ans=="7":
+        elif ans=="9":
             module_type = "Osx_Cascade_Encoding"
             Phantom_lib.clear()
             Phantom_lib.description_printer(module_type)
             Phantom_lib.clear() 
             Phantom_lib.osx_cascade_encoding()
 
-        elif ans=="8":
+        elif ans=="10":
             module_type = "Smali_Droidmare"
             Phantom_lib.clear()
             Phantom_lib.description_printer(module_type)
             Phantom_lib.clear() 
             Phantom_lib.droidmare_launcher()
 
-        elif ans=="9":
+        elif ans=="11":
             module_type = "Pytherpreter"
             Phantom_lib.clear()
             Phantom_lib.description_printer(module_type) 
             Phantom_lib.pytherpreter_completer(module_type)
 
-        elif ans=="10":
+        elif ans=="12":
             module_type = "Pytherpreter_Polymorphic"
             Phantom_lib.clear()
             Phantom_lib.description_printer(module_type) 
@@ -171,6 +189,10 @@ while ans:
         print("\n[3] Windows Polymorphic MultipathVirtualAlloc (C)")
         sleep(0.2)
         print("\n[4] Windows Polymorphic MultipathHeapAlloc (C)")
+        sleep(0.2)
+        print("\n[5] Windows Polymorphic Powershell Oneline Dropper (Powershell)")
+        sleep(0.2)
+        print("\n[6] Windows Polymorphic Powershell Script Dropper (Powershell)")
         sleep(0.2)
         print("\n[0] Back")
         sleep(0.2)
@@ -206,6 +228,21 @@ while ans:
             Phantom_lib.description_printer(module_type)        
             print("\n\n")
             Phantom_lib.shellcode_completer(module_type)
+
+        elif ans=="5":
+            module_type = "Polymorphic_PowershellOnelineDropper_windows.py"
+            Phantom_lib.clear()
+            Phantom_lib.description_printer(module_type)        
+            print("\n\n")
+            Phantom_lib.powershell_completer(module_type)
+
+        elif ans=="6":
+            module_type = "Polymorphic_PowershellScriptDropper_windows.py"
+            Phantom_lib.clear()
+            Phantom_lib.description_printer(module_type)        
+            print("\n\n")
+            Phantom_lib.powershell_completer(module_type)
+
 
         elif ans=="0":
             print("\n")
@@ -273,7 +310,7 @@ while ans:
         print(bcolors.OCRA + "\n[+] ANDROID MODULES:\n" + bcolors.ENDC)
         print("----------------------------------------------------------------------")
         sleep(0.2)
-        print("\n[1] Android Droidmare msfvenom-rebuilder (Smali)")
+        print("\n[1] Android msfvenom smali obfuscator  (Smali)")
         sleep(0.2)
         print("\n[0] Back")
         sleep(0.2)

