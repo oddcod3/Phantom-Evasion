@@ -2,7 +2,7 @@
 
 ## version 0.2 released!
 
-Phantom-Evasion is a malware stub generator tool written in python 
+Phantom-Evasion is a malware stub generator tool written in python.
 The aim of this tool is to make antivirus evasion an easy task for pentesters 
 with the use of prewritten modules capable to 
 generate  (almost) undetectable executable even with most common 32 bit metasploit payload.
