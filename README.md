@@ -36,21 +36,34 @@ Be sure in that case to use 64 bit payload
 
 ## Cross platform autocompile SUPPORTED:
 
-In linux :
+Using linux :
 
-GCC > elf 
+GCC used to compile source code to ELF format
 
-Mingw-w64 > exe
+Mingw-w64 used to compile source code to EXE format
 
-Pyinstaller > elf
+Pyinstaller used to generate pyhton  ELF execuatable
 
 in windows:
 
-GCC > exe
+GCC  used to compile source code to EXE format
 
-Cygwin > elf (AUTOCOMPILE not supported)
+Cygwin > AUTOCOMPILE ELF not supported
 
-Pyinstaller > exe
+Pyinstaller used to generate python EXE executable
+
+When using "msfvenom payload" options phantom evasion will autocompile 32 bit executable when a 32 bit payload is selected
+Instead 64 bit executable will be generated using 64 bit payload
+
+Example:
+
+Windows/meterpreter/reverse_tcp  (autocompiled to exe 32 bit)
+
+Windows/x64/meterpreter/reverse_tcp (autocompiled to exe 64 bit)
+
+Equivalent for linux modules
+
+When using "Polymorphic Powershell Script Dropper" remember that 32 bit powershell payloads are not compatible with 64 bit powershell target and vice versa
 
 ## Getting Started
 
