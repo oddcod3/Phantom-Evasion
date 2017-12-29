@@ -1,6 +1,6 @@
 # PHANTOM EVASION
 
-## version 0.2 released!
+## Version 0.2 released!
 
 Phantom-Evasion is a malware stub generator tool written in python.
 The aim of this tool is to make antivirus evasion an easy task for pentesters 
@@ -155,7 +155,7 @@ Pytherpreter modules supports all python msfvenom payload
 Actually there is no error checking routine on user input!!
 Be sure to input options correctly!!
 
-Python3 compatibility temporarily suspended 
+PYTHON3 COMPATIBILITY TEMPORARILY SUSPENDED!
 
 Like Jon Snow "I know nothing"
 
