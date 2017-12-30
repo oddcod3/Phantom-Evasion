@@ -34,42 +34,10 @@ New powershell script dropper support msfvenom powershell payloads and custom po
 Powershell script dropper can't execute 32 bit powershell payload on 64 bit target
 Be sure in that case to use 64 bit payload
 
-## Cross platform autocompile SUPPORTED:
-
-Using linux :
-
-GCC used to compile source code to ELF format
-
-Mingw-w64 used to compile source code to EXE format
-
-Pyinstaller used to generate pyhton  ELF execuatable
-
-in windows:
-
-GCC  used to compile source code to EXE format
-
-Cygwin > AUTOCOMPILE ELF not supported
-
-Pyinstaller used to generate python EXE executable
-
-When using "msfvenom payload" options phantom evasion will autocompile 32 bit executable when a 32 bit payload is selected
-Instead 64 bit executable will be generated using 64 bit payload
-
-Example:
-
-Windows/meterpreter/reverse_tcp  (autocompiled to exe 32 bit)
-
-Windows/x64/meterpreter/reverse_tcp (autocompiled to exe 64 bit)
-
-Equivalent for linux modules
-
-When using "Polymorphic Powershell Script Dropper" remember that 32 bit powershell payloads are not compatible with 64 bit powershell target and vice versa
 
 ## Getting Started
 
 Simply git clone or download and unzip Phantom-Evasion folder
-
-requires python2.7 for Universal Modules ( excluding that it works great also with python 3)
 
 
 ## Installing
@@ -83,11 +51,6 @@ Actually the only OS truly supported.
 Automatic setup, simply launch with:
 ```
 python phantom-evasion.py 
-```
-or:
-
-```
-python3 phantom-evasion.py
 ```
 or:
 ```
@@ -125,10 +88,6 @@ python phantom-evasion.py
 or:
 
 ```
-python3 phantom-evasion.py
-```
-or:
-```
 chmod +x ./phantom-evasion.py
 
 ./phantom-evasion.py
@@ -162,7 +121,6 @@ Android Smali-Droidmare module support both msfvenom payload obfuscation and inj
 
 Pytherpreter modules supports all python msfvenom payload
 
-
 ## Warning
 
 Never rename generated executable (choose file name during generation process)
@@ -173,6 +131,39 @@ Be sure to input options correctly!!
 PYTHON3 COMPATIBILITY TEMPORARILY SUSPENDED!
 
 Like Jon Snow "I know nothing"
+
+
+## Cross platform autocompile SUPPORTED:
+
+Using linux :
+
+GCC used to compile source code to ELF format
+
+Mingw-w64 used to compile source code to EXE format
+
+Pyinstaller used to generate pyhton  ELF execuatable
+
+in windows:
+
+GCC  used to compile source code to EXE format
+
+Cygwin > AUTOCOMPILE ELF not supported
+
+Pyinstaller used to generate python EXE executable
+
+When using "msfvenom payload" options phantom evasion will autocompile 32 bit executable when a 32 bit payload is selected
+Instead 64 bit executable will be generated using 64 bit payload
+
+Example:
+
+Windows/meterpreter/reverse_tcp  (autocompiled to exe 32 bit)
+
+Windows/x64/meterpreter/reverse_tcp (autocompiled to exe 64 bit)
+
+Equivalent for linux modules
+
+When using "Polymorphic Powershell Script Dropper" remember that 32 bit powershell payloads are not compatible with 64 bit powershell target and vice versa
+
 
 ## license
 
