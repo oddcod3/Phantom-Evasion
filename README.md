@@ -106,7 +106,7 @@ Install & setup gcc,mingw-w64,pyinstaller,apktool,openssl,metasploit,zipalign
 
 Modules which targets specified platform are prefixed with Windows,Linux,Android,OSX,
 
-Universal modules create an executable type dependent on which platform is used during generation process (pyinstaller)
+Universal modules create an executable type dependending on which platform is used during generation process (pyinstaller)
 
 
 ## Modules options
@@ -117,7 +117,7 @@ Powershell oneline dropper support empire one-liner payload
 
 Powershell script dropper support msfvenom powershell payloads or custom powershell scripts
 
-Android Smali-Droidmare module support both msfvenom payload obfuscation and injection in existing apk (if apktool succeed in baksmailing the apk)
+Android msvenom smali obfuscator module support both msfvenom payload obfuscation and injection in existing apk (if apktool succeed in baksmailing the apk)
 
 Pytherpreter modules supports all python msfvenom payload
 
