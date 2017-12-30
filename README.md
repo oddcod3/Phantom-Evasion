@@ -165,6 +165,8 @@ Pytherpreter modules supports all python msfvenom payload
 
 ## Warning
 
+Never rename generated executable (choose file name during generation process)
+
 Actually there is no error checking routine on user input!!
 Be sure to input options correctly!!
 
