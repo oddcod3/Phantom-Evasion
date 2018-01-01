@@ -23,7 +23,7 @@ Now 64 bit payloads are fully supported and completely FUD
 
 ## New: Custom Encoder
 
-New multibyte xor encoder with C decrypter stub compatible with msfvenom and custom payloads
+New multibyte xor encoder with C decryption stub compatible with msfvenom and custom payloads
 
 ## New: Powershell payload support
 
