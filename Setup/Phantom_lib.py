@@ -568,7 +568,7 @@ def module_launcher1(module_choice):
         Arc = "x64"
         print(bcolors.OCRA + "\n[>] Encoding step:\n" + bcolors.ENDC)
         sleep(0.2)
-        print("[1] x64/xor (good)\n")
+        print("[1] x64/xor (average)\n")
         print("[2] x64/xor + Multibyte xor c stub (excellent)\n")
 
 
