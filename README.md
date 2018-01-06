@@ -63,7 +63,7 @@ chmod +x ./phantom-evasion.py
 
 Install python 2.7
 
-You need to install dependencies manually:
+Install dependencies manually:
 
 Install & setup gcc,cygwin,pyinstaller,apktool,openssl,metasploit
 
@@ -79,7 +79,7 @@ py phantom-evasion.py
 
 
 
-You need to manually install metasploit framework if not present then:
+Manually install metasploit framework if not present then:
 
 Automatic setup, simply launch with:
 ```
@@ -96,7 +96,7 @@ chmod +x ./phantom-evasion.py
 
 ## linux no apt:
 
-You need to install dependencies manually:
+Install dependencies manually:
 
 Install & setup gcc,mingw-w64,pyinstaller,apktool,openssl,metasploit,zipalign
 
