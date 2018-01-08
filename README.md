@@ -141,7 +141,7 @@ GCC used to compile source code to ELF format
 
 Mingw-w64 used to compile source code to EXE format
 
-Pyinstaller used to generate pyhton  ELF execuatable
+Pyinstaller used to generate pyhton  ELF executable
 
 in windows:
 
@@ -151,7 +151,7 @@ Cygwin > AUTOCOMPILE ELF not supported
 
 Pyinstaller used to generate python EXE executable
 
-When using "msfvenom payload" options phantom evasion will autocompile 32 bit executable when a 32 bit payload is selected
+When using "msfvenom payload" options phantom evasion will autocompile 32 bit executable if a 32 bit payload is selected
 Instead 64 bit executable will be generated using 64 bit payload
 
 Example:
