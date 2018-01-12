@@ -169,6 +169,16 @@ When using "Polymorphic Powershell Script Dropper" remember that 32 bit powershe
 
 GPLv3.0
 
+## Monero webmining donation
+
+Click one of this link to support Phantom-Evasion mining a little bit of monero at this link:
+
+https://cnhv.co/191mn  (256 hash)
+
+https://cnhv.co/191fm  (4096 hash)
+
+Wait till coinhive finish 
+
 ## Want to Donate?
 
 if you like my code you can buy me a beer
