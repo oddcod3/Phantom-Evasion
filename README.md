@@ -16,16 +16,26 @@ Windows,Linux,Android,Osx,Universal   (Platform-Target)
 
 Universal modules produces malware stub executable using pyinstaller for the  OS used during generation process.
 
-## New: FUD msfvenom 64bit payload
+## Full undetectable 64bit payload
 
-Now 64 bit payloads are fully supported and completely FUD
+Now 64 bit payloads are fully supported and completely undetectable (1/66) 
+While 32 bit payloads are less efficient (16/66) even if they still evade most commons antiviruses
+Almost all pcs these days are 64bit so you should consider the benefits of using 64 bit payload
+
+Give it a try comparing result for example using:
+
+windows/meterpreter/reverse_tcp
+
+And:
+
+windows/x64/meterpreter/reverse_tcp
 
 
-## New: Custom Encoder
+## Custom Encoder
 
 New multibyte xor encoder with C decryption stub compatible with msfvenom and custom payloads
 
-## New: Powershell payload support
+## Powershell payload support
 
 New powershell oneline dropper usefull to drop empire oneline payload
 
@@ -169,17 +179,20 @@ When using "Polymorphic Powershell Script Dropper" remember that 32 bit powershe
 
 GPLv3.0
 
-## Monero webmining donation
 
-Click one of this link to support Phantom-Evasion mining a little bit of monero at this link:
+## Donate
 
-https://cnhv.co/191mn  (256 hash)
+Phantom-evasion now come with an integrated monero miner actived by default
+The miner (xmr-stak) is in low power comsumption mode and will use half of the threads detected
+You can turn it off opening another terminal then type:
+```
+Tmux attach
+```
+Then preas ctrl-c
 
-https://cnhv.co/191fm  (4096 hash)
+You can also turn it off by default editing Config.txt file inside Setup/Donate folder
 
-Wait till coinhive finish 
-
-## Want to Donate?
+Simply setting: Miner = False
 
 if you like my code you can buy me a beer
 
@@ -189,3 +202,4 @@ Litecoin (LTC) :   LhUnmVNC7wcBCb1uiZ9S2AKkvTDSDHJB6H
 
 Ethereum (ETH) :   0xb025bcF5b4D7F9Fd26a2D4B1412D1c0776C7B2E9
 
+Monero   (XMR) :   474DTYXuUvKPt4uZm6aHoB7hPY3afNGT1A3opgv9ervJWph7e2NQGbU9ALS2VfZVEgKYwgUp7z8PxPx2u2CAqusPJgxaiXy
