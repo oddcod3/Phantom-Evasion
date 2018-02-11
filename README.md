@@ -188,7 +188,7 @@ You can turn it off opening another terminal then type:
 ```
 Tmux attach
 ```
-Then preas ctrl-c
+Then press ctrl-c
 
 You can also turn it off by default editing Config.txt file inside Setup/Donate folder
 
