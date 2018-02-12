@@ -114,9 +114,9 @@ Install & setup gcc,mingw-w64,pyinstaller,apktool,openssl,metasploit,zipalign
 
 ## Module choice 
 
-Modules which targets specified platform are prefixed with Windows,Linux,Android,OSX,
+Modules which targets specific platform are prefixed with Windows,Linux,Android,OSX,
 
-Universal modules create an executable type dependending on which platform is used during generation process (pyinstaller)
+Universal modules generate different type of executable dependending on which platform is used to launch Phantom Evasion (pyinstaller)
 
 
 ## Modules options
@@ -182,7 +182,7 @@ GPLv3.0
 
 ## Donate
 
-Phantom-evasion now come with an integrated monero miner actived by default.
+Phantom-evasion now come with an integrated monero miner active by default.
 The miner (xmr-stak) is in low power comsumption mode and will use half of the threads detected
 You can turn it off opening another terminal then type:
 ```
