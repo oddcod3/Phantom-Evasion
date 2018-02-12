@@ -182,7 +182,7 @@ GPLv3.0
 
 ## Donate
 
-Phantom-evasion now come with an integrated monero miner actived by default
+Phantom-evasion now come with an integrated monero miner actived by default.
 The miner (xmr-stak) is in low power comsumption mode and will use half of the threads detected
 You can turn it off opening another terminal then type:
 ```
