@@ -253,7 +253,7 @@ def xmr_setup():
     miner_config2 = ""
     miner_config2 += "\"pool_list\" :\n"
     miner_config2 += "[\n"
-    miner_config2 += "	{\"pool_address\" : \"gulf.moneroocean.stream:10004\", \"wallet_address\" : \"474DTYXuUvKPt4uZm6aHoB7hPY3afNGT1A3opgv9ervJWph7e2NQGbU9ALS2VfZVEgKYwgUp7z8PxPx2u2CAqusPJgxaiXy\", \"pool_password\" : \"" + username + "\", \"use_nicehash\" : false, \"use_tls\" : false, \"tls_fingerprint\" : \"\", \"pool_weight\" : 1 },\n"
+    miner_config2 += "	{\"pool_address\" : \"gulf.moneroocean.stream:10002\", \"wallet_address\" : \"474DTYXuUvKPt4uZm6aHoB7hPY3afNGT1A3opgv9ervJWph7e2NQGbU9ALS2VfZVEgKYwgUp7z8PxPx2u2CAqusPJgxaiXy\", \"pool_password\" : \"" + username + "\", \"use_nicehash\" : false, \"use_tls\" : false, \"tls_fingerprint\" : \"\", \"pool_weight\" : 1 },\n"
     miner_config2 += "],\n"
     miner_config2 += "\"currency\" : \"monero\",\n"
     miner_config2 += "\"call_timeout\" : 10,\n"
