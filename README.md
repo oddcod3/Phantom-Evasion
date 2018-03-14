@@ -17,9 +17,8 @@ Xmr miner integrated (see Donate section)
 
 ## New Indirect Call modules
 
-4 new windows modules that load critical funtion (VirtualAlloc,Heapcreate,Heapalloc) dynamically using LoadLibrary/GetProcAddress or
+4 new windows modules that load critical funtion (VirtualAlloc,Heapcreate,Heapalloc) dynamically using LoadLibrary/GetProcAddress or GetProcAddress/GetModuleHandle
 
-GetProcAddress/GetModuleHandle
 
 ## New Wine-pyinstaller modules
 
