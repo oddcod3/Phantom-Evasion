@@ -195,9 +195,9 @@ Tmux attach
 ```
 Then press ctrl-c
 
-You can also turn it off by default editing Config.txt file inside Setup/Donate folder
+You can also turn it off by default editing Config.txt file inside Setup folder
 
-Simply setting: Miner = False
+Simply setting: Mining = False
 
 if you like my code you can buy me a beer
 
