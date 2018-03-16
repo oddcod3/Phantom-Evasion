@@ -326,9 +326,9 @@ def miner_advisor():
         if "Miner=FirstRun" in line: 
             print(bcolors.OCRA + "\n[Optional] XMR-STAK setup: " + bcolors.ENDC + "In order to support the developer of this tool,\nyou can help out by allowing the program to install a Monero Miner\nalong side the program's main functionality.\nThe miner will be configured to use a low amount of system resources\nduring phantom-evasion execution and can be deactivated at any time\nshould you wish to do so" + bcolors.ENDC)
             if py_version[0] == "3": 
-                ans=input("[>]Install optional miner(y/n):")
+                ans=input("\n[>]Install optional miner(y/n):")
             else:
-                ans=raw_input("[>]Install optional miner(y/n):")
+                ans=raw_input("\n[>]Install optional miner(y/n):")
 
             if (ans == "y") or ( ans == "Y"):
                 print("\n[>] Installing Xmr-stak\n ")
@@ -349,6 +349,7 @@ def miner_advisor():
                     new_conf+=line
                 with open("Setup/Config.txt", "w") as configw:
                     configw.write(new_conf)
+            sleep(2)
 
 def xmr_setup():
     os.system("xterm -e \"mkdir Setup/Donate ;cd Setup/Donate ;apt install libmicrohttpd-dev libssl-dev cmake build-essential libhwloc-dev -y ;git clone https://github.com/fireice-uk/xmr-stak.git ;mkdir xmr-stak/build ;cd xmr-stak/build ;cmake .. -DCUDA_ENABLE=OFF -DOpenCL_ENABLE=OFF ; make install\"")
