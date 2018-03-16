@@ -483,9 +483,9 @@ if __name__ == "__main__":
     Phantom_lib.dependencies_checker()
     Phantom_lib.advisor()
     try:
-        with open("Setup/Donate/Config.txt", "r") as donate_config:
+        with open("Setup/Config.txt", "r") as donate_config:
             for line in donate_config:
-                if "Miner = True" in line:
+                if "Mining=True" in line:
                     if platform.system() == "Linux":
                         Phantom_lib.xmr_miner()
 

