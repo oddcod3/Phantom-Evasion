@@ -3,7 +3,7 @@
 ## Version 0.3 released!
 
 Phantom-Evasion is an antivirus evasion tool written in python able to generate metamorphic malware capable to detect sandbox artifacts and 
-delay payload execution (EXECUTION TIME RANGE 30 seconds - 120 seconds, tested on "win10 vbox 2core 2gb Ram").
+delay payload execution (EXECUTION TIME RANGE: 30/120 seconds, tested on "win10 vbox 2core 2gb Ram").
 The aim of this tool is to make antivirus evasion an easy task for pentesters 
 with the use of prewitten modules that require minimal knowledge and grant excellent results.
 
@@ -17,21 +17,20 @@ Xmr miner integrated (see Donate section)
 
 ## New Indirect Call modules
 
-4 new windows modules that load critical funtion (VirtualAlloc,Heapcreate,Heapalloc) dynamically using LoadLibrary/GetProcAddress or GetProcAddress/GetModuleHandle
+4 new windows modules that load critical functions (VirtualAlloc,Heapcreate,Heapalloc) dynamically using LoadLibrary/GetProcAddress or GetProcAddress/GetModuleHandle
 
 
 ## New Wine-pyinstaller modules
 
 Still experimental (More on 0.4 version)  
 
-## Three Custom Encoder
+## Three Custom Encoders
 
 New Double & Triple key multibyte xor encoder with C decryption stub compatible with msfvenom and custom payloads
 
-## Full undetectable 64bit payload
+## Full undetectable 64bit payloads
 
-Again 64 bit payloads are fully supported and completely undetectable (0/66). 
-While 32 bit payloads are less efficient (6/66) even if they still evade most commons antiviruses.
+Again 64 bit payloads are fully supported and completely undetectable (0/66) while 32 bit payloads are less efficient (6/66) even if they still evade most common antiviruses.
 Almost all pcs these days are 64bit so you should consider the benefits of using 64 bit payloads
 
 Give it a try comparing result for example using:
