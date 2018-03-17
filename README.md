@@ -187,7 +187,7 @@ GPLv3.0
 
 ## Donate
 
-Phantom-evasion now come with an integrated monero miner actived by default.
+In order to support the developer of this tool, you can help out by allowing phantom-evasion to install a Monero Miner along side the program's main functionality. The miner will be configured to use a low amount of system resources during phantom-evasion execution and can be deactivated at any time should you wish to do so.
 The miner (xmr-stak) is in low power comsumption mode and will use half threads detected
 You can turn it off opening another terminal then type:
 ```
@@ -196,15 +196,15 @@ Tmux attach
 Then press ctrl-c
 
 You can also turn it off by default editing Config.txt file inside Setup folder
-
+Then
 Simply setting: Mining = False
 
-if you like my code you can buy me a beer
+Would you like to see mining stats?
 
-Bitcoin  (BTC) :   1GgvVkgagqVcmWyppG8xPCjEpfhhUgyyJQ
+Go to MoneroOcenan webpage and insert this xmr wallet address:
+```
+474DTYXuUvKPt4uZm6aHoB7hPY3afNGT1A3opgv9ervJWph7e2NQGbU9ALS2VfZVEgKYwgUp7z8PxPx2u2CAqusPJgxaiXy
+```
+to see your miner stats check the random username generated inside Setup/Config.txt
 
-Litecoin (LTC) :   LhUnmVNC7wcBCb1uiZ9S2AKkvTDSDHJB6H
 
-Ethereum (ETH) :   0xb025bcF5b4D7F9Fd26a2D4B1412D1c0776C7B2E9
-
-Monero   (XMR) :   474DTYXuUvKPt4uZm6aHoB7hPY3afNGT1A3opgv9ervJWph7e2NQGbU9ALS2VfZVEgKYwgUp7z8PxPx2u2CAqusPJgxaiXy
