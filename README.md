@@ -13,7 +13,7 @@ MODULE TYPE:
  
 Windows,Linux,Android,Osx,Universal   (Platform-Target)
 
-Xmr miner integrated (see Donate section)
+Optional Xmr-miner (see Donate section)
 
 ## New Indirect Call modules
 
