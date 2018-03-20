@@ -34,8 +34,6 @@ Randbufname = usefull.varname_creator()
 
 Payload = usefull.encoding_manager(Encryption,Payload,Randbufname) 
 
-Randgood = usefull.varname_creator()
-
 Randmem = usefull.varname_creator()
 
 NdcHeapcreate = usefull.varname_creator()
@@ -43,14 +41,6 @@ NdcHeapcreate = usefull.varname_creator()
 NdcHeapalloc = usefull.varname_creator()
 
 Ker32 = usefull.varname_creator()
-
-Randbig = random.randrange(60000000,120000000,1000000) 	
-
-Randmaxop = usefull.varname_creator()
-
-Randcpt	= usefull.varname_creator()
-
-Randi =	usefull.varname_creator()
 
 Randlpv = usefull.varname_creator()
 

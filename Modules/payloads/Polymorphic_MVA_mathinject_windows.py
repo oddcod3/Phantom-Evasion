@@ -33,14 +33,6 @@ Randbufname = usefull.varname_creator()
 
 Payload = usefull.encoding_manager(Encryption,Payload,Randbufname) 
 
-Randgood = usefull.varname_creator()
-	
-Randmaxop = usefull.varname_creator()
-
-Randcpt	= usefull.varname_creator()
-
-Randi =	usefull.varname_creator()
-
 Randlpv = usefull.varname_creator()
 
 Randhand = usefull.varname_creator()
