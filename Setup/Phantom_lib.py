@@ -298,14 +298,14 @@ def wine_check():
         py_check=subprocess.check_output(['wine','python','-v'],stderr=subprocess.STDOUT)
 
     except subprocess.CalledProcessError: 
-        print(bcolors.RED + bcolors.BOLD + "[Wine] Python Not Found\n" + bcolors.ENDC + bcolors.ENDC)
+        print(bcolors.RED + bcolors.BOLD + "\n[Wine] Python Not Found\n" + bcolors.ENDC + bcolors.ENDC)
         print("In order to use windows wine-pyinstaller modules you need to\n install python on wine manually (\"wine python -v\" to check if it's reachable from commandline)\n")
         Enter2Continue() 
         
         
     else:
         if "cannot find" in py_check:
-            print(bcolors.RED + bcolors.BOLD + "[Wine] Python Not Found\n" + bcolors.ENDC + bcolors.ENDC)
+            print(bcolors.RED + bcolors.BOLD + "\n[Wine] Python Not Found\n" + bcolors.ENDC + bcolors.ENDC)
             print("In order to use windows wine-pyinstaller modules you need to\n manually install python on wine manually (\"wine python -v\" to check if python is reachable from commandline)\n")
             Enter2Continue()
         else:
@@ -316,15 +316,15 @@ def wine_check():
     try:
         pyin_check=subprocess.check_output(['wine','pyinstaller','-v'],stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError: 
-        print(bcolors.RED + bcolors.BOLD + "[Wine] Pyinstaller Not Found\n" + bcolors.ENDC + bcolors.ENDC)
-        print("In order to use windows wine-pyinstaller modules you need to\n manually install pyinstaller on wine (\"wine python -v\" to check if pyinstaller is reachable from commandline)\n")
+        print(bcolors.RED + bcolors.BOLD + "\n[Wine] Pyinstaller Not Found\n" + bcolors.ENDC + bcolors.ENDC)
+        print("In order to use windows wine-pyinstaller modules you need to\n manually install pyinstaller on wine (\"wine pyinstaller -v\" to check if pyinstaller is reachable from commandline)\n")
         Enter2Continue() 
         
 
     else:
         if "cannot find" in pyin_check:
-            print(bcolors.RED + bcolors.BOLD + "[Wine] Pyinstaller Not Found\n" + bcolors.ENDC + bcolors.ENDC)
-            print("In order to use windows wine-pyinstaller modules you need to\n manually install pyinstaller on wine (\"wine python -v\" to check if pyinstaller is reachable from commandline)\n")
+            print(bcolors.RED + bcolors.BOLD + "\n[Wine] Pyinstaller Not Found\n" + bcolors.ENDC + bcolors.ENDC)
+            print("In order to use windows wine-pyinstaller modules you need to\n manually install pyinstaller on wine (\"wine pyinstaller -v\" to check if pyinstaller is reachable from commandline)\n")
             Enter2Continue() 
 
         else:
