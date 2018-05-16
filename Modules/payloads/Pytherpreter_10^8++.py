@@ -18,11 +18,11 @@
      #                                                                                      #
      ########################################################################################
 
-import random
-import random, string
+
+from random import randint
 import sys
 sys.path.append("Modules/payloads/auxiliar")
-import usefull
+from usefull import varname_creator
 
 
 Pytherpreter = sys.argv[1]
@@ -30,7 +30,7 @@ Filename = sys.argv[2]
 
 Randflag = usefull.varname_creator()
 Randcounter = usefull.varname_creator()
-Randbig = str(random.randint(6000000,12000000)) 
+Randbig = str(randint(6000000,12000000)) 
 Hollow_code = ""
 Hollow_code += Randcounter + " = 0\n"
 Hollow_code += Randflag + " = 0\n"
@@ -42,4 +42,7 @@ Hollow_code = Hollow_code.encode('utf-8')
 
 with open(Filename,'wb') as f:
     f.write(Hollow_code)
+
+
+
 

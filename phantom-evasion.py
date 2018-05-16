@@ -56,195 +56,33 @@ def complete_menu():
             ans = raw_input("\n[>] Please insert choice\'s number: ")
         if ans=="1":
             Phantom_lib.clear()
-            print("--------------------------------------------------------------------------") 
-            print(bcolors.OCRA + "[+] ALL MODULES:" + bcolors.ENDC)
-            print("--------------------------------------------------------------------------")
-            sleep(0.15)
-            print("\n[1]  Windows Polymorphic Multipath VirtualAlloc                      (C)")
-            sleep(0.15)
-            print("\n[2]  Windows Polymorphic Multipath VirtualAlloc NoDirectCall LL/GPA  (C)")
-            sleep(0.15)
-            print("\n[3]  Windows Polymorphic Multipath VirtualAlloc NoDirectCall GPA/GMH (C)")
-            sleep(0.15)
-            print("\n[4]  Windows Polymorphic Multipath HeapAlloc                         (C)")
-            sleep(0.15)
-            print("\n[5]  Windows Polymorphic Multipath Heapalloc NoDirectCall LL/GPA     (C)")
-            sleep(0.15)
-            print("\n[6]  Windows Polymorphic Multipath Heapalloc NoDirectCall GPA/GMH    (C)")
-            sleep(0.15)
-            print("\n[7]  Windows Polymorphic Powershell One-line Dropper        (Powershell)")
-            sleep(0.15)
-            print("\n[8]  Windows Polymorphic Powershell Script Dropper          (Powershell)")
-            sleep(0.15)
-            print("\n[9]  Windows Wine-Pyinstaller Python Meterpreter                (Python)")
-            sleep(0.15)
-            print("\n[10] Windows Wine-Pyinstaller Oneline payload dropper   (Python/cmd/Psh)")
-            sleep(0.15)
-            print("\n[11] Linux Multipath HeapAlloc                                       (C)")
-            sleep(0.15)
-            print("\n[12] Linux Polymorphic Multipath HeapAlloc                           (C)")
-            sleep(0.15)
-            print("\n[13] OSX 64 bit cascade encoding                             (Macho/Dmg)")
-            sleep(0.15)
-            print("\n[14] Android msfvenom smali obfuscator                       (Smali/Apk)")
-            sleep(0.15)
-            print("\n[15] Universal Pyhterpreter increments-trick                    (Python)")
-            sleep(0.15)
-            print("\n[16] Universal Polymorphic Pyhterpreter                         (Python)")
-            sleep(0.15)
-            print("\n[17] Universal Polymorphic Oneline payload dropper   (Python/Cmd/Psh/sh)")
-            sleep(0.15)
-            print("\n[0]  Back")
-            sleep(0.15)
-            if py_version[0] == "3":
-                ans=input("\n[>] Please insert choice\'s number: ")
-            else:
-                ans = raw_input("\n[>] Please insert choice\'s number: ") 
-            if ans=="1":
-                module_type = "Polymorphic_MVA_mathinject_windows.py"
-                Phantom_lib.clear()
-                Phantom_lib.description_printer(module_type)
-                print("\n\n")
-                Phantom_lib.shellcode_completer(module_type)
-
-            elif ans=="2":
-                module_type = "Polymorphic_MVA_NDC_LLGPA_mathinject_windows.py" 
-                Phantom_lib.clear()
-                Phantom_lib.description_printer(module_type)       
-                print("\n\n")
-                Phantom_lib.shellcode_completer(module_type)
-
-            elif ans=="3":
-                module_type = "Polymorphic_MVA_NDC_GPAGMH_mathinject_windows.py"
-                Phantom_lib.clear()
-                Phantom_lib.description_printer(module_type)        
-                print("\n\n")
-                Phantom_lib.shellcode_completer(module_type)
-
-            elif ans=="4":
-                module_type = "Polymorphic_MHA_mathinject_windows.py"
-                Phantom_lib.clear()
-                Phantom_lib.description_printer(module_type)        
-                print("\n\n")
-                Phantom_lib.shellcode_completer(module_type)
-
-            elif ans=="5":
-                module_type = "Polymorphic_MHA_NDC_LLGPA_mathinject_windows.py"
-                Phantom_lib.clear()
-                Phantom_lib.description_printer(module_type)        
-                print("\n\n")
-                Phantom_lib.shellcode_completer(module_type)
-
-            elif ans=="6":
-                module_type = "Polymorphic_MHA_NDC_GPAGMH_mathinject_windows.py"
-                Phantom_lib.clear()
-                Phantom_lib.description_printer(module_type)        
-                print("\n\n")
-                Phantom_lib.shellcode_completer(module_type)
-
-            elif ans=="7":
-                module_type = "Polymorphic_PowershellOnelineDropper_windows.py"
-                Phantom_lib.clear()
-                Phantom_lib.description_printer(module_type)        
-                print("\n\n")
-                Phantom_lib.powershell_completer(module_type)
-
-
-            elif ans=="8":
-                module_type = "Polymorphic_PowershellScriptDropper_windows.py"
-                Phantom_lib.clear()
-                Phantom_lib.description_printer(module_type)        
-                print("\n\n")
-                Phantom_lib.powershell_completer(module_type)
-
-
-            elif ans =="9":
-                module_type = "Pytherpreter_Polymorphic"
-                Phantom_lib.clear()
-                Phantom_lib.description_printer(module_type) 
-                Phantom_lib.pytherpreter_completer(module_type,"True")
-
-            elif ans =="10":
-                module_type = "Pytherpreter_Polymorphic_Powershelloneline"
-                Phantom_lib.clear()
-                Phantom_lib.description_printer(module_type) 
-                Phantom_lib.python_sys_completer("True")
-
-            elif ans=="11":
-                module_type = "MHA_mathinject_linux.py"
-                Phantom_lib.clear()
-                Phantom_lib.description_printer(module_type)        
-                print("\n\n")
-                Phantom_lib.shellcode_completer(module_type)
-
-            elif ans=="12":
-                module_type = "Polymorphic_MHA_mathinject_linux.py"
-                Phantom_lib.clear()
-                Phantom_lib.description_printer(module_type)        
-                print("\n\n")
-                Phantom_lib.shellcode_completer(module_type)
-
-            elif ans=="13":
-                module_type = "Osx_Cascade_Encoding"
-                Phantom_lib.clear()
-                Phantom_lib.description_printer(module_type)
-                Phantom_lib.clear() 
-                Phantom_lib.osx_cascade_encoding()
-
-            elif ans=="14":
-                module_type = "Smali_Droidmare"
-                Phantom_lib.clear()
-                Phantom_lib.description_printer(module_type)
-                Phantom_lib.clear() 
-                Phantom_lib.droidmare_launcher()
-
-            elif ans=="15":
-                module_type = "Pytherpreter"
-                Phantom_lib.clear()
-                Phantom_lib.description_printer(module_type) 
-                Phantom_lib.pytherpreter_completer(module_type)
-
-            elif ans=="16":
-                module_type = "Pytherpreter_Polymorphic"
-                Phantom_lib.clear()
-                Phantom_lib.description_printer(module_type) 
-                Phantom_lib.pytherpreter_completer(module_type)
-
-            elif ans =="17":
-                module_type = "Pytherpreter_Polymorphic_Powershelloneline"
-                Phantom_lib.clear()
-                Phantom_lib.description_printer(module_type) 
-                Phantom_lib.python_sys_completer("False")
-
-            elif ans=="0":
-                print("\n")
-
-  
-        elif ans=="2":
-            Phantom_lib.clear()
             print("---------------------------------------------------------------------------")
             print(bcolors.OCRA + "[+] WINDOWS MODULES:" + bcolors.ENDC)
             print("---------------------------------------------------------------------------")
             sleep(0.15)
-            print("\n[1]  Windows Polymorphic Multipath VirtualAlloc                       (C)")
+            print("\n[1]  Windows Shellcode Injection VirtualAlloc                         (C)")
             sleep(0.15)
-            print("\n[2]  Windows Polymorphic Multipath VirtualAlloc NoDirectCall LL/GPA   (C)")
+            print("\n[2]  Windows Shellcode Injection VirtualAlloc NoDirectCall LL/GPA     (C)")
             sleep(0.15)
-            print("\n[3]  Windows Polymorphic Multipath VirtualAlloc NoDirectCall GPA/GMH  (C)")
+            print("\n[3]  Windows Shellcode Injection VirtualAlloc NoDirectCall GPA/GMH    (C)")
             sleep(0.15)
-            print("\n[4]  Windows Polymorphic Multipath HeapAlloc                          (C)")
+            print("\n[4]  Windows Shellcode Injection Multipath HeapAlloc                  (C)")
             sleep(0.15)
-            print("\n[5]  Windows Polymorphic Multipath Heapalloc NoDirectCall LL/GPA      (C)")
+            print("\n[5]  Windows Shellcode Injection Heapalloc NoDirectCall LL/GPA        (C)")
             sleep(0.15)
-            print("\n[6]  Windows Polymorphic Multipath Heapalloc NoDirectCall GPA/GMH     (C)")
+            print("\n[6]  Windows Shellcode Injection Heapalloc NoDirectCall GPA/GMH       (C)")
             sleep(0.15)
-            print("\n[7]  Windows Polymorphic Powershell One-line Dropper         (Powershell)")
+            print("\n[7]  Windows Pure C meterpreter/reverse_tcp Stager                    (C)")
             sleep(0.15)
-            print("\n[8]  Windows Polymorphic Powershell Script Dropper           (Powershell)")
+            print("\n[8]  Windows Pure C meterpreter/reverse_http Stager                   (C)")
             sleep(0.15)
-            print("\n[9]  Windows Wine-Pyinstaller Python Meterpreter                 (Python)")
+            print("\n[9]  Windows Powershell Oneliner Dropper                     (Powershell)")
             sleep(0.15)
-            print("\n[10] Windows Wine-Pyinstaller Oneline payload dropper (Python/Cmd/Psh/sh)")
+            print("\n[10] Windows Powershell Script Dropper                       (Powershell)")
+            sleep(0.15)
+            print("\n[11] Windows WinePyinstaller Python Meterpreter                 (Python)")
+            sleep(0.15)
+            print("\n[12] Windows WinePyinstaller Oneline payload dropper            (Python)")
             sleep(0.15)
             print("\n[0] Back")
             sleep(0.15)
@@ -287,6 +125,7 @@ def complete_menu():
                 print("\n\n")
                 Phantom_lib.shellcode_completer(module_type)
 
+
             elif ans=="6":
                 module_type = "Polymorphic_MHA_NDC_GPAGMH_mathinject_windows.py"
                 Phantom_lib.clear()
@@ -295,6 +134,20 @@ def complete_menu():
                 Phantom_lib.shellcode_completer(module_type)
 
             elif ans=="7":
+                module_type = "Polymorphic_C_x86ReverseTcpMeterpreter_windows.py"
+                Phantom_lib.clear()
+                Phantom_lib.description_printer(module_type)        
+                print("\n\n")
+                Phantom_lib.Polymorphic_C_x86Meterpreter_launcher(module_type)
+
+            elif ans=="8":
+                module_type = "Polymorphic_C_x86ReverseHttpMeterpreter_windows.py"
+                Phantom_lib.clear()
+                Phantom_lib.description_printer(module_type)        
+                print("\n\n")
+                Phantom_lib.Polymorphic_C_x86Meterpreter_launcher(module_type)
+
+            elif ans=="9":
                 module_type = "Polymorphic_PowershellOnelineDropper_windows.py"
                 Phantom_lib.clear()
                 Phantom_lib.description_printer(module_type)        
@@ -302,7 +155,7 @@ def complete_menu():
                 Phantom_lib.powershell_completer(module_type)
 
 
-            elif ans=="8":
+            elif ans=="10":
                 module_type = "Polymorphic_PowershellScriptDropper_windows.py"
                 Phantom_lib.clear()
                 Phantom_lib.description_printer(module_type)        
@@ -310,32 +163,46 @@ def complete_menu():
                 Phantom_lib.powershell_completer(module_type)
 
 
-            elif ans =="9":
-                module_type = "Pytherpreter_Polymorphic"
-                Phantom_lib.clear()
-                Phantom_lib.description_printer(module_type) 
-                Phantom_lib.pytherpreter_completer(module_type,"True")
+            elif ans =="11":
 
-            elif ans =="10":
-                module_type = "Pytherpreter_Polymorphic_Powershelloneline"
-                Phantom_lib.clear()
-                Phantom_lib.description_printer(module_type) 
-                Phantom_lib.python_sys_completer("True")
+                if Phantom_lib.wine_fastcheck() == True:
+
+                    module_type = "Pytherpreter_Polymorphic"
+                    Phantom_lib.clear()
+                    Phantom_lib.description_printer(module_type) 
+                    Phantom_lib.pytherpreter_completer(module_type,"True")
+
+                else:
+
+                    print(bcolors.RED + "\n[-] Wine Environment not ready\n" + bcolors.ENDC)
+                    Phantom_lib.Enter2Continue()
+
+            elif ans =="12":
+
+                if Phantom_lib.wine_fastcheck() == True:
+
+                    module_type = "Pytherpreter_Polymorphic_Powershelloneline"
+                    Phantom_lib.clear()
+                    Phantom_lib.description_printer(module_type) 
+                    Phantom_lib.python_sys_completer("True")
+
+                else:
+
+                    print(bcolors.RED + "\n[-] Wine Environment not ready\n" + bcolors.ENDC)
+                    Phantom_lib.Enter2Continue()
 
             elif ans=="0":
                 print("\n")
-           
-            
 
-        elif ans=="3":
+        elif ans=="2":
             Phantom_lib.clear()
             print("------------------------------------------------------------------------")
             print(bcolors.OCRA + "[+] LINUX MODULES:" + bcolors.ENDC)
             print("------------------------------------------------------------------------")
             sleep(0.15)
-            print("\n[1] Linux MultipathHeapAlloc                                       (C)")
+            print("\n[1] Linux Shellcode Injection HeapAlloc                            (C)")
             sleep(0.15)
-            print("\n[2] Linux Polymorphic MultipathHeapAlloc                           (C)")
+            print("\n[2] Linux Bash Oneliner Dropper                                   (C)")
             sleep(0.15)
             print("\n[0] Back")
             sleep(0.15)
@@ -343,14 +210,8 @@ def complete_menu():
                 ans=input("\n[>] Please insert choice\'s number: ")
             else:
                 ans = raw_input("\n[>] Please insert choice\'s number: ") 
-            if ans=="1":
-                module_type = "MHA_mathinject_linux.py"
-                Phantom_lib.clear()
-                Phantom_lib.description_printer(module_type)
-                print("\n\n")
-                Phantom_lib.shellcode_completer(module_type)
 
-            elif ans=="2":
+            if ans=="1":
                 module_type = "Polymorphic_MHA_mathinject_linux.py"
                 Phantom_lib.clear()
                 Phantom_lib.description_printer(module_type)
@@ -358,17 +219,25 @@ def complete_menu():
                 Phantom_lib.shellcode_completer(module_type)
 
 
+            if ans=="2":
+                module_type = "Polymorphic_BashOnelinerDropper_mathinject_linux.py"
+                Phantom_lib.clear()
+                Phantom_lib.description_printer(module_type)
+                print("\n\n")
+                Phantom_lib.BashOnelinerDropper()
+
+
             elif ans=="0":
                 print("\n")
 
 
-        elif ans=="4":
+        elif ans=="3":
             Phantom_lib.clear()
             print("------------------------------------------------------------------------")
             print(bcolors.OCRA + "[+] OSX MODULES:" + bcolors.ENDC)
             print("------------------------------------------------------------------------")
             sleep(0.15)
-            print("\n[1] OSX 64 bit cascade encoding                            (Macho/Dmg)")
+            print("\n[1] OSX 32 bit cascade encoding                            (Macho/Dmg)")
             sleep(0.15)
             print("\n[0] Back")
             sleep(0.15)
@@ -382,44 +251,44 @@ def complete_menu():
                 Phantom_lib.description_printer(module_type)
                 Phantom_lib.clear() 
                 Phantom_lib.osx_cascade_encoding()
+            elif ans=="0":
+                print("\n\n")
+
+        elif ans=="4":
+            Phantom_lib.clear()
+            print("-------------------------------------------------------------------------")
+            print(bcolors.OCRA + "[+] ANDROID MODULES:" + bcolors.ENDC)
+            print("-------------------------------------------------------------------------")
+            sleep(0.15)
+            print("\n[1] Android Msfvenom Baksmali Obfuscator                          (Apk)")
+            sleep(0.15)
+            print("\n[0] Back")
+            sleep(0.15)
+            if py_version[0] == "3":
+                ans=input("\n[>] Please insert choice\'s number: ")
+            else:
+                ans = raw_input("\n[>] Please insert choice\'s number: ") 
+            if ans =="1":
+                module_type = "Smali_Droidmare"
+                Phantom_lib.clear()
+                Phantom_lib.description_printer(module_type)
+                Phantom_lib.clear() 
+                Phantom_lib.droidmare_launcher()
+
             elif ans=="0":
                 print("\n\n")
 
         elif ans=="5":
             Phantom_lib.clear()
             print("-------------------------------------------------------------------------")
-            print(bcolors.OCRA + "[+] ANDROID MODULES:" + bcolors.ENDC)
-            print("-------------------------------------------------------------------------")
-            sleep(0.15)
-            print("\n[1] Android msfvenom smali obfuscator                       (Smali/Apk)")
-            sleep(0.15)
-            print("\n[0] Back")
-            sleep(0.15)
-            if py_version[0] == "3":
-                ans=input("\n[>] Please insert choice\'s number: ")
-            else:
-                ans = raw_input("\n[>] Please insert choice\'s number: ") 
-            if ans =="1":
-                module_type = "Smali_Droidmare"
-                Phantom_lib.clear()
-                Phantom_lib.description_printer(module_type)
-                Phantom_lib.clear() 
-                Phantom_lib.droidmare_launcher()
-
-            elif ans=="0":
-                print("\n\n")
-
-        elif ans=="6":
-            Phantom_lib.clear()
-            print("-------------------------------------------------------------------------")
             print(bcolors.OCRA + "[+] UNIVERSAL MODULES:" + bcolors.ENDC)
             print("-------------------------------------------------------------------------")
             sleep(0.15)
-            print("\n[1] Universal Pyhterpreter increments-trick                    (Python)")
+            print("\n[1] Universal Meterpreter increments-trick                     (Python)")
             sleep(0.15)
-            print("\n[2] Universal Polymorphic Pyhterpreter                         (Python)")
+            print("\n[2] Universal Polymorphic Meterpreter                          (Python)")
             sleep(0.15)
-            print("\n[3] Universal Polymorphic Oneline payload dropper   (Python/Cmd/Psh/sh)")
+            print("\n[3] Universal Polymorphic Oneliner dropper                     (Python)")
             sleep(0.15)
             print("\n[0] Back")
             sleep(0.15)
@@ -444,6 +313,67 @@ def complete_menu():
                 Phantom_lib.clear()
                 Phantom_lib.description_printer(module_type) 
                 Phantom_lib.python_sys_completer("False")
+
+            elif ans=="0":
+                print("\n\n")
+
+        elif ans=="6":
+            Phantom_lib.clear()
+            print("-------------------------------------------------------------------------")
+            print(bcolors.OCRA + "[+] POST-EXPLOITATION MODULES:" + bcolors.ENDC)
+            print("-------------------------------------------------------------------------")
+            sleep(0.15)
+            print("\n[1] Windows Persistence RegCreateKeyExW Add Registry Key            (C)")
+            sleep(0.15)
+            print("\n[2] Windows Persistence REG Add Registry Key                      (CMD)")
+            sleep(0.15)  
+            print("\n[3] Windows Persistence Keep Process Alive                          (C)")
+            sleep(0.15)
+            print("\n[4] Windows Persistence Schtasks cmdline                          (CMD)")
+            sleep(0.15)
+            print("\n[5] Windows Set Files Attribute Hidden                          (C/CMD)")
+            sleep(0.15)
+            print("\n[0] Back")
+            sleep(0.15)    
+        
+            if py_version[0] == "3":
+                ans=input("\n[>] Please insert choice\'s number: ")
+            else:
+                ans = raw_input("\n[>] Please insert choice\'s number: ") 
+
+            if ans == "1":
+                module_type = "Windows_C_Persistence_Startup.py"
+                Phantom_lib.clear()
+                Phantom_lib.description_printer(module_type) 
+                Phantom_lib.Windows_C_PersistenceAgent(module_type)
+
+            if ans == "2":
+                module_type = "Windows_CMD_Persistence_REG"
+                Phantom_lib.clear()
+                Phantom_lib.description_printer(module_type) 
+                Phantom_lib.Windows_CMD_PersistenceAgent()
+
+
+            elif ans == "3":
+                module_type = "Windows_C_Persistence_TimeBased.py"
+                Phantom_lib.clear()
+                Phantom_lib.description_printer(module_type) 
+                Phantom_lib.Windows_C_PersistenceAgent(module_type)
+
+            elif ans == "4":
+                module_type = "Windows_CMD_Persistence_Schtasks.py"
+                Phantom_lib.clear()
+                Phantom_lib.description_printer(module_type) 
+                Phantom_lib.Windows_Schtasks_Persistence()
+
+            elif ans == "5":
+                module_type = "Windows_C_SetFilesAttributeHidden.py"
+                Phantom_lib.clear()
+                Phantom_lib.description_printer(module_type) 
+                Phantom_lib.SelectHideMode()
+
+
+
 
             elif ans=="0":
                 print("\n\n")

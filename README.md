@@ -1,186 +1,246 @@
 # PHANTOM EVASION
 
-## Version 0.3 released!
+## Version 1.0 released!
 
-Phantom-Evasion is an antivirus evasion tool written in python able to generate metamorphic malware capable to detect sandbox artifacts and 
-delay payload execution (EXECUTION TIME RANGE: 30/120 seconds, tested on "win10 vbox 2core 2gb Ram").
-The aim of this tool is to make antivirus evasion an easy task for pentesters 
-with the use of prewitten modules that require minimal knowledge and grant excellent results.
+Phantom-Evasion is an interactive antivirus evasion tool written in python capable to generate (almost) FUD executable even with the most common 32 bit msfvenom payload (best performances are obtained with 64 bit payload).
+The aim of this tool is to make antivirus evasion an easy task for pentesters through the use of prewritten modules focused on polymorphic code and antivirus sandbox detection techniques.
+Since version 1.0 Phantom-Evasion also include a post-exploitation section dedicated to persistence and auxiliary modules.
 
-Format: exe/elf/apk/dmg
 
-MODULE TYPE:
+Kali Linux Rolling 2018.1+ is the only OS with automatic setup officially supported
+
+The following OSs support (unofficially) automatic setup :
+    
+1. Parrot Security
+
+
+The following OSs are likely able to run Phantom Evasion through manual setup:
+
+1. Arch Linux
+2. BlackArch Linux
+3. Elementary
+4. Linux Mint
+5. Ubuntu 15.10+
+6. Windows 7/8/10
  
-Windows,Linux,Android,Osx,Universal   (Platform-Target)
-
-Optional Xmr-miner (see Donate section)
-
-## New Indirect Call modules
-
-4 new windows modules that load critical functions (VirtualAlloc,Heapcreate,Heapalloc) dynamically using LoadLibrary/GetProcAddress or GetProcAddress/GetModuleHandle
-
-
-## New Wine-pyinstaller modules
-
-Still experimental (More on 0.4 version)  
-
-## Three Custom Encoders
-
-New Double & Triple key multibyte xor encoder with C decryption stub compatible with msfvenom and custom payloads
-
-## Full undetectable 64bit payloads
-
-Again 64 bit payloads are fully supported and completely undetectable (0/66) while 32 bit payloads are less efficient (6/66) even if they still evade most common antiviruses.
-Almost all pcs these days are 64bit so you should consider the benefits of using 64 bit payloads
-
-Give it a try comparing result for example using:
-
-windows/meterpreter/reverse_tcp
-
-And:
-
-windows/x64/meterpreter/reverse_tcp
-
-## Powershell payload support
-
-Powershell oneline dropper usefull to drop empire oneline payload
-
-Powershell script dropper support msfvenom powershell payloads and custom powershell payload
-
-Powershell script dropper can't execute 32 bit powershell payload on 64 bit target
-Be sure in that case to use 64 bit payload
-
 
 ## Getting Started
 
 Simply git clone or download and unzip Phantom-Evasion folder
 
+## Kali Linux:
 
-## Installing
+Automatic setup officially supported, open a terminal and execute phantom-evasion:
 
 
-## kali linux:
-
-The best.
-Actually the only OS truly supported.
-Automatic setup, simply launch with:
 ```
 python phantom-evasion.py 
 ```
-or:
-```
-chmod +x ./phantom-evasion.py
 
-./phantom-evasion.py
-```
-
-## windows 10
-
-Install python 2.7
-
-Install dependencies manually:
-
-Install & setup gcc,cygwin,pyinstaller,apktool,openssl,metasploit
-
-remember to set Environment variables 
-
-go to phantom-evasion folder and launch:
-
-```
-py phantom-evasion.py 
-```
-
-## linux with apt:
-
-
-
-Manually install metasploit framework if not present then:
-
-Automatic setup, simply launch with:
-```
-python phantom-evasion.py 
-```
 or:
 
 ```
 chmod +x ./phantom-evasion.py
 
 ./phantom-evasion.py
-
 ```
 
-## linux no apt:
+## Dependencies (only for maunal setup)
 
-Install dependencies manually:
+1. metasploit
+2. mingw-w64
+3. gcc
+4. apktool
+5. strip
+6. wine
+7. zipalign
 
-Install & setup gcc,mingw-w64,pyinstaller,apktool,openssl,metasploit,zipalign
+require libc6-dev-i386 (linux only)
+
+## WINDOWS PAYLOADS
+
+## Windows Shellcode Injection Modules (C)
+
+Msfvenom windows payloads and custom shellcodes supported
+
+(>) Randomized junkcode and windows antivirus evasion techniques
+(>) Multibyte Xor encoders availables (see Multibyte Xor encoders readme section)
+(>) Decoy Processes Spawner available (see Decoy Process Spawner section)
+(>) Strip executable available (https://en.wikipedia.org/wiki/Strip_(Unix))
+(>) Execution time range:35-60 second
+
+1) Windows Shellcode Injection VirtualAlloc:
+Inject and Execute shellcode in memory using VirtualAlloc,CreateThread,WaitForSingleObject API.
+
+2) Windows Shellcode Injection VirtualAlloc NoDirectCall LL/GPA:
+Inject and Execute shellcode in memory using VirtualAlloc,CreateThread,WaitForSingleObject API.
+VirtualAlloc is dinamically loaded (No Direct Call) using LoadLibrary and GetProcAddress API.  
+
+3) Windows Shellcode Injection VirtualAlloc NoDirectCall GPA/GMH:
+Inject and Execute shellcode in memory using VirtualAlloc,CreateThread,WaitForSingleObject API.
+VirtualAlloc is dinamically loaded (No Direct Call) using GetModuleHandle and GetProcAddress API.  
+
+4) Windows Shellcode Injection HeapAlloc:
+Inject and Execute shellcode in memory using VirtualAlloc,CreateThread,WaitForSingleObject API.
+
+5) Windows Shellcode Injection HeapAlloc NoDirectCall LL/GPA:
+Inject and Execute shellcode in memory using HeapCreate,HeapAlloc,CreateThread,WaitForSingleObject API.
+HeapCreate and HeapAlloc are dinamically loaded (No Direct Call) using LoadLibrary and GetProcAddress API.  
+
+6) Windows Shellcode Injection HeapAlloc NoDirectCall GPA/GMH:
+Inject and Execute shellcode in memory using HeapCreate,HeapAlloc,CreateThread,WaitForSingleObject API.
+HeapCreate and HeapAlloc are dinamically loaded (No Direct Call) using GetModuleHandle and GetProcAddress API.  
 
 
+## Windows Pure C meterpreter stager
 
-## Module choice 
+Pure C polymorphic meterpreter stagers compatible with msfconsole and cobalt strike beacon.(reverse_tcp/reverse_http) 
 
-Modules which targets specific platform are prefixed with Windows,Linux,Android,OSX,
+(>) Randomized junkcode and windows antivirus evasion techniques
+(>) Phantom evasion decoy process spawner available (see phantom evasion decoy process spawner section)
+(>) Strip executable available (https://en.wikipedia.org/wiki/Strip_(Unix))
+(>) Execution time range:35-60 second
 
-Universal modules generate different type of executable dependending on which platform is used to launch Phantom Evasion (pyinstaller)
+
+7) Windows Pure C meterpreter/reverse_tcp Stager:
+32 bit windows/meterpreter/reverse_tcp polymorphic stager (require multi/handler listener with payload set to windows/meterpreter/reverse_tcp)
+First established meterpreter sessions will be invalid wait till a second sessions will be created (with stdapi loaded),   
+
+8) Windows Pure C meterpreter/reverse_tcp Stager:
+32 bit windows/meterpreter/reverse_http polymorphic stager (require multi/handler listener with payload set to windows/meterpreter/reverse_tcp)
 
 
-## Modules options
+## Windows Powershell modules 
 
-Multipath modules support both msfvenom payload or custom shellcode 
+(>) Randomized junkcode and windows antivirus evasion techniques
+(>) Decoy Process Spawner available (see phantom evasion decoy process spawner section)
+(>) Strip executable available (https://en.wikipedia.org/wiki/Strip_(Unix))
+(>) Execution time range:35-60 second
 
-Powershell oneline dropper support empire one-liner payload
+9) Windows Powershell/Cmd Oneliner Dropper:
+Require user-supplied Powershell/Cmd oneliner payload (example Empire oneliner payload). 
+Generate Windows powershell/Cmd oneliner dropper written in c.
+Powershell/Cmd oneliner payload is executed using system() function.
 
-Powershell script dropper support msfvenom powershell payloads or custom powershell scripts
 
-Android msvenom smali obfuscator module support both msfvenom payload obfuscation and injection in existing apk (if apktool succeed in baksmailing the apk)
+10) Windows Powershell Script Dropper:
+Both msfvenom and custom powershell payloads supported.
+(32 bit powershell payloads are not compatible with 64 bit powershell target and vice versa.)
+Generate Windows powershell script (.ps1) dropper written in c.
+Powershell script payload is executed using system() function 
+(powershell -executionpolicy bypass -WindowStyle Hidden -Noexit -File "PathTops1script").
 
-Pytherpreter modules supports all python msfvenom payload
 
+## Windows Wine-Pyinstaller modules 
+
+(>) Randomized junkcode and windows antivirus evasion techniques
+(>) Execution time range:5-25 second
+
+11) Windows WinePyinstaller Python Meterpreter
+
+Pure python meterpreter payload.  
+
+12)  WinePyinstaller Oneline payload dropper
+
+Pure python powershell/cmd oneliner dropper.
+
+Powershell/cmd payload executed using os.system().
+
+## LINUX PAYLOADS
+
+## Linux Shellcode Injection Module (C)
+
+Msfvenom linux payloads and custom shellcodes supported.
+
+(>) Randomized junkcode and C antivirus evasion techniques
+(>) Multibyte Xor encoders availables (see Multibyte Xor encoders readme section)
+(>) Strip executable available (https://en.wikipedia.org/wiki/Strip_(Unix))
+(>) Execution time range:20-45 second
+
+1) Linux Shellcode Injection HeapAlloc:
+Inject and Execute shellcode in memory using mmap and memcpy.
+
+2) Linux Bash Oneliner Dropper:
+Execute custom oneliner payload using system() function.
+
+## OSX PAYLOADS
+
+1) OSX 32bit multi-encoded:
+
+Pure msfvenom multi-encoded OSX payloads.
+
+## ANDROID PAYLOADS
+
+1) Android Msfvenom Apk smali/baksmali:
+
+(>) Fake loop injection
+
+Android msfvenom payloads modified an rebuilded with apktool (Also capable of apk backdoor injection). 
+
+## UNIVERSAL PAYLOADS
+
+Generate executable compatible with the OSs used to run Phantom-Evasion.
+
+1) Universal Meterpreter increments-trick
+
+2) Universal Polymorphic Meterpreter 
+
+3) Universal Polymorphic Oneliner dropper                  
+
+## POST-EXPLOITATION MODULES
+
+1) Windows Persistence RegCreateKeyExW Add Registry Key  (C)
+This modules generate executables which needs to be uploaded to the target machine and excuted specifing the fullpath to file to add to startup as arguments.
+
+2) Windows Persistence REG Add Registry Key (CMD)
+This module generate persistence cmdline payloads (Add Registry Key via REG.exe).  
+    
+3) Windows Persistence Keep Process Alive
+This module generate executable which need to be uploaded to the target machine and executed.
+Use CreateToolSnapshoot ProcessFirst and ProcessNext to check if specified process is alive every X seconds.
+Usefull combined with Persistence N.1 or N.2 (persistence start Keep process alive file which then start and keep alive the specified process)
+
+4) Windows Persistence Schtasks cmdline
+
+This modules generate persistence cmdline payloads (using Schtasks.exe).
+
+5) Windows Set Files Attribute Hidden
+
+hide file through commandline or with compiled executable (SetFileAttributes API)   
+ 
 ## Warning
-
-Never rename generated executable (choose file name during generation process)
-
-Actually there is no error checking routine on user input!!
-Be sure to input options correctly!!
 
 PYTHON3 COMPATIBILITY TEMPORARILY SUSPENDED!
 
-Like Jon Snow "I know nothing"
+## Decoy Processes Spawner:
+
+During target-side execution this will cause to spawn (Using WinExec or CreateProcess API) a maximum of 4 processes
+consequentialy.
+The last spawned process will reach the malicious section of code while the other decoy processes spawned before will executes only random junk code.
+
+PRO: Longer execution time,Lower rate of detection.
+CONS: Higher resource consumption.
+
+## Multibyte Xor Encoder:
+
+C xor encoders with three pure c decoding stub available with Shellcode Injection modules family.
+
+1. MultibyteKey xor:
+
+Shellcode xored with one multibyte (variable lenght) random key
+           
+2. Double Multibyte-key xor delayed:
+
+Shellcode xored with the result of xor between two multibyte (variable lenght) random keys
+Decoder stub contain junk for loop. (decoding phase delayed)
+      
+3. Triple Multibyte-key xor delayed:
+
+Shellcode xored with the result of xor between two multibyte (variable lenght) random keys xored with a third multibyte random key.
+Decoder stub contain junk for loop. (decoding phase delayed)
 
 
-## Cross platform autocompile SUPPORTED:
-
-Using linux :
-
-GCC used to compile source code to ELF format
-
-Mingw-w64 used to compile source code to EXE format
-
-Pyinstaller used to generate pyhton  ELF executable
-
-in windows:
-
-GCC  used to compile source code to EXE format
-
-Cygwin > AUTOCOMPILE ELF not supported
-
-Pyinstaller used to generate python EXE executable
-
-When using "msfvenom payload" options phantom evasion will autocompile 32 bit executable if a 32 bit payload is selected
-Instead 64 bit executable will be generated using 64 bit payload
-
-Example:
-
-Windows/meterpreter/reverse_tcp  (autocompiled to exe 32 bit)
-
-Windows/x64/meterpreter/reverse_tcp (autocompiled to exe 64 bit)
-
-Equivalent for linux modules
-
-When using "Polymorphic Powershell Script Dropper" remember that 32 bit powershell payloads are not compatible with 64 bit powershell target and vice versa
-
-
-## license
+## License
 
 GPLv3.0
 

