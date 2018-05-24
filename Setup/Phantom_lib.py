@@ -1014,8 +1014,8 @@ def encoding_selection32():
     sleep(0.2)
     print("[1] x86/shikata_ga_nai                                   (average)\n")
     print("[2] x86/shikata_ga_nai + Multibyte-key xor                  (good)\n")
-    print("[3] x86/shikata_ga_nai + Double Multibyte-key xor trap (excellent)\n")
-    print("[4] x86/shikata_ga_nai + Triple Multibyte-key xor trap (excellent)\n")
+    print("[3] x86/shikata_ga_nai + Double Multibyte-key xor      (excellent)\n")
+    print("[4] x86/shikata_ga_nai + Triple Multibyte-key xor      (excellent)\n")
 
     if py_version[0] == "3":
 
@@ -1029,10 +1029,10 @@ def encoding_selection64():
     py_version=platform.python_version()
     print(bcolors.OCRA + "\n[>] Encoding step:\n" + bcolors.ENDC)
     sleep(0.2)
-    print("[1] x64/xor                                    (average)\n")
-    print("[2] x64/xor + Multibyte xor                       (good)\n")
-    print("[3] x64/xor + Double Multibyte-key xor trap  (excellent)\n")
-    print("[4] x64/xor + Triple Multibyte-key xor trap  (excellent)\n")
+    print("[1] x64/xor                                             (average)\n")
+    print("[2] x64/xor + Multibyte-key xor                            (good)\n")
+    print("[3] x64/xor + Double Multibyte-key xor                (excellent)\n")
+    print("[4] x64/xor + Triple Multibyte-key xor                (excellent)\n")
     if py_version[0] == "3":
 
         enc_type = input("\n[>] Please enter options number: ")
@@ -1046,10 +1046,10 @@ def encoding_selection_custom():
     py_version=platform.python_version()
     print(bcolors.OCRA + "\n[>] Encoding step:\n" + bcolors.ENDC)
     sleep(0.2)
-    print("[1] None                                (none)\n")
-    print("[2] MultibyteKey xor                    (good)\n")
-    print("[3] Double Multibyte-key xor trap  (excellent)\n")
-    print("[4] Triple Multibyte-key xor trap  (excellent)\n")
+    print("[1] None                                                 (none)\n")
+    print("[2] Multibyte-key xor                                    (good)\n")
+    print("[3] Double Multibyte-key xor                        (excellent)\n")
+    print("[4] Triple Multibyte-key xor                        (excellent)\n")
 
     if py_version[0] == "3":
 

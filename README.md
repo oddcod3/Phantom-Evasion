@@ -1,9 +1,9 @@
 # PHANTOM EVASION
 
-## Version 1.0 released!
+## Version 1.1 released!
 
-Phantom-Evasion is an interactive antivirus evasion tool written in python capable to generate (almost) FUD executable even with the most common 32 bit msfvenom payload (best performances are obtained with 64 bit payload).
-The aim of this tool is to make antivirus evasion an easy task for pentesters through the use of prewritten modules focused on polymorphic code and antivirus sandbox detection techniques.
+Phantom-Evasion is an interactive antivirus evasion tool written in python capable to generate (almost) FUD executable even with the most common 32 bit msfvenom payload (best performances are obtained with 64 bit payloads).
+The aim of this tool is to make antivirus evasion an easy task for pentesters through the use of modules focused on polymorphic code and antivirus sandbox detection techniques.
 Since version 1.0 Phantom-Evasion also include a post-exploitation section dedicated to persistence and auxiliary modules.
 
 
@@ -106,8 +106,8 @@ Pure C polymorphic meterpreter stagers compatible with msfconsole and cobalt str
 32 bit windows/meterpreter/reverse_tcp polymorphic stager (require multi/handler listener with payload set to windows/meterpreter/reverse_tcp)
 First established meterpreter sessions will be invalid wait till a second sessions will be created (with stdapi loaded),   
 
-8) Windows Pure C meterpreter/reverse_tcp Stager:
-32 bit windows/meterpreter/reverse_http polymorphic stager (require multi/handler listener with payload set to windows/meterpreter/reverse_tcp)
+8) Windows Pure C meterpreter/reverse_http Stager:
+32 bit windows/meterpreter/reverse_http polymorphic stager (require multi/handler listener with payload set to windows/meterpreter/reverse_http)
 
 
 ## Windows Powershell modules 
@@ -227,17 +227,18 @@ C xor encoders with three pure c decoding stub available with Shellcode Injectio
 
 1. MultibyteKey xor:
 
-Shellcode xored with one multibyte (variable lenght) random key
+Shellcode xored with one multibyte (variable lenght) random key.
+Polymorphic C decoder stub. 
            
-2. Double Multibyte-key xor delayed:
+2. Double Multibyte-key xor:
 
 Shellcode xored with the result of xor between two multibyte (variable lenght) random keys
-Decoder stub contain junk for loop. (decoding phase delayed)
+Polymorphic C decoder stub.
       
-3. Triple Multibyte-key xor delayed:
+3. Triple Multibyte-key xor:
 
 Shellcode xored with the result of xor between two multibyte (variable lenght) random keys xored with a third multibyte random key.
-Decoder stub contain junk for loop. (decoding phase delayed)
+Polymorphic C decoder stub.
 
 
 ## License

