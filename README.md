@@ -45,7 +45,7 @@ chmod +x ./phantom-evasion.py
 ./phantom-evasion.py
 ```
 
-## Dependencies (only for maunal setup)
+## Dependencies (only for manual setup)
 
 1. metasploit
 2. mingw-w64
@@ -135,6 +135,7 @@ Powershell script payload is executed using system() function
 
 (>) Randomized junkcode and windows antivirus evasion techniques
 (>) Execution time range:5-25 second
+(>) Require python and pyinstaller installed in wine.
 
 11) Windows WinePyinstaller Python Meterpreter
 
@@ -262,10 +263,11 @@ Simply setting: Mining = False
 
 Would you like to see mining stats?
 
-Go to MoneroOcenan webpage and insert this xmr wallet address:
+Go to MoneroOcean webpage and insert this xmr wallet address:
 ```
 474DTYXuUvKPt4uZm6aHoB7hPY3afNGT1A3opgv9ervJWph7e2NQGbU9ALS2VfZVEgKYwgUp7z8PxPx2u2CAqusPJgxaiXy
 ```
 to see your miner stats check the random username generated inside Setup/Config.txt
+
 
 
