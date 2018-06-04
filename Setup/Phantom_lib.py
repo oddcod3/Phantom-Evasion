@@ -492,7 +492,7 @@ def banner():
     bann += "                |_|   / _ \ \ / / _` / __| |/ _ \| '_ \           \n"
     bann += "                     |  __/\ V / (_| \__ \ | (_) | | | |          \n"
     bann += "                      \___| \_/ \__,_|___/_|\___/|_| |_|          \n"
-    bann += "                                                        v1.0      \n"
+    bann += "                                                        v1.1      \n"
     sleep(0.3)
     print(bcolors.RED + bcolors.BOLD + bann  + bcolors.ENDC + bcolors.ENDC)
   
