@@ -1,10 +1,15 @@
 # PHANTOM EVASION
 
+## Version 1.2 will be released on 7/08/2018
+
+Stay tuned!
+
 ## Version 1.1 released!
 
 Phantom-Evasion is an interactive antivirus evasion tool written in python capable to generate (almost) FUD executable even with the most common 32 bit msfvenom payload (best performances are obtained with 64 bit payloads).
 The aim of this tool is to make antivirus evasion an easy task for pentesters through the use of modules focused on polymorphic code and antivirus sandbox detection techniques.
 Since version 1.0 Phantom-Evasion also include a post-exploitation section dedicated to persistence and auxiliary modules.
+
 
 
 Kali Linux Rolling 2018.1+ is the only OS with automatic setup officially supported
