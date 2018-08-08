@@ -106,7 +106,7 @@ def Xor_stub2(shellcode,bufname):
     Randflag2 = varname_creator()
     keyname = varname_creator()
 
-    Encoded_buffer = "unsigned char " + bufname + " [] = \"" + printable_shellcode + "\";\n"
+    Encoded_buffer = "unsigned char " + bufname + "[] = \"" + printable_shellcode + "\";\n"
 
     Xor_stub = ""
 
@@ -230,7 +230,7 @@ def Doublexor_stub2(shellcode,bufname):
     keynamestep2 = varname_creator()
 
 
-    Encoded_buffer = "unsigned char " + bufname + " [] = \"" + printable_shellcode + "\";\n"
+    Encoded_buffer = "unsigned char " + bufname + "[] = \"" + printable_shellcode + "\";\n"
 
     Xor_stub = ""
 
@@ -409,7 +409,7 @@ def Triplexor_stub2(shellcode,bufname):
     keynamestep1 = varname_creator()
     keynamestep2 = varname_creator()
 
-    Encoded_buffer = "unsigned char " + bufname + " [] = \"" + printable_shellcode + "\";\n"
+    Encoded_buffer = "unsigned char " + bufname + "[] = \"" + printable_shellcode + "\";\n"
 
     Xor_stub = ""
 

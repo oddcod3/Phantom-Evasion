@@ -427,7 +427,7 @@ def python_poly_multipath(number,step):
 
 def Junkmathinject():
 
-    number = random.randint(1,28)
+    number = random.randint(1,37)
 
     if number == 1: #sum firs n integer 1 
         Randcounter = varname_creator()
@@ -455,7 +455,7 @@ def Junkmathinject():
         Junkcode += Randcounter + " = " + Randcounter + " - 1;}\n"
 
 
-    elif number == 3: #fibonacci numbers in range (1,N) MEDIO-VELOCE
+    elif number == 3: #fibonacci numbers in range (1,N)
 
         Rand1=varname_creator()
         Rand2=varname_creator()
@@ -472,7 +472,7 @@ def Junkmathinject():
         Junkcode += Rand1 + "=" + Rand2 + ";\n" + Rand2 + " = " + Rand3 + ";}\n"
  
 
-    elif number == 4: # Twin tower MEDIO-LENTO
+    elif number == 4: # Twin tower
 
         Randbig1 = str(random.randrange(700000000,990000000,10))
         Randbig2 = str(random.randrange(500000000,790000000,10))
@@ -488,7 +488,7 @@ def Junkmathinject():
         Junkcode += "else{\n"
         Junkcode += Randcpt2 + " = " + Randcpt2 + " - 1;}}\n"
 
-    elif number == 5: #BacktoZero MEDIO
+    elif number == 5: #BacktoZero
 
         Randbig1 = str(random.randrange(1000000000,2000000000,100))
         Randcpt= varname_creator()
@@ -498,7 +498,7 @@ def Junkmathinject():
         Junkcode += Randcpt + " = " + Randcpt + " - 1;}\n"
 
 
-    elif number == 6: # Randmatrix 1 MEDIO-VELOCE
+    elif number == 6: # Randmatrix 1 
 
         Randi = str(random.randint(8000,10000))
         Randj = str(random.randint(8000,10000))
@@ -518,7 +518,7 @@ def Junkmathinject():
         Junkcode += Randtot + " = " + Randtot + " + " + Randmatr + "[" + Randflag + "][" + Randflag2 + "];\n}}"
         Junkcode += "free(" + Randmatr + ");\n"
 
-    elif number == 7: # Randmatrix 2 MEDIO-VELOCE
+    elif number == 7: # Randmatrix 2
 
         Randi = str(random.randint(8000,10000))
         Randj = str(random.randint(8000,10000))
@@ -541,7 +541,7 @@ def Junkmathinject():
         Junkcode += Randmatr3 + "[" + Randflag + "][" + Randflag2 + "] = " + Randmatr + "[" + Randflag + "][" + Randflag2 + "] +" + Randmatr2 + "[" + Randflag + "][" + Randflag2 + "];\n}}"
         Junkcode += "free(" + Randmatr + ");free(" + Randmatr2 + ");free(" + Randmatr3 + ");\n"
 
-    elif number == 8: # Randmatrix 3 MEDIO-VELOCE
+    elif number == 8: # Randmatrix 3
 
         Randi = str(random.randint(8000,10000))
         Randj = str(random.randint(8000,10000))
@@ -565,7 +565,7 @@ def Junkmathinject():
         Junkcode += "free(" + Randmatr + ");free(" + Randmatr2 + ");free(" + Randmatr3 + ");\n"
 
 
-    elif number == 9: # Randmatrix 4 MEDIO-VELOCE
+    elif number == 9: # Randmatrix 4
 
         Randi = str(random.randint(8000,10000))
         Randj = str(random.randint(8000,10000))
@@ -590,7 +590,7 @@ def Junkmathinject():
 
 
 
-    elif number == 10: # Randmatrix 5 VELOCE
+    elif number == 10: # Randmatrix 5
 
         Randi = str(random.randint(8000,10000))
         Randj = str(random.randint(8000,10000))
@@ -616,7 +616,7 @@ def Junkmathinject():
         Junkcode += "free(" + Randmatr + ");free(" + Randmatr2 + ");free(" + Randmatr3 + ");\n"
 
 
-    elif number == 11: # Randmatrix 6 VELOCE
+    elif number == 11: # Randmatrix 6
 
         Randi = str(random.randint(6000,9000))
         Randj = str(random.randint(6000,9000))
@@ -1030,7 +1030,213 @@ def Junkmathinject():
         Junkcode += RandVariance + " = " + RandSum2 + "/((float)" + RandRange + ");\n"
         Junkcode += RandDevStd + " = sqrt(" + RandVariance + ");\n" 
         Junkcode += "free(" + RandVar + ");\n"
-       
+
+
+    elif number == 29: # Bubble Sort int array
+
+        RandRange = str(random.randint(1000000,2500000))
+        RandVar = varname_creator()
+        RandVar2 = varname_creator()
+        Randflag = varname_creator()
+        Randflag2 = varname_creator()
+        
+
+        Junkcode = ""
+        Junkcode += "int *" + RandVar + " = malloc(sizeof(int)*" + RandRange + ");\n"
+        Junkcode += "int " + Randflag + ";\n"
+        Junkcode += "int " + Randflag2 + ";\n"
+        Junkcode += "int " + RandVar2 + ";\n"
+        Junkcode += "for(" + Randflag + " = 0;" + Randflag + " < " + RandRange + ";" + Randflag + "++){\n"
+        Junkcode += RandVar + "[" + Randflag + "] = rand() % 10000 ;}\n"
+        Junkcode += "for(" + Randflag + " = 0;" + Randflag + " < " + RandRange + ";" + Randflag + "++){\n"
+        Junkcode += "for(" + Randflag2 + " = 0;" + Randflag2 + " < (" + RandRange + " - " + Randflag + " - 1);" + Randflag + "++){\n"
+        Junkcode += "if(" + RandVar + "[" + Randflag + "] > " + RandVar + "[" + Randflag2 + " + 1]){"
+        Junkcode += RandVar2 + " = " + RandVar + "[" + Randflag2 + "];\n"
+        Junkcode += RandVar + "[" + Randflag2 + "] = " + RandVar + "[" + Randflag + " + 1];\n"
+        Junkcode += RandVar + "[" + Randflag2 + " + 1] = " + RandVar2 + ";}}}\n" 
+        Junkcode += "free(" + RandVar + ");\n"
+
+
+    elif number == 30: # Bubble Sort float array
+
+        RandRange = str(random.randint(1000000,2500000))
+        RandVar = varname_creator()
+        RandVar2 = varname_creator()
+        Randflag = varname_creator()
+        Randflag2 = varname_creator()
+        
+
+        Junkcode = ""
+        Junkcode += "float *" + RandVar + " = malloc(sizeof(float)*" + RandRange + ");\n"
+        Junkcode += "int " + Randflag + ";\n"
+        Junkcode += "int " + Randflag2 + ";\n"
+        Junkcode += "float " + RandVar2 + ";\n"
+        Junkcode += "for(" + Randflag + " = 0;" + Randflag + " < " + RandRange + ";" + Randflag + "++){\n"
+        Junkcode += RandVar + "[" + Randflag + "] = (float)(rand() % 1000) / (float)(rand() % 70);}\n"
+        Junkcode += "for(" + Randflag + " = 0;" + Randflag + " < " + RandRange + ";" + Randflag + "++){\n"
+        Junkcode += "for(" + Randflag2 + " = 0;" + Randflag2 + " < (" + RandRange + " - " + Randflag + " - 1);" + Randflag + "++){\n"
+        Junkcode += "if(" + RandVar + "[" + Randflag + "] > " + RandVar + "[" + Randflag2 + " + 1]){"
+        Junkcode += RandVar2 + " = " + RandVar + "[" + Randflag2 + "];\n"
+        Junkcode += RandVar + "[" + Randflag2 + "] = " + RandVar + "[" + Randflag + " + 1];\n"
+        Junkcode += RandVar + "[" + Randflag2 + " + 1] = " + RandVar2 + ";}}}\n" 
+        Junkcode += "free(" + RandVar + ");\n"
+
+
+    elif number == 31: # Gnome Sort int array
+
+        RandRange = str(random.randint(10000,15000))
+        RandVar = varname_creator()
+        Randtemp = varname_creator()
+        Randflag = varname_creator() 
+        Randflag2 = varname_creator() 
+        
+
+        Junkcode = ""
+        Junkcode += "int *" + RandVar + " = malloc(sizeof(int)*" + RandRange + ");\n"
+        Junkcode += "int " + Randflag + ";\n"
+        Junkcode += "int " + Randtemp + ";\n"
+        Junkcode += "for(" + Randflag + " = 0;" + Randflag + " < " + RandRange + ";" + Randflag + "++){\n"
+        Junkcode += RandVar + "[" + Randflag + "] = rand() % 10000;}\n"
+        Junkcode += Randflag + "=0;\n"
+        Junkcode += "while(" + Randflag + " < " + RandRange + "){\n"
+        Junkcode += "if(" + Randflag + " == 0 || " + RandVar + "[" + Randflag + "-1] <= " + RandVar + "[" + Randflag + "]){\n"
+        Junkcode += Randflag + "++;\n}"
+        Junkcode += "else{\n"
+        Junkcode += Randtemp + " = " + RandVar + "[" + Randflag + "-1];\n"
+        Junkcode += RandVar + "[" + Randflag + "-1] = " + RandVar + "[" + Randflag + "];\n"
+        Junkcode += RandVar + "[" + Randflag + "] = " + Randtemp + ";\n"
+        Junkcode += Randflag + " = " + Randflag + "-1;}}\n"
+        Junkcode += "free(" + RandVar + ");\n"
+
+    elif number == 32: # Gnome Sort float array
+
+        RandRange = str(random.randint(10000,15000))
+        RandVar = varname_creator()
+        Randtemp = varname_creator()
+        Randflag = varname_creator() 
+        Randflag2 = varname_creator() 
+        
+
+        Junkcode = ""
+        Junkcode += "float *" + RandVar + " = malloc(sizeof(float)*" + RandRange + ");\n"
+        Junkcode += "int " + Randflag + "," + Randflag2 + ";\n"
+        Junkcode += "float " + Randtemp + ";\n"
+        Junkcode += "for(" + Randflag + " = 0;" + Randflag + " < " + RandRange + ";" + Randflag + "++){\n"
+        Junkcode += RandVar + "[" + Randflag + "] = (float)(rand() % 1000) / (float)(rand() % 100);}\n"
+        Junkcode += Randflag + "=0;\n"
+        Junkcode += "while(" + Randflag + " < " + RandRange + "){\n"
+        Junkcode += "if(" + Randflag + " == 0 || " + RandVar + "[" + Randflag + "-1] <= " + RandVar + "[" + Randflag + "]){\n"
+        Junkcode += Randflag + "++;\n}"
+        Junkcode += "else{\n"
+        Junkcode += Randtemp + " = " + RandVar + "[" + Randflag + "-1];\n"
+        Junkcode += RandVar + "[" + Randflag + "-1] = " + RandVar + "[" + Randflag + "];\n"
+        Junkcode += RandVar + "[" + Randflag + "] = " + Randtemp + ";\n"
+        Junkcode += Randflag + " = " + Randflag + "-1;}}\n"
+        Junkcode += "free(" + RandVar + ");\n"
+
+    elif number == 33: # Last Armstrong numbers in range
+
+        RandRange = str(random.randint(10000000,25000000))
+        RandVar = varname_creator() 
+        RandVar2 = varname_creator() 
+        Randflag = varname_creator() 
+        Randflag2 = varname_creator()
+        RandLastArmN = varname_creator()
+
+        Junkcode = ""
+        Junkcode += "int " + RandLastArmN + ";\n"
+        Junkcode += "int " + RandVar + "," + Randflag + "," + RandVar2 + "," + Randflag2 + ";\n"
+        Junkcode += "for(" + Randflag + " = 1;" + Randflag + " <= " + RandRange + ";" + Randflag + "++){\n"
+        Junkcode += RandVar + " = 0;\n"
+        Junkcode += RandVar2 + " = " + Randflag + ";\n"
+        Junkcode += "while(" + RandVar2 + " != 0){\n"
+        Junkcode += Randflag2 + " = " + RandVar2 + "%10;\n"
+        Junkcode += RandVar + " += " + Randflag2 + "*" + Randflag2 + "*" + Randflag2 + ";\n"
+        Junkcode += RandVar2 + " = " + RandVar2 + "/10;}\n"
+        Junkcode += "if(" + RandVar + " == " + Randflag + "){\n"
+        Junkcode += RandLastArmN + " = " + Randflag + ";}}\n"  
+    
+    elif number == 34: # ODD or EVEN 1
+
+
+        RandRange = str(random.randint(4000000,6000000))
+        RandVar = varname_creator()
+        Randflag = varname_creator() 
+        RandODD = varname_creator()
+        RandEVEN= varname_creator() 
+
+        
+        Junkcode = ""
+        Junkcode += "int " + Randflag + ";\n"
+        Junkcode += "int *" + RandVar + " = malloc(sizeof(int)*" + RandRange + ");\n"
+        Junkcode += "int " + RandODD + " = 0;\n"
+        Junkcode += "int " + RandEVEN + " = 0;\n"
+        Junkcode += "for(" + Randflag + " = 0;" + Randflag + " < " + RandRange + ";" + Randflag + "++){\n"
+        Junkcode += RandVar + "[" + Randflag + "] = rand() % 100000;}\n"
+        Junkcode += Randflag + " = " + "0;\n"
+        Junkcode += "for(" + Randflag + " = 0;" + Randflag + " < " + RandRange + ";" + Randflag + "++){\n"
+        Junkcode += "if(" + RandVar + "[" + Randflag + "]&1){\n"
+        Junkcode += RandODD + " += 1;}\n"
+        Junkcode += "else if(!(" + RandVar + "[" + Randflag + "]&1)){\n"
+        Junkcode += RandEVEN + " += 1;}}\n"
+        Junkcode += "free(" + RandVar + ");\n"
+
+    elif number == 35: # ODD or EVEN 2
+
+
+        RandRange = str(random.randint(4000000,6000000))
+        RandVar = varname_creator()
+        Randflag = varname_creator() 
+        RandODD = varname_creator()
+        RandEVEN= varname_creator() 
+
+        
+        Junkcode = ""
+        Junkcode += "int " + Randflag + ";\n"
+        Junkcode += "int *" + RandVar + " = malloc(sizeof(int)*" + RandRange + ");\n"
+        Junkcode += "int " + RandODD + " = 0;\n"
+        Junkcode += "int " + RandEVEN + " = 0;\n"
+        Junkcode += "for(" + Randflag + " = 0;" + Randflag + " < " + RandRange + ";" + Randflag + "++){\n"
+        Junkcode += RandVar + "[" + Randflag + "] = rand() % 1000;\n"
+        Junkcode += "if(" + RandVar + "[" + Randflag + "]&1){\n"
+        Junkcode += RandODD + " += 1;}\n"
+        Junkcode += "else if(!(" + RandVar + "[" + Randflag + "]&1)){\n"
+        Junkcode += RandEVEN + " += 1;}}\n"
+        Junkcode += "free(" + RandVar + ");\n"
+
+
+
+    elif number == 36: # Slow pi calc 1
+
+
+        RandRange = str(random.randint(5000000,10000000))
+        Randflag = varname_creator() 
+        RandPI = varname_creator()
+ 
+
+        Junkcode = ""
+        Junkcode += "int " + Randflag + ";\n"
+        Junkcode += "float " + RandPI + "=0;\n"
+        Junkcode += "for(" + Randflag + " = 0;" + Randflag + " < " + RandRange + ";" + Randflag + "++){\n"
+        Junkcode += RandPI + " += (powf(-1," + Randflag + "+ 1.000))/(2.000*" + Randflag + "-1.000);}\n"
+        Junkcode += RandPI + " = " + RandPI + "*4;\n"
+
+    elif number == 37: # Slow pi calc 2
+
+
+        RandRange = str(random.randint(5000000,10000000))
+        Randflag = varname_creator() 
+        RandPI = varname_creator()
+ 
+
+        Junkcode = ""
+        Junkcode += "int " + Randflag + "=-1;\n"
+        Junkcode += "double " + RandPI + "=0;\n"
+        Junkcode += "do{\n"
+        Junkcode += Randflag + "++;\n"
+        Junkcode += RandPI + " += (pow(-1," + Randflag + "+ 1.000))/(2.000*" + Randflag + "-1.000);}while(" + Randflag + " < " + RandRange + "-1);\n"
+        Junkcode += RandPI + " = " + RandPI + "*4;\n"   
+
                  
     return Junkcode
 

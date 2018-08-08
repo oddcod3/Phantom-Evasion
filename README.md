@@ -1,15 +1,8 @@
 # PHANTOM EVASION
 
-## Version 1.2 will be released on 7/08/2018
-
-Stay tuned!
-
-## Version 1.1 released!
-
 Phantom-Evasion is an interactive antivirus evasion tool written in python capable to generate (almost) FUD executable even with the most common 32 bit msfvenom payload (best performances are obtained with 64 bit payloads).
 The aim of this tool is to make antivirus evasion an easy task for pentesters through the use of modules focused on polymorphic code and antivirus sandbox detection techniques.
 Since version 1.0 Phantom-Evasion also include a post-exploitation section dedicated to persistence and auxiliary modules.
-
 
 
 Kali Linux Rolling 2018.1+ is the only OS with automatic setup officially supported
@@ -28,6 +21,11 @@ The following OSs are likely able to run Phantom Evasion through manual setup:
 5. Ubuntu 15.10+
 6. Windows 7/8/10
  
+## Version 1.2.0 released!
+
+-x64 reverse_tcp/http pure c stager
+
+-android module reworked
 
 ## Getting Started
 
@@ -115,6 +113,14 @@ First established meterpreter sessions will be invalid wait till a second sessio
 32 bit windows/meterpreter/reverse_http polymorphic stager (require multi/handler listener with payload set to windows/meterpreter/reverse_http)
 
 
+9) Windows Pure C meterpreter/reverse_tcp Stager:
+64 bit windows/meterpreter/reverse_tcp polymorphic stager (require multi/handler listener with payload set to windows/x64/meterpreter/reverse_tcp)
+First established meterpreter sessions will be invalid wait till a second sessions will be created (with stdapi loaded),   
+
+10) Windows Pure C meterpreter/reverse_http Stager:
+64 bit windows/meterpreter/reverse_http polymorphic stager (require multi/handler listener with payload set to windows/x64/meterpreter/reverse_http)
+
+
 ## Windows Powershell modules 
 
 (>) Randomized junkcode and windows antivirus evasion techniques
@@ -122,13 +128,13 @@ First established meterpreter sessions will be invalid wait till a second sessio
 (>) Strip executable available (https://en.wikipedia.org/wiki/Strip_(Unix))
 (>) Execution time range:35-60 second
 
-9) Windows Powershell/Cmd Oneliner Dropper:
+11) Windows Powershell/Cmd Oneliner Dropper:
 Require user-supplied Powershell/Cmd oneliner payload (example Empire oneliner payload). 
 Generate Windows powershell/Cmd oneliner dropper written in c.
 Powershell/Cmd oneliner payload is executed using system() function.
 
 
-10) Windows Powershell Script Dropper:
+12) Windows Powershell Script Dropper:
 Both msfvenom and custom powershell payloads supported.
 (32 bit powershell payloads are not compatible with 64 bit powershell target and vice versa.)
 Generate Windows powershell script (.ps1) dropper written in c.
@@ -142,11 +148,11 @@ Powershell script payload is executed using system() function
 (>) Execution time range:5-25 second
 (>) Require python and pyinstaller installed in wine.
 
-11) Windows WinePyinstaller Python Meterpreter
+13) Windows WinePyinstaller Python Meterpreter
 
 Pure python meterpreter payload.  
 
-12)  WinePyinstaller Oneline payload dropper
+14)  WinePyinstaller Oneline payload dropper
 
 Pure python powershell/cmd oneliner dropper.
 
@@ -180,6 +186,7 @@ Pure msfvenom multi-encoded OSX payloads.
 1) Android Msfvenom Apk smali/baksmali:
 
 (>) Fake loop injection
+(>) Goto loop
 
 Android msfvenom payloads modified an rebuilded with apktool (Also capable of apk backdoor injection). 
 
