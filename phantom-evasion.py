@@ -66,23 +66,27 @@ def complete_menu():
             sleep(0.10)
             print("\n[3]  Windows Shellcode Injection VirtualAlloc NoDirectCall GPA/GMH    (C)")
             sleep(0.10)
-            print("\n[4]  Windows Shellcode Injection Multipath HeapAlloc                  (C)")
+            print("\n[4]  Windows Shellcode Injection HeapAlloc                            (C)")
             sleep(0.10)
             print("\n[5]  Windows Shellcode Injection Heapalloc NoDirectCall LL/GPA        (C)")
             sleep(0.10)
             print("\n[6]  Windows Shellcode Injection Heapalloc NoDirectCall GPA/GMH       (C)")
             sleep(0.10)
-            print("\n[7]  Windows Pure C meterpreter/reverse_tcp Stager                    (C)")
+            print("\n[7]  Windows C meterpreter/reverse_tcp Stager                         (C)")
             sleep(0.10)
-            print("\n[8]  Windows Pure C meterpreter/reverse_http Stager                   (C)")
+            print("\n[8]  Windows C meterpreter/reverse_http Stager                        (C)")
             sleep(0.10)
-            print("\n[9]  Windows Powershell Oneliner Dropper                     (Powershell)")
+            print("\n[9]  Windows C x64/meterpreter/reverse_tcp Stager                     (C)")
             sleep(0.10)
-            print("\n[10] Windows Powershell Script Dropper                       (Powershell)")
+            print("\n[10] Windows C x64/meterpreter/reverse_http Stager                    (C)")
             sleep(0.10)
-            print("\n[11] Windows WinePyinstaller Python Meterpreter                  (Python)")
+            print("\n[11] Windows Powershell Oneliner Dropper                     (Powershell)")
             sleep(0.10)
-            print("\n[12] Windows WinePyinstaller Oneline payload dropper             (Python)")
+            print("\n[12] Windows Powershell Script Dropper                       (Powershell)")
+            sleep(0.10)
+            print("\n[13] Windows WinePyinstaller Python Meterpreter                  (Python)")
+            sleep(0.10)
+            print("\n[14] Windows WinePyinstaller Oneline payload dropper             (Python)")
             sleep(0.10)
             print("\n[0] Back")
             sleep(0.10)
@@ -138,16 +142,31 @@ def complete_menu():
                 Phantom_lib.clear()
                 Phantom_lib.description_printer(module_type)        
                 print("\n\n")
-                Phantom_lib.Polymorphic_C_x86Meterpreter_launcher(module_type)
+                Phantom_lib.Polymorphic_C_Meterpreter_launcher(module_type)
 
             elif ans=="8":
                 module_type = "Polymorphic_C_x86ReverseHttpMeterpreter_windows.py"
                 Phantom_lib.clear()
                 Phantom_lib.description_printer(module_type)        
                 print("\n\n")
-                Phantom_lib.Polymorphic_C_x86Meterpreter_launcher(module_type)
+                Phantom_lib.Polymorphic_C_Meterpreter_launcher(module_type)
 
             elif ans=="9":
+                module_type = "Polymorphic_C_x64ReverseTcpMeterpreter_windows.py"
+                Phantom_lib.clear()
+                Phantom_lib.description_printer(module_type)        
+                print("\n\n")
+                Phantom_lib.Polymorphic_C_Meterpreter_launcher(module_type)
+
+            elif ans=="10":
+                module_type = "Polymorphic_C_x64ReverseHttpMeterpreter_windows.py"
+                Phantom_lib.clear()
+                Phantom_lib.description_printer(module_type)        
+                print("\n\n")
+                Phantom_lib.Polymorphic_C_Meterpreter_launcher(module_type)
+
+
+            elif ans=="11":
                 module_type = "Polymorphic_PowershellOnelineDropper_windows.py"
                 Phantom_lib.clear()
                 Phantom_lib.description_printer(module_type)        
@@ -155,7 +174,7 @@ def complete_menu():
                 Phantom_lib.powershell_completer(module_type)
 
 
-            elif ans=="10":
+            elif ans=="12":
                 module_type = "Polymorphic_PowershellScriptDropper_windows.py"
                 Phantom_lib.clear()
                 Phantom_lib.description_printer(module_type)        
@@ -163,7 +182,7 @@ def complete_menu():
                 Phantom_lib.powershell_completer(module_type)
 
 
-            elif ans =="11":
+            elif ans =="13":
 
                 if Phantom_lib.wine_fastcheck() == True:
 
@@ -177,7 +196,7 @@ def complete_menu():
                     print(bcolors.RED + "\n[-] Wine Environment not ready\n" + bcolors.ENDC)
                     Phantom_lib.Enter2Continue()
 
-            elif ans =="12":
+            elif ans =="14":
 
                 if Phantom_lib.wine_fastcheck() == True:
 
