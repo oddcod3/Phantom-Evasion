@@ -51,12 +51,14 @@ chmod +x ./phantom-evasion.py
 ## Dependencies (only for manual setup)
 
 1. metasploit
-2. mingw-w64
+2. mingw-w64 (cygwin on windows)
 3. gcc
 4. apktool
 5. strip
-6. wine
-7. zipalign
+6. wine (not necessary on windows)
+7. apksigner
+8. pyinstaller
+
 
 require libc6-dev-i386 (linux only)
 
