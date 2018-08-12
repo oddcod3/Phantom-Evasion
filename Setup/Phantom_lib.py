@@ -1025,7 +1025,7 @@ def payload_generator(msfvenom_payload,arch,host,port,CustomOpt,payload_format):
         
 def custom_payload_completer(custom_shellcode):
 
-    Payload = "unsigned char * buf = \"" + custom_shellcode + "\";\n"
+    Payload = "unsigned char buf[] = \"" + custom_shellcode + "\";\n"
 
     return Payload
 
