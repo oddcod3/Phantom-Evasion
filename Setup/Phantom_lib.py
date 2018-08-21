@@ -340,7 +340,7 @@ def wine_check():
 
     except subprocess.CalledProcessError: 
         print(bcolors.RED + bcolors.BOLD + "\n[Wine] Python Not Found\n" + bcolors.ENDC + bcolors.ENDC)
-        print("In order to use windows wine-pyinstaller modules you need to\n install python on wine manually (\"wine python -v\" to check if it's reachable from commandline)\n")
+        print("In order to use windows wine-pyinstaller modules you need to\n install python on wine manually (\"wine python --version\" to check if it's reachable from commandline)\n")
         Enter2Continue() 
         
         
@@ -348,7 +348,7 @@ def wine_check():
 
         if "cannot find" in py_check:
             print(bcolors.RED + bcolors.BOLD + "\n[Wine] Python Not Found\n" + bcolors.ENDC + bcolors.ENDC)
-            print("In order to use windows wine-pyinstaller modules you need to\n manually install python on wine manually (\"wine python -v\" to check if python is reachable from commandline)\n")
+            print("In order to use windows wine-pyinstaller modules you need to\n manually install python on wine manually (\"wine python --version\" to check if python is reachable from commandline)\n")
             Enter2Continue()
         else:
 
