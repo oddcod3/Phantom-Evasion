@@ -27,6 +27,14 @@ The following OSs are likely able to run Phantom Evasion through manual setup:
 
 -android module reworked
 
+## Contributors
+
+Special thanks to:
+
+phra https://github.com/phra
+
+stefano118 https://github.com/stefano118
+
 ## Getting Started
 
 Simply git clone or download and unzip Phantom-Evasion folder
