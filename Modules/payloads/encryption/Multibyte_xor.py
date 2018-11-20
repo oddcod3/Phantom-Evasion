@@ -1,6 +1,7 @@
 import os,sys
 import binascii
 import random,string
+from time import sleep
 
 def varname_creator():
     varname = ""
@@ -25,71 +26,332 @@ def xor_encryption(data,key):
     return shellcode
 
 def bad_char_inspector(data):
+
     bad_char_detected=False
-    data=str(data)
+
     for i in range(0,len(data)):
-        if ord(data[i]) == 0:
+
+        if data[i] == "\x00":
             bad_char_detected=True
-        if ord(data[i]) == 10:
+        if data[i] == "\x0a":
             bad_char_detected=True
-        if ord(data[i]) == 13:
+        if data[i] == "\x0d":
             bad_char_detected=True
 
     return bad_char_detected
 
-def key_gen(keysize):
-    key=os.urandom(keysize)
-    check_bad_key=True
-    check_bad_key=bad_char_inspector(key)
-    while check_bad_key == True:
-        key=os.urandom(keysize)
-        check_bad_key=bad_char_inspector(key)
-    return key
+def shellcode_key_inspect(newb,keysize,shellcode,i):
+    index=0
+    len_shell=len(shellcode)
 
-def baddoublekey(key1,key2):
-    check_badchar=True
-    st_step = xor_encryption(key1,key2)
-    check_badchar=bad_char_inspector(st_step)
-    if check_badchar == False:
-        return False
-    else:
-        return True
+    while((i+(index*(keysize))) < len_shell):
 
+        shellbyte=bytearray(shellcode[i+(index*(keysize))])
+        keybyte=bytearray(newb)
 
-def badtriplekey(key,key2,key3):
-    check_badchar1=True
-    st_step = xor_encryption(key,key2)
-    check_badchar1=bad_char_inspector(st_step)
-    if check_badchar1 == False:
+        res=bytearray([shellbyte[0]^keybyte[0]])
 
-        check_badchar2=True
-        nd_step = xor_encryption(st_step,key3)
-        check_badchar2=bad_char_inspector(nd_step)
-
-        if check_badchar2 == False:
-
-            return False
-
-        else:
+        if bad_char_inspector(str(res)):
 
             return True
-    else:
+ 
+        index+=1
 
-        return True
+    return False
+
+
+def key_gen(shellcode):
+
+    Valid_key=False
+
+    New_lenght=True
+
+    st_len=16
+
+    byist=[chr(i) for i in range(1,256)]
+
+    while Valid_key == False:
+
+        Valid_key = True
+
+        key=""
+
+        if New_lenght==True:
+
+            st_len=st_len*2
+            keysize=random.randint(st_len,st_len*2)
+            New_lenght=False
+
+        sys.stdout.write("[Building xor-key (lenght:" + str(keysize) + "]: ")
+        sys.stdout.flush()
+
+        i=0
+
+        while i < keysize:
+
+            random.shuffle(byist)
+
+            ii = 0
+
+            FindB = False
+
+            while (ii < 255) and ((Valid_key == True) and (FindB == False)):
+
+                newb=byist[ii]
+
+                if ((bad_char_inspector(newb) == False) and (shellcode_key_inspect(newb,keysize,shellcode.decode('string-escape'),i) == False)):
+                    key+=newb
+                    FindB = True
+                    sleep(0.01)
+                    sys.stdout.write("\\x" + newb.encode('hex'))
+                    sys.stdout.flush()
+
+                elif ii == 254:
+
+                    Valid_key = False
+                    print("[-] Failed , increasing key lenght ")
+                    New_lenght=True
+                    sleep(1)
+                    ii+=1
+
+                else:
+
+                    ii+=1
+
+            i+=1
+
+
+ 
+    return key
+
+def doublekey_gen(shellcode):
+
+    Valid_key=False
+
+    New_lenght=True
+
+    st_len=16
+
+    if len(shellcode) > 10000:
+
+        st_len=st_len*2
+
+    if len(shellcode) > 200000:
+
+        st_len=st_len*2
+
+
+    byist1=[chr(i) for i in range(1,256)]
+    byist2=[chr(i) for i in range(1,256)]
+
+    while Valid_key == False:
+
+        Valid_key = True
+
+        key1=""
+        key2=""
+
+        if New_lenght==True:
+
+            st_len=st_len*2
+            keysize=random.randint(st_len,st_len*2)
+            New_lenght=False
+
+        sys.stdout.write("[Building xor-key (lenght:" + str(keysize) + "]: ")
+        sys.stdout.flush()
+
+        i=0
+
+        while i < keysize:
+
+            random.shuffle(byist1)
+            random.shuffle(byist2)
+
+            ii = 0
+
+
+            FindB = False
+
+            while (ii < 255) and ((Valid_key == True) and (FindB == False)):
+
+                ix = 0
+                newb=byist1[ii]
+                newb2=byist2[ix]
+
+                if ((bad_char_inspector(newb) == False and bad_char_inspector(newb2) == False) and (shellcode_key_inspect(newb,keysize,newb2,i) == False) and (shellcode_key_inspect(xor_encryption(newb,newb2),keysize,shellcode.decode('string-escape'),i) == False)):
+
+                    key1+=newb
+                    key2+=newb2
+                    FindB = True
+                    sleep(0.01)
+                    sys.stdout.write("\\x" + newb.encode('hex'))
+                    sys.stdout.flush()
+
+                elif ii == 254:
+
+                    Valid_key = False
+                    print("[-] Failed , increasing key lenght ")
+                    New_lenght=True
+                    sleep(1)
+                    ii+=1
+
+                else:
+
+                    if bad_char_inspector(newb) == False:
+
+                        while (ix < 254) and (FindB == False):
+
+                            ix+=1
+
+                            newb2=byist2[ix]
+
+                            if (bad_char_inspector(newb2) == False) and ((shellcode_key_inspect(newb,keysize,newb2,i) == False) and (shellcode_key_inspect(xor_encryption(newb,newb2),keysize,shellcode.decode('string-escape'),i) == False)):
+
+                                key1+=newb
+                                key2+=newb2
+                                FindB = True
+                                sleep(0.01)
+                                sys.stdout.write("\\x" + newb.encode('hex'))
+                                sys.stdout.flush()
+                        ii+=1
+
+                    else:
+
+                        ii+=1
+
+            i+=1
+
+
+ 
+    return (key1,key2)
+
+def triplekey_gen(shellcode):
+
+    Valid_key=False
+
+    New_lenght=True
+
+    st_len=16
+
+    if len(shellcode) > 10000:
+
+        st_len=st_len*2
+
+
+    if len(shellcode) > 100000:
+
+        st_len=st_len*2
+
+    if len(shellcode) > 1000000:
+
+        st_len=st_len*4
+
+    byist1=[chr(i) for i in range(1,256)]
+    byist2=[chr(i) for i in range(1,256)]
+    byist3=[chr(i) for i in range(1,256)]
+
+    while Valid_key == False:
+
+        Valid_key = True
+
+        key1=""
+        key2=""
+        key3=""
+
+        if New_lenght==True:
+
+            st_len=st_len*2
+            keysize=random.randint(st_len,st_len*2)
+            New_lenght=False
+
+        sys.stdout.write("[Building xor-key (lenght:" + str(keysize) + "]: ")
+        sys.stdout.flush()
+
+        i=0
+
+        while i < keysize:
+
+            random.shuffle(byist1)
+            random.shuffle(byist2)
+            random.shuffle(byist3)
+
+            ii = 0
+
+
+            FindB = False
+
+            while (ii < 255) and ((Valid_key == True) and (FindB == False)):
+
+                ix = 0
+                iz = 0
+                newb=byist1[ii]
+                newb2=byist2[ix]
+                newb3=byist3[iz]
+
+                if (bad_char_inspector(newb) == False) and (bad_char_inspector(newb2) == False and bad_char_inspector(newb3) == False) and (shellcode_key_inspect(newb,keysize,newb2,i) == False and shellcode_key_inspect(xor_encryption(newb,newb2),keysize,newb3,i) == False and shellcode_key_inspect(xor_encryption(xor_encryption(newb,newb2),newb3),keysize,shellcode.decode('string-escape'),i) == False):
+
+                    key1+=newb
+                    key2+=newb2
+                    key3+=newb3
+                    FindB = True
+                    sleep(0.01)
+                    sys.stdout.write("\\x" + newb.encode('hex'))
+                    sys.stdout.flush()
+
+                elif ii == 254:
+
+                    Valid_key = False
+                    print("[-] Failed , increasing key lenght ")
+                    New_lenght=True
+                    sleep(1)
+                    ii+=1
+
+                else:
+
+                    if bad_char_inspector(newb) == False:
+
+                        while (ix < 254) and (FindB == False):
+
+                            ix+=1
+                            iz=0
+
+                            newb2=byist2[ix]
+
+                            while (iz < 254) and (FindB == False):
+
+                                if (bad_char_inspector(newb2) == False) and (bad_char_inspector(newb3) == False) and (shellcode_key_inspect(newb,keysize,newb2,i) == False and shellcode_key_inspect(xor_encryption(newb,newb2),keysize,newb3,i) == False and shellcode_key_inspect(xor_encryption(xor_encryption(newb,newb2),newb3),keysize,shellcode.decode('string-escape'),i) == False):
+
+                                    key1+=newb
+                                    key2+=newb2
+                                    key3+=newb3
+                                    FindB = True
+                                    sleep(0.01)
+                                    sys.stdout.write("\\x" + newb.encode('hex'))
+                                    sys.stdout.flush()
+
+                                else:
+                                    newb3=byist3[iz]
+
+                                iz+=1
+                            ii+=1
+                        ii+=1
+
+                    else:
+
+                        ii+=1
+
+            i+=1
+
+
+ 
+    return (key1,key2,key3)
+
 
 def Xor_stub2(shellcode,bufname):
-    keysize=random.randint(12,24)
-    key=key_gen(keysize)
+
+    key=key_gen(shellcode)
 
     encrypted_shellcode=xor_encryption(shellcode.decode('string-escape'),key)
-    check_bad_char=True
-    check_bad_char=bad_char_inspector(encrypted_shellcode)
-
-    while check_bad_char == True:
-        key=key_gen(keysize)
-        encrypted_shellcode=xor_encryption(shellcode.decode('string-escape'),key)
-        check_bad_char=bad_char_inspector(encrypted_shellcode)
-
     encrypted_shellcode= binascii.hexlify(encrypted_shellcode)
 
     printable_shellcode = ""
@@ -162,46 +424,17 @@ def Xor_stub2(shellcode,bufname):
         Xor_stub += Randflag2 + " = 0;\n}" 
         Xor_stub += "else{\n"
         Xor_stub += Randflag2  + " = " + Randflag2 + " + 1;}\n"
-        Xor_stub += Randflag1 + " +=1;}\n"              
-    
+        Xor_stub += Randflag1 + " +=1;}\n"
+
+    print("")
     return (Encoded_buffer,Xor_stub)
 
 def Doublexor_stub2(shellcode,bufname):
-    keysize1=random.randint(12,24)
-    keysize2=random.randint(12,24)
-    key1=key_gen(keysize1)
-    key2=key_gen(keysize2)
-    badkeys=True
-
-    badkeys=baddoublekey(key1,key2)
-
-    while badkeys == True:
-        key1=key_gen(keysize1)
-        key2=key_gen(keysize2)
-        badkeys=baddoublekey(key1,key2)
-    
+    keys=doublekey_gen(shellcode)
+    key1=keys[0]
+    key2=keys[1]
     Realkey=xor_encryption(key1,key2)
-
     encrypted_shellcode=xor_encryption(shellcode.decode('string-escape'),Realkey)
-    check_bad_char=True
-    check_bad_char=bad_char_inspector(encrypted_shellcode)
-
-    while check_bad_char == True:
-        badkeys=True
-        key1=key_gen(keysize1)
-        key2=key_gen(keysize2)
-        badkeys=baddoublekey(key1,key2)
-
-        while badkeys == True:
-            key1=key_gen(keysize1)
-            key2=key_gen(keysize2)
-            badkeys=baddoublekey(key1,key2)
-
-            Realkey=xor_encryption(key1,key2)
-
-        encrypted_shellcode=xor_encryption(shellcode.decode('string-escape'),Realkey)
-        check_bad_char=bad_char_inspector(encrypted_shellcode)
-
     encrypted_shellcode= binascii.hexlify(encrypted_shellcode)
 
     printable_shellcode = ""
@@ -325,55 +558,18 @@ def Doublexor_stub2(shellcode,bufname):
         Xor_stub += "else{\n"
         Xor_stub += Randflag4  + " = " + Randflag4 + " + 1;}\n"
         Xor_stub += Randflag1 + " += 1;}\n"    
-    
+
+    print("")    
     return (Encoded_buffer,Xor_stub)
 
 def Triplexor_stub2(shellcode,bufname):
-    keysize1=random.randint(12,24)
-    keysize2=random.randint(12,24)
-    keysize3=random.randint(12,24)
-    key1=key_gen(keysize1)
-    key2=key_gen(keysize2)
-    key3=key_gen(keysize3)
-    badkeys=True
-
-    badkeys=badtriplekey(key1,key2,key3)
-
-    while badkeys == True:
-        key1=key_gen(keysize1)
-        key2=key_gen(keysize2)
-        key3=key_gen(keysize3)
-        badkeys=badtriplekey(key1,key2,key3)
-    
+    keys=triplekey_gen(shellcode)
+    key1=keys[0]
+    key2=keys[1]
+    key3=keys[2]
     Realkey=xor_encryption(key1,key2)
-    
     Realkey=xor_encryption(Realkey,key3)
-
-
     encrypted_shellcode=xor_encryption(shellcode.decode('string-escape'),Realkey)
-    check_bad_char=True
-    check_bad_char=bad_char_inspector(encrypted_shellcode)
-
-    while check_bad_char == True:
-        badkeys=True
-        key1=key_gen(keysize1)
-        key2=key_gen(keysize2)
-        key3=key_gen(keysize3)
-        badkeys=badtriplekey(key1,key2,key3)
-
-        while badkeys == True:
-            key1=key_gen(keysize1)
-            key2=key_gen(keysize2)
-            key3=key_gen(keysize3)
-            badkeys=badtriplekey(key1,key2,key3)
-
-            Realkey=xor_encryption(key1,key2)
-    
-            Realkey=xor_encryption(Realkey,key3)
-
-        encrypted_shellcode=xor_encryption(shellcode.decode('string-escape'),Realkey)
-        check_bad_char=bad_char_inspector(encrypted_shellcode)
-
     encrypted_shellcode= binascii.hexlify(encrypted_shellcode)
 
     printable_shellcode = ""
@@ -544,5 +740,5 @@ def Triplexor_stub2(shellcode,bufname):
         Xor_stub += Randflag1 + " += 1;}\n"
 
  
-    
+    print("")    
     return (Encoded_buffer,Xor_stub)

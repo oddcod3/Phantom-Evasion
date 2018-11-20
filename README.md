@@ -1,31 +1,36 @@
-# PHANTOM EVASION
+# PHANTOM EVASION 2.0
 
-Phantom-Evasion is an interactive antivirus evasion tool written in python capable to generate (almost) FUD executable even with the most common 32 bit msfvenom payload (best performances are obtained with 64 bit payloads).
+Phantom-Evasion is an interactive antivirus evasion tool written in python capable to generate (almost) FUD executable even with the most common 32 bit msfvenom payload (lower detection ratio with 64 bit payloads).
 The aim of this tool is to make antivirus evasion an easy task for pentesters through the use of modules focused on polymorphic code and antivirus sandbox detection techniques.
 Since version 1.0 Phantom-Evasion also include a post-exploitation section dedicated to persistence and auxiliary modules.
 
 
+
 Kali Linux Rolling 2018.1+ is the only OS with automatic setup officially supported
 
-The following OSs support (unofficially) automatic setup :
-    
-1. Parrot Security
+The following OSs officialy support automatic setup:
 
+1. Kali Linux Rolling 2018.1+   (64 bit)
+2. Parrot Security              (64 bit)
 
 The following OSs are likely able to run Phantom Evasion through manual setup:
 
-1. Arch Linux
-2. BlackArch Linux
-3. Elementary
-4. Linux Mint
-5. Ubuntu 15.10+
-6. Windows 7/8/10
+1. Arch Linux                   (64 bit)
+2. BlackArch Linux              (64 bit)
+3. Elementary                   (64 bit)
+4. Linux Mint                   (64 bit)
+5. Ubuntu 15.10+                (64 bit)
+6. Windows 7/8/10               (64 bit)
  
-## Version 1.2.0 released!
+## Version 2.0 released!
 
--x64 reverse_tcp/http pure c stager
+New features:
 
--android module reworked
+-Process Inject (PEinject) modules
+-Thread Execution Hijack modules
+-Pure C meterpreter reverse https stager (x86/x64)
+-non-staged msfvenom payload support
+-multibyte xor with progressive key-lenght
 
 ## Contributors
 
@@ -45,20 +50,20 @@ Automatic setup officially supported, open a terminal and execute phantom-evasio
 
 
 ```
-python phantom-evasion.py 
+sudo python phantom-evasion.py 
 ```
 
 or:
 
 ```
-chmod +x ./phantom-evasion.py
+sudo chmod +x ./phantom-evasion.py
 
-./phantom-evasion.py
+sudo ./phantom-evasion.py
 ```
 
 ## Dependencies (only for manual setup)
 
-1. metasploit
+1. metasploit-framework
 2. mingw-w64 (cygwin on windows)
 3. gcc
 4. apktool
@@ -77,9 +82,13 @@ require libc6-dev-i386 (linux only)
 Msfvenom windows payloads and custom shellcodes supported
 
 (>) Randomized junkcode and windows antivirus evasion techniques
+
 (>) Multibyte Xor encoders availables (see Multibyte Xor encoders readme section)
+
 (>) Decoy Processes Spawner available (see Decoy Process Spawner section)
+
 (>) Strip executable available (https://en.wikipedia.org/wiki/Strip_(Unix))
+
 (>) Execution time range:35-60 second
 
 1) Windows Shellcode Injection VirtualAlloc:
@@ -87,23 +96,44 @@ Inject and Execute shellcode in memory using VirtualAlloc,CreateThread,WaitForSi
 
 2) Windows Shellcode Injection VirtualAlloc NoDirectCall LL/GPA:
 Inject and Execute shellcode in memory using VirtualAlloc,CreateThread,WaitForSingleObject API.
-VirtualAlloc is dinamically loaded (No Direct Call) using LoadLibrary and GetProcAddress API.  
+Critical API are dinamically loaded (No Direct Call) using LoadLibrary and GetProcAddress API.  
 
 3) Windows Shellcode Injection VirtualAlloc NoDirectCall GPA/GMH:
 Inject and Execute shellcode in memory using VirtualAlloc,CreateThread,WaitForSingleObject API.
-VirtualAlloc is dinamically loaded (No Direct Call) using GetModuleHandle and GetProcAddress API.  
+Critical API are dinamically loaded (No Direct Call) using GetModuleHandle and GetProcAddress API.  
 
 4) Windows Shellcode Injection HeapAlloc:
-Inject and Execute shellcode in memory using VirtualAlloc,CreateThread,WaitForSingleObject API.
+Inject and Execute shellcode in memory using HeapAlloc,HeapCreate,CreateThread,WaitForSingleObject API.
 
 5) Windows Shellcode Injection HeapAlloc NoDirectCall LL/GPA:
 Inject and Execute shellcode in memory using HeapCreate,HeapAlloc,CreateThread,WaitForSingleObject API.
-HeapCreate and HeapAlloc are dinamically loaded (No Direct Call) using LoadLibrary and GetProcAddress API.  
+Critical API are dinamically loaded (No Direct Call) using LoadLibrary and GetProcAddress API. 
 
 6) Windows Shellcode Injection HeapAlloc NoDirectCall GPA/GMH:
 Inject and Execute shellcode in memory using HeapCreate,HeapAlloc,CreateThread,WaitForSingleObject API.
-HeapCreate and HeapAlloc are dinamically loaded (No Direct Call) using GetModuleHandle and GetProcAddress API.  
+Critical API are dinamically loaded (No Direct Call) using GetModuleHandle and GetProcAddress API.  
 
+7) Windows Shellcode Injection Process inject:
+Inject and Execute shellcode into remote process memory (default: OneDrive.exe (x86) , explorer.exe (x64)) using VirtualAllocEx,WriteProcessMemory,CreateRemoteThread,WaitForSingleObject API.
+
+8) Windows Shellcode Injection Process inject NoDirectCall LL/GPA:
+Inject and Execute shellcode into remote process memory (default: OneDrive.exe (x86) , explorer.exe (x64)) using VirtualAllocEx,WriteProcessMemory,CreateRemoteThread,WaitForSingleObject API.
+Critical API are dinamically loaded (No Direct Call) using LoadLibrary and GetProcAddress API.
+
+9) Windows Shellcode Injection Process inject NoDirectCall GPA/GMH:
+Inject and Execute shellcode into remote process memory (default: OneDrive.exe (x86) , explorer.exe (x64)) using VirtualAllocEx,WriteProcessMemory,CreateRemoteThread,WaitForSingleObject API.
+Critical API are dinamically loaded (No Direct Call) using GetModuleHandle and GetProcAddress API.
+
+10) Windows Shellcode Injection Thread Hijack:
+Inject shellcode into remote process memory and execute it performing thread execution hijack (default: OneDrive.exe (x86) , explorer.exe (x64)) using VirtualAllocEx,WriteProcessMemory,Get/SetThreadContext,Suspend/ResumeThread API.
+
+11) Windows Shellcode Injection Thread Hijack LL/GPA:
+Inject shellcode into remote process memory and execute it performing thread execution hijack (default: OneDrive.exe (x86) , explorer.exe (x64)) using VirtualAllocEx,WriteProcessMemory,Get/SetThreadContext,Suspend/ResumeThread API.
+Critical API are dinamically loaded (No Direct Call) using LoadLibrary and GetProcAddress API.
+
+12) Windows Shellcode Injection Thread Hijack GPA/GMH:
+Inject shellcode into remote process memory and execute it performing thread execution hijack (default: OneDrive.exe (x86) , explorer.exe (x64)) using VirtualAllocEx,WriteProcessMemory,Get/SetThreadContext,Suspend/ResumeThread API.
+Critical API are dinamically loaded (No Direct Call) using GetModuleHandle and GetProcAddress API.
 
 ## Windows Pure C meterpreter stager
 
@@ -115,54 +145,76 @@ Pure C polymorphic meterpreter stagers compatible with msfconsole and cobalt str
 (>) Execution time range:35-60 second
 
 
-7) Windows Pure C meterpreter/reverse_tcp Stager:
-32 bit windows/meterpreter/reverse_tcp polymorphic stager (require multi/handler listener with payload set to windows/meterpreter/reverse_tcp)
-First established meterpreter sessions will be invalid wait till a second sessions will be created (with stdapi loaded),   
+1) C meterpreter/reverse_TCP VirtualAlloc (x86/x64):
+32/64 bit windows/meterpreter/reverse_tcp polymorphic stager written in c (require multi/handler listener with payload set to windows/meterpreter/reverse_tcp (if x86) -- windows/x64/meterpreter/reverse_tcp (if x64) , memory:Virtual)
 
-8) Windows Pure C meterpreter/reverse_http Stager:
-32 bit windows/meterpreter/reverse_http polymorphic stager (require multi/handler listener with payload set to windows/meterpreter/reverse_http)
+2) C meterpreter/reverse_TCP HeapAlloc (x86/x64):
+32/64 bit windows/meterpreter/reverse_tcp polymorphic stager written in c (require multi/handler listener with payload set to windows/meterpreter/reverse_tcp (if x86) -- windows/x64/meterpreter/reverse_tcp (if x64) , memory:Heap) 
+
+3) C meterpreter/reverse_TCP VirtualAlloc NoDirectCall GPAGMH  (x86/x64):
+32/64 bit windows/meterpreter/reverse_tcp polymorphic stager written in c (rrequire multi/handler listener with payload set to windows/meterpreter/reverse_tcp (if x86) -- windows/x64/meterpreter/reverse_tcp (if x64) , memory:Virtual , API loaded at runtime)
+
+4) C meterpreter/reverse_TCP HeapAlloc NoDirectCall GPAGMH (x86/x64):
+32/64 bit windows/meterpreter/reverse_tcp polymorphic stager written in c (require multi/handler listener with payload set to windows/meterpreter/reverse_tcp (if x86) -- windows/x64/meterpreter/reverse_tcp (if x64) , memory:Heap , API loaded at runtime) 
+
+5) C meterpreter/reverse_HTTP VirtualAlloc (x86/x64):
+32/64 bit windows/meterpreter/reverse_http polymorphic stager written in c (require multi/handler listener with payload set to windows/meterpreter/reverse_http (if x86) -- windows/x64/meterpreter/reverse_http (if x64) , memory:Virtual)
+
+6) C meterpreter/reverse_HTTP HeapAlloc (x86/x64):
+32/64 bit windows/meterpreter/reverse_http polymorphic stager written in c (require multi/handler listener with payload set to windows/meterpreter/reverse_http (if x86) -- windows/x64/meterpreter/reverse_http (if x64) , memory:Heap) 
+
+7) C meterpreter/reverse_HTTP VirtualAlloc NoDirectCall GPAGMH  (x86/x64):
+32/64 bit windows/meterpreter/reverse_http polymorphic stager written in c (require multi/handler listener with payload set to windows/meterpreter/reverse_http (if x86) -- windows/x64/meterpreter/reverse_http (if x64) , API loaded at runtime)
+
+8) C meterpreter/reverse_HTTP HeapAlloc NoDirectCall GPAGMH (x86/x64):
+32/64 bit windows/meterpreter/reverse_http polymorphic stager written in c (require multi/handler listener with payload set to windows/meterpreter/reverse_http (if x86) -- windows/x64/meterpreter/reverse_http (if x64) , memory:Heap , API loaded at runtime)
+
+9) C meterpreter/reverse_HTTPS VirtualAlloc (x86/x64):
+32/64 bit windows/meterpreter/reverse_http polymorphic stager written in c (require multi/handler listener with payload set to windows/meterpreter/reverse_https (if x86) -- windows/x64/meterpreter/reverse_https (if x64) , memory:Virtual)
+
+10) C meterpreter/reverse_HTTPS HeapAlloc (x86/x64):
+32/64 bit windows/meterpreter/reverse_http polymorphic stager written in c (require multi/handler listener with payload set to windows/meterpreter/reverse_https (if x86) -- windows/x64/meterpreter/reverse_https (if x64) , memory:Heap) 
+
+11) C meterpreter/reverse_HTTPS VirtualAlloc NoDirectCall GPAGMH  (x86/x64):
+32/64 bit windows/meterpreter/reverse_http polymorphic stager written in c (require multi/handler listener with payload set to windows/meterpreter/reverse_https (if x86) -- windows/x64/meterpreter/reverse_https (if x64) , API loaded at runtime)
+
+12) C meterpreter/reverse_HTTPS HeapAlloc NoDirectCall GPAGMH (x86/x64):
+32/64 bit windows/meterpreter/reverse_http polymorphic stager written in c (require multi/handler listener with payload set to windows/meterpreter/reverse_https (if x86) -- windows/x64/meterpreter/reverse_https (if x64) , memory:Heap , API loaded at runtime)
 
 
-9) Windows Pure C meterpreter/reverse_tcp Stager:
-64 bit windows/meterpreter/reverse_tcp polymorphic stager (require multi/handler listener with payload set to windows/x64/meterpreter/reverse_tcp)
-First established meterpreter sessions will be invalid wait till a second sessions will be created (with stdapi loaded),   
+## Powershell / Wine-Pyinstaller modules 
 
-10) Windows Pure C meterpreter/reverse_http Stager:
-64 bit windows/meterpreter/reverse_http polymorphic stager (require multi/handler listener with payload set to windows/x64/meterpreter/reverse_http)
-
-
-## Windows Powershell modules 
+Powershell modules:
 
 (>) Randomized junkcode and windows antivirus evasion techniques
 (>) Decoy Process Spawner available (see phantom evasion decoy process spawner section)
 (>) Strip executable available (https://en.wikipedia.org/wiki/Strip_(Unix))
 (>) Execution time range:35-60 second
 
-11) Windows Powershell/Cmd Oneliner Dropper:
+1) Windows Powershell/Cmd Oneliner Dropper:
 Require user-supplied Powershell/Cmd oneliner payload (example Empire oneliner payload). 
 Generate Windows powershell/Cmd oneliner dropper written in c.
 Powershell/Cmd oneliner payload is executed using system() function.
 
 
-12) Windows Powershell Script Dropper:
+2) Windows Powershell Script Dropper:
 Both msfvenom and custom powershell payloads supported.
 (32 bit powershell payloads are not compatible with 64 bit powershell target and vice versa.)
 Generate Windows powershell script (.ps1) dropper written in c.
 Powershell script payload is executed using system() function 
 (powershell -executionpolicy bypass -WindowStyle Hidden -Noexit -File "PathTops1script").
 
-
-## Windows Wine-Pyinstaller modules 
+Wine-Pyinstaller modules:
 
 (>) Randomized junkcode and windows antivirus evasion techniques
 (>) Execution time range:5-25 second
 (>) Require python and pyinstaller installed in wine.
 
-13) Windows WinePyinstaller Python Meterpreter
+3) Windows WinePyinstaller Python Meterpreter
 
 Pure python meterpreter payload.  
 
-14)  WinePyinstaller Oneline payload dropper
+4)  WinePyinstaller Oneline payload dropper
 
 Pure python powershell/cmd oneliner dropper.
 
@@ -246,7 +298,7 @@ CONS: Higher resource consumption.
 
 ## Multibyte Xor Encoder:
 
-C xor encoders with three pure c decoding stub available with Shellcode Injection modules family.
+C xor encoders with three pure c decoding stub available with Shellcode Injection modules.
 
 1. MultibyteKey xor:
 

