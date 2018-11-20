@@ -5,9 +5,6 @@ The aim of this tool is to make antivirus evasion an easy task for pentesters th
 Since version 1.0 Phantom-Evasion also include a post-exploitation section dedicated to persistence and auxiliary modules.
 
 
-
-Kali Linux Rolling 2018.1+ is the only OS with automatic setup officially supported
-
 The following OSs officialy support automatic setup:
 
 1. Kali Linux Rolling 2018.1+   (64 bit)
