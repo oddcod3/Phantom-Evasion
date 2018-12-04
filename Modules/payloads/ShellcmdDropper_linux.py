@@ -24,7 +24,7 @@ sys.path.append("Modules/payloads/auxiliar")
 from usefull import varname_creator
 from usefull import Junkmathinject
 from usefull import CheckForBackslash
-from usefull import Polymorph_Multipath_Evasion
+from usefull import generic_evasion
 
 BashOneliner = CheckForBackslash(sys.argv[1])
 
@@ -43,10 +43,10 @@ Junkcode_06 = Junkmathinject()
 Junkcode_07 = Junkmathinject()		
 Junkcode_08 = Junkmathinject()		
 
-MorphEvasion1 = Polymorph_Multipath_Evasion()
-MorphEvasion2 = Polymorph_Multipath_Evasion()
-MorphEvasion3 = Polymorph_Multipath_Evasion()
-MorphEvasion4 = Polymorph_Multipath_Evasion()
+MorphEvasion1 = generic_evasion()
+MorphEvasion2 = generic_evasion()
+MorphEvasion3 = generic_evasion()
+MorphEvasion4 = generic_evasion()
 
 Hollow_code = ""
 

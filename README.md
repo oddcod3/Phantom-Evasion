@@ -1,4 +1,4 @@
-# PHANTOM EVASION 2.0
+# PHANTOM EVASION 2.0.1
 
 Phantom-Evasion is an interactive antivirus evasion tool written in python capable to generate (almost) FUD executable even with the most common 32 bit msfvenom payload (lower detection ratio with 64 bit payloads).
 The aim of this tool is to make antivirus evasion an easy task for pentesters through the use of modules focused on polymorphic code and antivirus sandbox detection techniques.
@@ -19,15 +19,21 @@ The following OSs are likely able to run Phantom Evasion through manual setup:
 5. Ubuntu 15.10+                (64 bit)
 6. Windows 7/8/10               (64 bit)
  
-## Version 2.0 released!
+## Version 2.0.1 released!
 
 New features:
 
 -Process Inject (PEinject) modules
+
 -Thread Execution Hijack modules
+
 -Pure C meterpreter reverse https stager (x86/x64)
--non-staged msfvenom payload support
--multibyte xor with progressive key-lenght
+
+-Non-staged msfvenom payload support
+
+-Multibyte xor with progressive key-lenght
+
+-Online certificate spoofer & Exe signer
 
 ## Contributors
 

@@ -1612,7 +1612,7 @@ def Junkmathinject():
     return Junkcode
 
 
-def Polymorph_Multipath_Evasion():
+def generic_evasion():
 
     number = random.randint(1,7)
 

