@@ -1463,7 +1463,7 @@ def module_launcher2(module_choice):
 
         elif arch == "x64":
 
-            Proc_arch == "x64"
+            Proc_arch = "x64"
             Proc_target=InputFunc("\n[>] Please insert x64 target process (default:explorer.exe):")
 
             if Proc_target == "":
