@@ -1,3 +1,7 @@
+# PHANTOM EVASION 3.0
+
+Major update incoming in the next 3 days (approx.)
+
 # PHANTOM EVASION 2.0.1
 
 Phantom-Evasion is an interactive antivirus evasion tool written in python capable to generate (almost) FUD executable even with the most common 32 bit msfvenom payload (lower detection ratio with 64 bit payloads).
