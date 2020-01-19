@@ -100,43 +100,53 @@ or:
 Msfvenom windows payloads and custom shellcode supported.
 Shellcode can be stored as resource and retrieved at runtime with FindResource API.
 
-Shellcode Encryption supported: 1.none
+Shellcode Encryption supported: 
 
-                                2.Multibyte-Xor
+    1.none
 
-                                3.Double-key Multibyte-Xor
+    2.Multibyte-Xor
 
-                                4.Vigenere
+    3.Double-key Multibyte-Xor
 
-                                5.Double-key Vigenere
+    4.Vigenere
 
-1. Local exec method can be one of the following:  Thread
+    5.Double-key Vigenere
 
-                                                   APC    
+1. Local exec method can be one of the following:  
+                                                   
+    Thread
+                                                   
+    APC    
 
-   Local Memory allocation mode can be one of the following: Virtual_RWX
+   Local Memory allocation mode can be one of the following: 
 
-                                                             Virtual_RW/RX
+    Virtual_RWX
+                                                             
+    Virtual_RW/RX
+                                                         
+    Virtual_RW/RWX
+                                                           
+    Heap_RWX
 
-                                                             Virtual_RW/RWX
+2. Remote exec method can be one of the following: 
 
-                                                             Heap_RWX
+    ThreadExecutionHijack (shorten is TEH)
+                                                  
+    Processinject         (shorten is PI)
+                                                   
+    APCSpray              (shorten is APCS)
+                                                 
+    EarlyBird             (shorten is EB)
+                                                  
+    EntryPointHijack      (shorten is EPH) 
 
-2. Remote exec method can be one of the following: ThreadExecutionHijack (shorten is TEH)
+   Remote Memory allocation mode can be one of the following: 
 
-                                                   Processinject         (shorten is PI)
-
-                                                   APCSpray              (shorten is APCS)
-
-                                                   EarlyBird             (shorten is EB)
-
-                                                   EntryPointHijack      (shorten is EPH) 
-
-   Remote Memory allocation mode can be one of the following: Virtual_RWX
-
-                                                              Virtual_RW/RX
-
-                                                              Virtual_RW/RWX
+    Virtual_RWX
+                                                            
+    Virtual_RW/RX
+                                                              
+    Virtual_RW/RWX
                                                                                    
 
 ## Windows Pure C meterpreter stager (C)
@@ -151,31 +161,37 @@ Using cmdline mode:
 
     reverse_https c stager is WRS
 
-1. Local exec method can be one of the following:  Thread 
+1. Local exec method can be one of the following:  
 
-                                                   APC    
+    Thread 
+                                        
+    APC    
 
-   Local Memory allocation mode can be one of the following: Virtual_RWX
+   Local Memory allocation mode can be one of the following: 
 
-                                                             Virtual_RW/RX
-
-                                                             Virtual_RW/RWX
-
-                                                             Heap_RWX
+    Virtual_RWX
+                                                           
+    Virtual_RW/RX
+                                                           
+    Virtual_RW/RWX
+                                                           
+    Heap_RWX
 
 ## Windows C Download-Exec NoDiskWrite
 
 Download exe/dll from supplied url in memory and execute/load into remote process (without writing on disk).
 
-EXE/DLL Encrypted Download supported: 1.none
+EXE/DLL Encrypted Download supported: 
 
-                                      2.Multibyte-Xor
-
-                                      3.Double-key Multibyte-Xor
-
-                                      4.Vigenere
-
-                                      5.Double-key Vigenere
+    1.none
+                                     
+    2.Multibyte-Xor
+                                     
+    3.Double-key Multibyte-Xor
+                                   
+    4.Vigenere
+                                    
+    5.Double-key Vigenere
 
 The Encrypted DLL/EXE will be saved as originalfilename + "crypt" + ".dll" or ".exe" this is the one to be downloaded
 
