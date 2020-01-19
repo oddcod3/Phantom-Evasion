@@ -21,15 +21,11 @@
      ########################################################################################
 
 import sys
-import os,platform
 import atexit
-import random
-import subprocess
 from time import sleep 
-from shutil import rmtree
-from random import shuffle
 sys.path.insert(0,"Setup")
 import Phantom_lib
+from Setup_lib import AutoSetup
 sys.dont_write_bytecode = True
 
 class bcolors:
@@ -43,658 +39,348 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 
-def complete_menu():
+def CompleteMenu():
+
     answ=True
+
     while answ:
-        Phantom_lib.clear()
-        Phantom_lib.banner()
-        Phantom_lib.menu_options()
+
+        Phantom_lib.Clear()
+        Phantom_lib.Banner()
+        Phantom_lib.MenuOptions()
+
         ans = ""
         ans = Phantom_lib.InputFunc("\n[>] Please insert option: ")
 
         if ans=="1":
 
-            Phantom_lib.clear()
+            Phantom_lib.Clear()            
             print("---------------------------------------------------------------------------")
-            print(bcolors.OCRA + "[+] WINDOWS MODULES INDEX:" + bcolors.ENDC)
+            print(bcolors.OCRA + "[+] WINDOWS MODULES:" + bcolors.ENDC)
             print("---------------------------------------------------------------------------")
             sleep(0.10)
-            print("\n[1]  Shellcode Injection                                                 ")
+            print("\n[1]  Windows Shellcode Injection                 (C)")
             sleep(0.10)
-            print("\n[2]  Stager                                                              ")
+            print("\n[2]  Windows Reverse Tcp Stager                  (C)")
             sleep(0.10)
-            print("\n[3]  Powershell / Wine-pyinstaller                                       ")
+            print("\n[3]  Windows Reverse Http Stager                 (C)")
+            sleep(0.10)
+            print("\n[4]  Windows Reverse Https Stager                (C)")
+            sleep(0.10)
+            print("\n[5]  Windows Download Execute Exe NoDiskWrite    (C)")
+            sleep(0.10)
+            print("\n[6]  Windows Download Execute Dll NoDiskWrite    (C)")
             sleep(0.10)
             print("\n[0]  Back                                                                ")
             sleep(0.10)
 
-            ans = ""
-            ans = Phantom_lib.InputFunc("\n[>] Please insert option: ")
+            ValidAns=False
 
-            if ans == "1":
-
-                Phantom_lib.clear()
-            
-                print("---------------------------------------------------------------------------")
-                print(bcolors.OCRA + "[+] WINDOWS SHELLCODE INJECTION MODULES:" + bcolors.ENDC)
-                print("---------------------------------------------------------------------------")
-                sleep(0.10)
-                print("\n[1]  Windows Shellcode Injection VirtualAlloc                         (C)")
-                sleep(0.10)
-                print("\n[2]  Windows Shellcode Injection VirtualAlloc NoDirectCall LL/GPA     (C)")
-                sleep(0.10)
-                print("\n[3]  Windows Shellcode Injection VirtualAlloc NoDirectCall GPA/GMH    (C)")
-                sleep(0.10)
-                print("\n[4]  Windows Shellcode Injection HeapAlloc                            (C)")
-                sleep(0.10)
-                print("\n[5]  Windows Shellcode Injection Heapalloc NoDirectCall LL/GPA        (C)")
-                sleep(0.10)
-                print("\n[6]  Windows Shellcode Injection Heapalloc NoDirectCall GPA/GMH       (C)")
-                sleep(0.10)
-                print("\n[7]  Windows Shellcode Injection Process inject                       (C)")
-                sleep(0.10)
-                print("\n[8]  Windows Shellcode Injection Process inject NoDirectCall LL/GPA   (C)")
-                sleep(0.10)
-                print("\n[9]  Windows Shellcode Injection Process inject NoDirectCall GPA/GMH  (C)")
-                sleep(0.10)
-                print("\n[10] Windows Shellcode Injection Thread Hijack                        (C)")
-                sleep(0.10)
-                print("\n[11] Windows Shellcode Injection Thread Hijack NoDirectCall LL/GPA    (C)")
-                sleep(0.10)
-                print("\n[12] Windows Shellcode Injection Thread Hijack NoDirectCall GPA/GMH   (C)")
-                sleep(0.10)
-                print("\n[0]  Back                                                                ")
-                sleep(0.10)
+            while not ValidAns:
 
                 ans = ""
-                ans = Phantom_lib.InputFunc("\n[>] Please insert payload number: ")
-
-                ValidAns=False
+                ans = Phantom_lib.InputFunc("\n[>] Insert payload number: ")
 
                 if ans=="1":
-                    module_type = "ShellcodeInjection_virtual_windows.py"
+
+                    module_type = "ShellcodeInjection_C_windows"
                     ValidAns=True
 
                 elif ans=="2":
-                    module_type = "ShellcodeInjection_virtualNDC_LLGPA_windows.py"
+
+                    module_type = "ReverseTcpStager_C_windows"
                     ValidAns=True
-                   
 
                 elif ans=="3":
-                    module_type = "ShellcodeInjection_virtualNDC_GPAGMH_windows.py"
+
+                    module_type = "ReverseHttpStager_C_windows"
                     ValidAns=True
 
                 elif ans=="4":
-                    module_type = "ShellcodeInjection_heap_windows.py"
+
+                    module_type = "ReverseHttpsStager_C_windows"
                     ValidAns=True
 
                 elif ans=="5":
-                    module_type = "ShellcodeInjection_heapNDC_LLGPA_windows.py"
+
+                    module_type = "DownloadExecExe_C_windows"
                     ValidAns=True
 
                 elif ans=="6":
-                    module_type = "ShellcodeInjection_heapNDC_GPAGMH_windows.py"
-                    ValidAns=True
 
-                elif ans=="7":
-                    module_type = "ShellcodeInjection_ProcessInject_windows.py"
-                    ValidAns=True
-
-                elif ans=="8":
-                    module_type = "ShellcodeInjection_ProcessInject_NDC_LLGPA_windows.py"
-                    ValidAns=True
-
-                elif ans=="9":
-                    module_type = "ShellcodeInjection_ProcessInject_NDC_GPAGMH_windows.py"
-                    ValidAns=True
-
-                elif ans=="10":
-                    module_type = "ShellcodeInjection_ThreadExecutionHijack_windows.py"
-                    ValidAns=True
-
-                elif ans=="11":
-                    module_type = "ShellcodeInjection_ThreadExecutionHijack_NDC_LLGPA_windows.py"
-                    ValidAns=True
-
-                elif ans=="12":
-                    module_type = "ShellcodeInjection_ThreadExecutionHijack_NDC_GPAGMH_windows.py"
+                    module_type = "DownloadExecDll_C_windows"
                     ValidAns=True
 
                 elif ans=="0":
-                    print("\n")
+
+                    break
 
                 else:
                     print("[-] Invalid option")
                     sleep(1.5)
 
-                if ValidAns==True:
-
-                    Phantom_lib.clear()
-                    Phantom_lib.description_printer(module_type)        
-                    print("\n\n")
-                    Phantom_lib.shellcode_completer(module_type)
-
-
-
-            elif ans == "2":
-
-                Phantom_lib.clear()
-
-                print("---------------------------------------------------------------------------")
-                print(bcolors.OCRA + "[+] WINDOWS STAGER MODULES:" + bcolors.ENDC)
-                print("---------------------------------------------------------------------------")
-                sleep(0.10)
-                print("\n[1]  X86 stagers                                                         ")
-                sleep(0.10)
-                print("\n[2]  X64 stagers                                                         ")
-                sleep(0.10)
-                print("\n[0]  Back                                                                ")
-                sleep(0.10)
-                ans = ""
-                ans = Phantom_lib.InputFunc("\n[>] Please insert option: ")
-
-                if ans == "1":
-
-                    Phantom_lib.clear()     
-
-                    print("---------------------------------------------------------------------------")
-                    print(bcolors.OCRA + "[+] WINDOWS x86 STAGER MODULES:" + bcolors.ENDC)
-                    print("---------------------------------------------------------------------------")
-                    sleep(0.10)
-                    print("\n[1]  C meterpreter/reverse_TCP VirtualAlloc                           (C)")
-                    sleep(0.10)
-                    print("\n[2]  C meterpreter/reverse_TCP VirtualAlloc NoDirectCall GPAGMH       (C)")
-                    sleep(0.10)
-                    print("\n[3]  C meterpreter/reverse_TCP HeapAlloc                              (C)")
-                    sleep(0.10)
-                    print("\n[4]  C meterpreter/reverse_TCP HeapAlloc NoDirectCall GPAGMH          (C)")
-                    sleep(0.10)
-                    print("\n[5]  C meterpreter/reverse_HTTP VirtualAlloc                          (C)")
-                    sleep(0.10)
-                    print("\n[6]  C meterpreter/reverse_HTTP VirtualAlloc NoDirectCall GPAGMH      (C)")
-                    sleep(0.10)
-                    print("\n[7]  C meterpreter/reverse_HTTP HeapAlloc                             (C)")
-                    sleep(0.10)
-                    print("\n[8]  C meterpreter/reverse_HTTP HeapAlloc NoDirectCall GPAGMH         (C)")
-                    sleep(0.10)
-                    print("\n[9]  C meterpreter/reverse_HTTPS VirtualAlloc                         (C)")
-                    sleep(0.10)
-                    print("\n[10] C meterpreter/reverse_HTTPS VirtualAlloc NoDirectCall GPAGMH     (C)")
-                    sleep(0.10)
-                    print("\n[11] C meterpreter/reverse_HTTPS HeapAlloc                            (C)")
-                    sleep(0.10)
-                    print("\n[12] C meterpreter/reverse_HTTPS HeapAlloc NoDirectCall GPAGMH        (C)")
-                    sleep(0.10)
-                    print("\n[0]  Back                                                                ")
-                    sleep(0.10)
-
-                    ans = ""
-                    ans = Phantom_lib.InputFunc("\n[>] Please insert payload number: ")
-                    ValidAns=False
-
-                    if ans == "1":
-                        module_type = "x86ReverseTcpMeterpreter_virtual_C_windows.py"
-                        ValidAns=True
-
-                    elif ans == "2":
-                        module_type = "x86ReverseTcpMeterpreter_virtualNDC_C_windows.py"
-                        ValidAns=True
-
-                    elif ans == "3":
-                        module_type = "x86ReverseTcpMeterpreter_heap_C_windows.py"
-                        ValidAns=True
-
-                    elif ans == "4":
-                        module_type = "x86ReverseTcpMeterpreter_heapNDC_C_windows.py"
-                        ValidAns=True
-
-                    elif ans == "5":
-                        module_type = "x86ReverseHttpMeterpreter_virtual_C_windows.py"
-                        ValidAns=True
-
-                    elif ans == "6":
-                        module_type = "x86ReverseHttpMeterpreter_virtualNDC_C_windows.py"
-                        ValidAns=True
-
-                    elif ans == "7":
-                        module_type = "x86ReverseHttpMeterpreter_heap_C_windows.py"
-                        ValidAns=True
-
-                    elif ans == "8":
-                        module_type = "x86ReverseHttpMeterpreter_heapNDC_C_windows.py"
-                        ValidAns=True
-
-                    elif ans == "9":
-                        module_type = "x86ReverseHttpsMeterpreter_virtual_C_windows.py"
-                        ValidAns=True
-
-                    elif ans == "10":
-                        module_type = "x86ReverseHttpsMeterpreter_virtualNDC_C_windows.py"
-                        ValidAns=True
-
-                    elif ans == "11":
-                        module_type = "x86ReverseHttpsMeterpreter_heap_C_windows.py"
-                        ValidAns=True
-
-                    elif ans == "12":
-                        module_type = "x86ReverseHttpsMeterpreter_heapNDC_C_windows.py"
-                        ValidAns=True
-
-                    elif ans == "0":
-                        print("\n")
-
-                    else:
-                        print("[-] Invalid option")
-                        sleep(1.5)
-
-
-                    if ValidAns==True:
-
-
-                        Phantom_lib.clear()
-                        Phantom_lib.description_printer(module_type)        
-                        print("\n\n")
-                        Phantom_lib.Polymorphic_C_Meterpreter_launcher(module_type)
-
-
-
-
-
-                elif ans == "2":
-
-                    Phantom_lib.clear()     
-
-                    print("---------------------------------------------------------------------------")
-                    print(bcolors.OCRA + "[+] WINDOWS x64 STAGER MODULES:" + bcolors.ENDC)
-                    print("---------------------------------------------------------------------------")
-                    sleep(0.10)
-                    print("\n[1]  C x64/meterpreter/reverse_TCP VirtualAlloc                       (C)")
-                    sleep(0.10)
-                    print("\n[2]  C x64/meterpreter/reverse_TCP VirtualAlloc NoDirectCall          (C)")
-                    sleep(0.10)
-                    print("\n[3]  C x64/meterpreter/reverse_TCP HeapAlloc                          (C)")
-                    sleep(0.10)
-                    print("\n[4]  C x64/meterpreter/reverse_TCP HeapAlloc NoDirectCall             (C)")
-                    sleep(0.10)
-                    print("\n[5]  C x64/meterpreter/reverse_HTTP VirtualAlloc                      (C)")
-                    sleep(0.10)
-                    print("\n[6]  C x64/meterpreter/reverse_HTTP VirtualAlloc NoDirectCall         (C)")
-                    sleep(0.10)
-                    print("\n[7]  C x64/meterpreter/reverse_HTTP HeapAlloc                         (C)")
-                    sleep(0.10)
-                    print("\n[8]  C x64/meterpreter/reverse_HTTP HeapAlloc NoDirectCall            (C)")
-                    sleep(0.10)
-                    print("\n[9]  C x64/meterpreter/reverse_HTTPS VirtualAlloc                     (C)")
-                    sleep(0.10)
-                    print("\n[10] C x64/meterpreter/reverse_HTTPS VirtualAlloc NoDirectCall        (C)")
-                    sleep(0.10)
-                    print("\n[11] C x64/meterpreter/reverse_HTTPS HeapAlloc                        (C)")
-                    sleep(0.10)
-                    print("\n[12] C x64/meterpreter/reverse_HTTPS HeapAlloc NoDirectCall           (C)")
-                    sleep(0.10)
-                    print("\n[0]  Back                                                                ")
-                    sleep(0.10)
-
-                    ans = ""
-                    ans = Phantom_lib.InputFunc("\n[>] Please insert payload number: ")
-                    ValidAns=False
-
-                    if ans=="1":
-                        module_type = "x64ReverseTcpMeterpreter_virtual_C_windows.py"
-                        ValidAns=True
-
-                    elif ans=="2":
-                        module_type = "x64ReverseTcpMeterpreter_virtualNDC_C_windows.py"
-                        ValidAns=True
-
-                    elif ans=="3":
-                        module_type = "x64ReverseTcpMeterpreter_heap_C_windows.py"
-                        ValidAns=True
-
-                    elif ans=="4":
-                        module_type = "x64ReverseTcpMeterpreter_heapNDC_C_windows.py"
-                        ValidAns=True
-
-                    elif ans=="5":
-                        module_type = "x64ReverseHttpMeterpreter_virtual_C_windows.py"
-                        ValidAns=True
-
-                    elif ans=="6":
-                        module_type = "x64ReverseHttpMeterpreter_virtualNDC_C_windows.py"
-                        ValidAns=True
-
-                    elif ans=="7":
-                        module_type = "x64ReverseHttpMeterpreter_heap_C_windows.py"
-                        ValidAns=True
-
-                    elif ans=="8":
-                        module_type = "x64ReverseHttpMeterpreter_heapNDC_C_windows.py"
-                        ValidAns=True
-
-                    elif ans=="9":
-                        module_type = "x64ReverseHttpsMeterpreter_virtual_C_windows.py"
-                        ValidAns=True
-
-                    elif ans=="10":
-                        module_type = "x64ReverseHttpsMeterpreter_virtualNDC_C_windows.py"
-                        ValidAns=True
-
-                    elif ans=="11":
-                        module_type = "x64ReverseHttpsMeterpreter_heap_C_windows.py"
-                        ValidAns=True
-
-                    elif ans=="12":
-                        module_type = "x64ReverseHttpsMeterpreter_heapNDC_C_windows.py"
-                        ValidAns=True
-
-                    elif ans=="0":
-                        print("\n")
-
-                    else:
-                        print("[-] Invalid option")
-                        sleep(1.5)
-
-
-                    if ValidAns==True:
-
-
-                        Phantom_lib.clear()
-                        Phantom_lib.description_printer(module_type)        
-                        print("\n\n")
-                        Phantom_lib.Polymorphic_C_Meterpreter_launcher(module_type)
-
-
-
-
-
-                elif ans=="0":
-                    print("\n")
-
-                else:
-                    print("[-] Invalid option")
-                    sleep(1.5)
-
-
-
-            elif ans == "3":
-
-                Phantom_lib.clear()
-
-                print("---------------------------------------------------------------------------")
-                print(bcolors.OCRA + "[+] WINDOWS POWERSHELL MODULES:" + bcolors.ENDC)
-                print("---------------------------------------------------------------------------")
-
-                sleep(0.10)
-                print("\n[1] Windows Powershell Oneliner Dropper                     (Powershell)")
-                sleep(0.10)
-                print("\n[2] Windows Powershell Script Dropper                       (Powershell)")
-                sleep(0.10)
-                print("\n[3] Windows WinePyinstaller Python Meterpreter                  (Python)")
-                sleep(0.10)
-                print("\n[4] Windows WinePyinstaller Oneline payload dropper             (Python)")
-                sleep(0.10)
-                print("\n[0] Back")
-                sleep(0.10)
-
-                ans = ""
-                ans = Phantom_lib.InputFunc("\n[>] Please insert choice\'s number: ") 
-
-
-                if ans=="1":
-
-                    module_type = "Polymorphic_PowershellOnelineDropper_windows.py"
-                    Phantom_lib.clear()
-                    Phantom_lib.description_printer(module_type)        
-                    print("\n\n")
-                    Phantom_lib.powershell_completer(module_type)
-
-
-                elif ans=="2":
-                    module_type = "Polymorphic_PowershellScriptDropper_windows.py"
-                    Phantom_lib.clear()
-                    Phantom_lib.description_printer(module_type)        
-                    print("\n\n")
-                    Phantom_lib.powershell_completer(module_type)
-
-
-                elif ans =="3":
-
-                    if Phantom_lib.wine_fastcheck() == True:
-
-                        module_type = "Pytherpreter_Polymorphic"
-                        Phantom_lib.clear()
-                        Phantom_lib.description_printer(module_type) 
-                        Phantom_lib.pytherpreter_completer(module_type,"True")
-
-                    else:
-
-                        print(bcolors.RED + "\n[-] Wine Environment not ready\n" + bcolors.ENDC)
-                        Phantom_lib.Enter2Continue()
-
-                elif ans =="4":
-
-                    if Phantom_lib.wine_fastcheck() == True:
-
-                        module_type = "Pytherpreter_Polymorphic_Powershelloneline"
-                        Phantom_lib.clear()
-                        Phantom_lib.description_printer(module_type) 
-                        Phantom_lib.python_sys_completer("True")
-
-                    else:
-
-                        print(bcolors.RED + "\n[-] Wine Environment not ready\n" + bcolors.ENDC)
-                        Phantom_lib.Enter2Continue()
-
-                elif ans=="0":
-                    print("\n")
-
-            elif ans=="0":
-                print("\n")
+            if ValidAns==True:
+                Phantom_lib.Clear()
+                Phantom_lib.ModuleDescription(module_type)        
+                Phantom_lib.ModuleLauncher(module_type)
 
         elif ans=="2":
 
-            Phantom_lib.clear()
+            Phantom_lib.Clear()
             print("------------------------------------------------------------------------")
             print(bcolors.OCRA + "[+] LINUX MODULES:" + bcolors.ENDC)
             print("------------------------------------------------------------------------")
             sleep(0.10)
-            print("\n[1] Linux Shellcode Injection HeapAlloc                            (C)")
-            sleep(0.10)
-            print("\n[2] Linux Bash Oneliner Dropper                                    (C)")
+            print("\n[1] Linux Shellcode Injection    (C)")
             sleep(0.10)
             print("\n[0] Back")
             sleep(0.10)
 
-            ans = ""
-            ans = Phantom_lib.InputFunc("\n[>] Please insert choice\'s number: ") 
+            ValidAns = False
 
-            if ans=="1":
-                module_type = "ShellcodeInjection_heap_linux.py"
-                Phantom_lib.clear()
-                Phantom_lib.description_printer(module_type)
-                print("\n\n")
-                Phantom_lib.shellcode_completer(module_type)
+            while not ValidAns:
+
+                ans = ""
+                ans = Phantom_lib.InputFunc("\n[>] Insert payload number: ") 
+
+                if ans=="1":
+
+                    ValidAns = True
+                    module_type = "ShellcodeInjection_C_linux"
+                    Phantom_lib.Clear()
+                    Phantom_lib.ModuleDescription(module_type)
+                    Phantom_lib.ModuleLauncher(module_type)
+
+                elif ans=="0":
+                    
+                    break
+
+                else:
+                    print("[-] Invalid option")
+                    sleep(1.5)
 
 
-            if ans=="2":
-                module_type = "ShellcmdDropper_linux.py"
-                Phantom_lib.clear()
-                Phantom_lib.description_printer(module_type)
-                print("\n\n")
-                Phantom_lib.BashOnelinerDropper()
-
-
-            elif ans=="0":
-                print("\n")
 
 
         elif ans=="3":
-            Phantom_lib.clear()
-            print("------------------------------------------------------------------------")
-            print(bcolors.OCRA + "[+] OSX MODULES:" + bcolors.ENDC)
-            print("------------------------------------------------------------------------")
-            sleep(0.10)
-            print("\n[1] OSX 32 bit multi-encoding                              (Macho/Dmg)")
-            sleep(0.10)
-            print("\n[0] Back")
-            sleep(0.10)
 
-            ans = ""
-            ans = Phantom_lib.InputFunc("\n[>] Please insert payload number: ") 
-
-            if ans =="1":
-                module_type = "Osx_Cascade_Encoding"
-                Phantom_lib.clear()
-                Phantom_lib.description_printer(module_type)
-                Phantom_lib.clear() 
-                Phantom_lib.osx_cascade_encoding()
-
-            elif ans=="0":
-                print("\n\n")
-
-        elif ans=="4":
-            Phantom_lib.clear()
+            Phantom_lib.Clear()
             print("-------------------------------------------------------------------------")
             print(bcolors.OCRA + "[+] ANDROID MODULES:" + bcolors.ENDC)
             print("-------------------------------------------------------------------------")
             sleep(0.10)
-            print("\n[1] Android Msfvenom Baksmali Obfuscator                          (Apk)")
+            print("\n[1] Android Msfvenom Obfuscator/Backdoor (APK)")
             sleep(0.10)
             print("\n[0] Back")
             sleep(0.10)
 
-            ans = ""
-            ans = Phantom_lib.InputFunc("\n[>] Please insert option: ")
+            ValidAns = False
+
+            while not ValidAns:
+
+                ans = ""
+                ans = Phantom_lib.InputFunc("\n[>] Please insert option: ")
  
-            if ans =="1":
-                module_type = "Smali_Droidmare"
-                Phantom_lib.clear()
-                Phantom_lib.description_printer(module_type)
-                Phantom_lib.clear() 
-                Phantom_lib.droidmare_launcher()
+                if ans =="1":
 
-            elif ans=="0":
-                print("\n\n")
+                    ValidAns = True
+                    module_type = "MsfvenomObfuscateBackdoor_android"
+                    Phantom_lib.Clear()
+                    Phantom_lib.ModuleDescription(module_type)
+                    Phantom_lib.ModuleLauncher(module_type)
 
-        elif ans=="5":
-            Phantom_lib.clear()
+                elif ans=="0":
+
+                    break
+
+                else:
+                    print("[-] Invalid option")
+                    sleep(1.5)
+
+        elif ans=="4":
+
+            Phantom_lib.Clear()
             print("-------------------------------------------------------------------------")
-            print(bcolors.OCRA + "[+] UNIVERSAL MODULES:" + bcolors.ENDC)
+            print(bcolors.OCRA + "[+] PERSISTENCE MODULES:" + bcolors.ENDC)
             print("-------------------------------------------------------------------------")
+            print("\n[1] Windows REG Add Registry Key         (C)")
+            sleep(0.10) 
+            print("\n[2] Windows REG Add Registry Key       (CMD)")
+            sleep(0.10) 
+            print("\n[3] Windows Keep Process Alive           (C)")
             sleep(0.10)
-            print("\n[1] Universal Meterpreter increments-trick                     (Python)")
+            print("\n[4] Windows Schtasks cmdline           (CMD)")
             sleep(0.10)
-            print("\n[2] Universal Polymorphic Meterpreter                          (Python)")
-            sleep(0.10)
-            print("\n[3] Universal Polymorphic Oneliner dropper                     (Python)")
-            sleep(0.10)
-            print("\n[0] Back")
-            sleep(0.10)
-
-            ans = ""
-            ans = Phantom_lib.InputFunc("\n[>] Please insert payload number: ")
-
-            if ans =="1":
-                module_type = "Pytherpreter"
-                Phantom_lib.clear()
-                Phantom_lib.description_printer(module_type) 
-                Phantom_lib.pytherpreter_completer(module_type,False)
-
-            elif ans =="2":
-                module_type = "Pytherpreter_Polymorphic"
-                Phantom_lib.clear()
-                Phantom_lib.description_printer(module_type) 
-                Phantom_lib.pytherpreter_completer(module_type,False)
-
-            elif ans =="3":
-                module_type = "Pytherpreter_Polymorphic_Powershelloneline"
-                Phantom_lib.clear()
-                Phantom_lib.description_printer(module_type) 
-                Phantom_lib.python_sys_completer("False")
-
-            elif ans=="0":
-                print("\n\n")
-
-        elif ans=="6":
-            Phantom_lib.clear()
-            print("-------------------------------------------------------------------------")
-            print(bcolors.OCRA + "[+] POST-EXPLOITATION MODULES:" + bcolors.ENDC)
-            print("-------------------------------------------------------------------------")
-            sleep(0.10)
-            print("\n[1] Windows Persistence RegCreateKeyExW Add Registry Key            (C)")
-            sleep(0.10)
-            print("\n[2] Windows Persistence REG Add Registry Key                      (CMD)")
-            sleep(0.10)  
-            print("\n[3] Windows Persistence Keep Process Alive                          (C)")
-            sleep(0.10)
-            print("\n[4] Windows Persistence Schtasks cmdline                          (CMD)")
-            sleep(0.10)
-            print("\n[5] Windows Set Files Attribute Hidden                          (C/CMD)")
+            print("\n[5] Windows Create Service             (CMD)")
             sleep(0.10)
             print("\n[0] Back")
             sleep(0.10)    
 
-            ans = ""
-            ans = Phantom_lib.InputFunc("\n[>] Please insert payload number: ") 
 
-            if ans == "1":
-                module_type = "Windows_C_Persistence_Startup.py"
-                Phantom_lib.clear()
-                Phantom_lib.description_printer(module_type) 
-                Phantom_lib.Windows_C_PersistenceAgent(module_type)
+            ValidAns = False
 
-            if ans == "2":
-                module_type = "Windows_CMD_Persistence_REG"
-                Phantom_lib.clear()
-                Phantom_lib.description_printer(module_type) 
-                Phantom_lib.Windows_CMD_PersistenceAgent()
+            while not ValidAns:
 
+                ans = ""
+                ans = Phantom_lib.InputFunc("\n[>] Insert module number: ") 
 
-            elif ans == "3":
-                module_type = "Windows_C_Persistence_TimeBased.py"
-                Phantom_lib.clear()
-                Phantom_lib.description_printer(module_type) 
-                Phantom_lib.Windows_C_PersistenceAgent(module_type)
+                if ans == "1":
 
-            elif ans == "4":
-                module_type = "Windows_CMD_Persistence_Schtasks.py"
-                Phantom_lib.clear()
-                Phantom_lib.description_printer(module_type) 
-                Phantom_lib.Windows_Schtasks_Persistence()
+                    module_type = "Persistence_C_REG_windows"
+                    ValidAns = True
 
-            elif ans == "5":
-                module_type = "Windows_C_SetFilesAttributeHidden.py"
-                Phantom_lib.clear()
-                Phantom_lib.description_printer(module_type) 
-                Phantom_lib.SelectHideMode()
+                elif ans == "2":
+    
+                    module_type = "Persistence_CMD_REG_windows"
+                    ValidAns = True
 
+                elif ans == "3":
 
+                    module_type = "Persistence_C_KeepAliveProcess_windows"
+                    ValidAns = True
 
+                elif ans == "4":
 
-            elif ans=="0":
-                print("\n\n")
+                    module_type = "Persistence_CMD_Schtasks_windows"
+                    ValidAns = True
 
+                elif ans == "5":
+
+                    module_type = "Persistence_CMD_CreateService_windows"
+                    ValidAns = True
+
+                elif ans=="0":
+
+                    break
+
+                else:
+                    print("[-] Invalid option")
+                    sleep(1.5)
+
+            if ValidAns==True:
+
+                Phantom_lib.Clear()
+                Phantom_lib.ModuleDescription(module_type) 
+                Phantom_lib.ModuleLauncher(module_type)
+
+        elif ans=="5":
+
+            Phantom_lib.Clear()
+            print("-------------------------------------------------------------------------")
+            print(bcolors.OCRA + "[+] PRIV-ESC MODULES:" + bcolors.ENDC)
+            print("-------------------------------------------------------------------------")
+            print("\n[1] Windows DuplicateTokenEx             (C)")
+            sleep(0.10)  
+            print("\n[0] Back")
+            sleep(0.10)
+
+            ValidAns = False
+
+            while not ValidAns:
+
+                ans = ""
+                ans = Phantom_lib.InputFunc("\n[>] Insert module number: ") 
+
+                if ans == "1":
+
+                    ValidAns = True
+                    module_type = "Privesc_C_DuplicateTokenEx_windows"
+                    Phantom_lib.Clear()
+                    Phantom_lib.ModuleDescription(module_type) 
+                    Phantom_lib.ModuleLauncher(module_type)
+
+                elif ans=="0":
+                
+                    break
+
+                else:
+                    print("[-] Invalid option")
+                    sleep(1.5)
+
+        elif ans=="6":
+
+            Phantom_lib.Clear()
+            print("-------------------------------------------------------------------------")
+            print(bcolors.OCRA + "[+] POST-EX MODULES:" + bcolors.ENDC)
+            print("-------------------------------------------------------------------------")
+            print("\n[1] Windows Unload Sysmon             (CMD)")
+            sleep(0.10)
+            print("\n[2] Windows Unload Sysmon               (C)")
+            sleep(0.10)
+            print("\n[3] Windows Attrib hide file          (CMD)")
+            sleep(0.10) 
+            print("\n[4] Windows SetFileAttribute hide file  (C)")
+            sleep(0.10)
+            print("\n[5] Windows Dump Lsass                  (C)")
+            sleep(0.10)
+            print("\n[6] Windows Dump Lsass                (CMD)")
+            sleep(0.10)
+            print("\n[0] Back")
+            sleep(0.10)
+
+            ValidAns = False
+
+            while not ValidAns:
+
+                ans = ""
+                ans = Phantom_lib.InputFunc("\n[>] Insert module number: ") 
+
+                if ans == "1":
+
+                    module_type = "Postex_CMD_UnloadSysmonDriver_windows"
+                    ValidAns = True
+
+                elif ans == "2":
+
+                    module_type = "Postex_C_UnloadSysmonDriver_windows"
+                    ValidAns = True
+
+                elif ans == "3":
+
+                    module_type = "Postex_CMD_AttribHideFile_windows"
+                    ValidAns = True
+
+                elif ans == "4":
+
+                    module_type = "Postex_C_SetFileAttributeHidden_windows"
+                    ValidAns = True
+
+                elif ans == "5":
+
+                    module_type = "Postex_C_MiniDumpWriteDumpLsass_windows"
+                    ValidAns = True
+
+                elif ans == "6":
+
+                    module_type = "Postex_CMD_DumpLsass_windows"
+                    ValidAns = True
+
+                elif ans=="0":
+
+                    break
+
+                else:
+                    print("[-] Invalid option")
+                    sleep(1.5)
+
+            if ValidAns==True:
+
+                Phantom_lib.Clear()
+                Phantom_lib.ModuleDescription(module_type) 
+                Phantom_lib.ModuleLauncher(module_type)
 
         elif ans=="7":
 
-            print("\n[>] Update check\n")
-            sleep(0.2)
-            if platform.system() == "Windows":
- 
-                subprocess.call(['git','status','-uno'],shell=True)
-
-            else: 
-
-                subprocess.call(['git','status','-uno'])
-            sleep(2)
-            print("[>] Update check completed!\n")
+            Phantom_lib.Clear()
+            print("\n[>>>] Phantom-Evasion setup...\n")
+            AutoSetup()
             sleep(1)
 
         elif ans=="0":
-            Phantom_lib.clear()
-            print(bcolors.RED + "\n[<<PHANTOM--EXIT>>]\n\n" + bcolors.ENDC)
+            Phantom_lib.Clear()
+            print(bcolors.RED + "\n[ <<< PHANTOM-EVASION 3.0 >>> ]\n" + bcolors.ENDC)
             sleep(0.2)
-            Phantom_lib.exit_banner()
+            Phantom_lib.ExitBanner()
             sleep(0.2)
             quit()
 
@@ -705,20 +391,16 @@ def complete_menu():
 
 if __name__ == "__main__":
 
-    Phantom_lib.python_banner()
-    Phantom_lib.dependencies_checker()
-    Phantom_lib.advisor()
-    try:
-        with open("Setup/Config.txt", "r") as donate_config:
-            for line in donate_config:
-                if "Mining=True" in line:
-                    if platform.system() == "Linux":
-                        Phantom_lib.xmr_miner()
+    if len(sys.argv) > 1:
 
-        complete_menu()
+        Phantom_lib.CmdlineLauncher(sys.argv)
+    else:
+        Phantom_lib.Clear()
+        Phantom_lib.Advisor()
 
-    except (KeyboardInterrupt, SystemExit):
-        subprocess.call(['tmux','send-keys','-t','phantom-miner','\"\x03\"','C-m'], stdout=open(os.devnull,'wb'), stderr=open(os.devnull,'wb'))
+        try:
+            CompleteMenu()
 
+        except (KeyboardInterrupt, SystemExit):
 
-
+            pass

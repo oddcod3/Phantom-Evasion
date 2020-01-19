@@ -1,3 +1,0 @@
-WinEnv=Check
-Miner=FirstRun
-
