@@ -197,17 +197,21 @@ The Encrypted DLL/EXE will be saved as originalfilename + "crypt" + ".dll" or ".
 
 1. Windows DownloadExecExe NoDiskWrite (WDE using cmdline mode):
 
-   Remote exec method can be one of the following: ProcessHollowing (shorten is PH)
+   Remote exec method can be one of the following: 
+
+    ProcessHollowing (shorten is PH)
 
                                                  
 
 2. Windows DownloadExecDll NoDiskWrite (WDD using cmdline mode):
 
-   Remote loading method can be one of the following: ReflectiveDll    (shorten is RD)
+   Remote loading method can be one of the following: 
 
-                                                      RDAPC            (ReflectiveDllAPC)
-
-                                                      ManualMap        (shorten is MM) ---> only x86
+    ReflectiveDll    (shorten is RD)
+                                                    
+    RDAPC            (ReflectiveDllAPC)
+                                                    
+    ManualMap        (shorten is MM) ---> only x86
                                                       
 ## LINUX PAYLOADS
 
