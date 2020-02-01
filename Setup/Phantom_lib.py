@@ -473,12 +473,12 @@ def ResGen(ModOpt):
     RCfd.write(str(random.randint(10,1000)) + " " + ModOpt["ResType"] + " " + RandBin + ".bin")
     RCfd.close()
 
-    BINfd = open(RandBin + ".bin","w")
-
     if platform.python_version()[0] == 3:
 
+        BINfd = open(RandBin + ".bin","w")
         BINfd.write(ModOpt["Payload"].decode('string-escape'))
     else:
+        BINfd = open(RandBin + ".bin","wb")
         BINfd.write(ModOpt["Payload"].encode('latin-1'))
 
     BINfd.close()
