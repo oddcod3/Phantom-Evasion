@@ -60,7 +60,7 @@ def AutoSetup():
 
         else:
 
-            OtherLinuxSetup()
+            OtherLinuxSetup(rel)
 
     elif pl == "darwin":
 
