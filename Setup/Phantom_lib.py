@@ -436,7 +436,7 @@ def ExeSigner(Filename,Spoofcert,descr="Notepad Benchmark Util"):
         cert.set_notAfter(x509.get_notAfter())
         cert.set_pubkey(keygen)
         cert.sign(keygen, 'sha256')
-        pfx = crypto.PKCS12Type()
+        pfx = crypto.PKCS12()
         pfx.set_privatekey(keygen)
         pfx.set_certificate(cert)
         pfxdata = pfx.export()
